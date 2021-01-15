@@ -1,0 +1,7 @@
+{
+  "name": "itchy-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
