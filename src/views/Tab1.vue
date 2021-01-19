@@ -1,28 +1,119 @@
 <template>
-  <ion-page>
-    <ion-header>
+<ion-page>
+  <ion-content :fullscreen="true">
+    <ion-header collapse="condense">
       <ion-toolbar>
-        <ion-title>Tab 1</ion-title>
+        <ion-title size="large">Front Page</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Tab 1</ion-title>
-        </ion-toolbar>
-      </ion-header>
-    
-      <ExploreContainer name="Tab 1 page" />
-    </ion-content>
-  </ion-page>
+    <ion-refresher slot="fixed" @ionRefresh="refreshData($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <!-- FEATURED PROJECTS -->
+    <ion-text v-if="!loading">
+      <h2>Featured</h2>
+    </ion-text>
+    <div class="sidescroll">
+      <div v-for="project in featuredProjects" :key="project.thumbnail_url">
+        <ProjectCard :title="project.title" :author="project.creator" :thumb="project.thumbnail_url" :id="project.id"></ProjectCard>
+      </div>
+    </div>
+    <!-- TOP LOVED PROJECTS -->
+    <ion-text>
+      <h2>Top Loved</h2>
+    </ion-text>
+    <div class="sidescroll">
+      <div v-for="project in lovedProjects" :key="project.thumbnail_url">
+        <ProjectCard :title="project.title" :author="project.creator" :thumb="project.thumbnail_url" :id="project.id"></ProjectCard>
+      </div>
+    </div>
+    <!-- CURATED PROJECTS -->
+    <ion-text v-if="!loading">
+      <h2>Curated</h2>
+    </ion-text>
+    <div class="sidescroll">
+      <div v-for="project in curatedProjects" :key="project.thumbnail_url">
+        <ProjectCard :title="project.title" :author="project.creator" :thumb="project.thumbnail_url" :id="project.id"></ProjectCard>
+      </div>
+    </div>
+    <!-- TOP REMIXED PROJECTS -->
+    <ion-text v-if="!loading">
+      <h2>Top Remixed</h2>
+    </ion-text>
+    <div class="sidescroll">
+      <div v-for="project in remixedProjects" :key="project.thumbnail_url">
+        <ProjectCard :title="project.title" :author="project.creator" :thumb="project.thumbnail_url" :id="project.id"></ProjectCard>
+      </div>
+    </div>
+  </ion-content>
+  <ion-progress-bar v-if="loading" type="indeterminate"></ion-progress-bar>
+</ion-page>
 </template>
 
-<script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
-
-export default  {
+<script>
+const axios = require('axios');
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonText,
+  IonRefresher
+} from '@ionic/vue';
+import ProjectCard from '../components/ProjectCard.vue';
+export default {
   name: 'Tab1',
-  components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
+  components: {
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonPage,
+    IonText,
+    IonRefresher,
+    ProjectCard
+  },
+  data() {
+    return {
+      featuredProjects: [],
+      lovedProjects: [],
+      curatedProjects: [],
+      remixedProjects: [],
+      loading: true
+    }
+  },
+  mounted() {
+    this.refreshData();
+  },
+  methods: {
+    refreshData(event) {
+      axios
+        .get('https://itchy-api.vercel.app/api/frontpage?page=featured')
+        .then((response) => {
+          this.featuredProjects = response.data;
+          axios
+            .get('https://itchy-api.vercel.app/api/frontpage?page=toploved')
+            .then((response) => {
+              this.lovedProjects = response.data;
+              axios
+                .get('https://itchy-api.vercel.app/api/frontpage?page=topremixed')
+                .then((response) => {
+                  this.remixedProjects = response.data;
+                  axios
+                    .get('https://itchy-api.vercel.app/api/frontpage?page=curated')
+                    .then((response) => {
+                      this.curatedProjects = response.data;
+                      if (event) {
+                        event.target.complete();
+                      } else {
+                        this.loading = false;
+                      }
+                    })
+                })
+            })
+        })
+    }
+  }
 }
 </script>

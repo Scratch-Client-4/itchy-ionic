@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Itchy</string>
+    <string name="title_activity_main">Itchy</string>
+    <string name="package_name">org.scratchclient4.itchy</string>
+    <string name="custom_url_scheme">org.scratchclient4.itchy</string>
+</resources>

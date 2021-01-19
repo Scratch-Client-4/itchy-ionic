@@ -1,16 +1,16 @@
 <template>
-  <div id="container">
-    <strong>{{ name }}</strong>
-    <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+<div id="container">
+  <strong>{{ name }} page</strong>
+  <p>This page is under development.</p>
+</div>
 </template>
 
-<script lang="ts">
-
+<script>
 export default {
-  name: 'ExploreContainer',
+  name: 'DevNotice',
   props: {
-    name: String
+    name: String,
+    message: String
   }
 }
 </script>

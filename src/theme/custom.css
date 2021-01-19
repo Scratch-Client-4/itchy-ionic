@@ -1,0 +1,91 @@
+ion-searchbar {
+  margin: 5vw;
+  width: 90vw !important;
+}
+
+ion-searchbar input {
+  border-radius: 0.4em;
+}
+
+.sidescroll {
+  overflow-x: scroll;
+  display: flex;
+  padding-left: 10px;
+}
+
+.sidescroll::-webkit-scrollbar {
+  display: none;
+}
+
+.project-scroller {
+  height: max-content;
+  width: 90vw;
+}
+
+ion-card {
+  height: max-content;
+  width: 35vh;
+  text-overflow: ellipsis;
+}
+
+ion-card-title {
+  font-size: 18px !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+ion-card img {
+  width: 100% !important;
+}
+
+ion-card-header {
+  padding: 0.7em;
+}
+
+ion-card-content {
+  padding-left: 0.7em !important;
+}
+
+h2 {
+  margin-left: 20px;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+ion-progress-bar {
+  position: absolute;
+  top: 0;
+}
+
+ion-title {
+  text-overflow: ellipsis;
+  width: calc(100vw - 20vw);
+  margin-right: 50em;
+}
+
+.refresher-refreshing-icon, .refresher-pulling-icon {
+  border: none !important;
+  background: var(--ion-tab-bar-background) !important;
+}
+
+.tw-wrapper {
+  position: relative;
+  width: 100%;
+  height: 50vh;
+  padding-bottom: 80%;
+  overflow: hidden;
+}
+
+.tw-player {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+}
+
+ion-content.modaled {
+  height: 100vh;
+}
