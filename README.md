@@ -2,7 +2,7 @@
 
 A more native approach to a Scratch mobile app
 
-![docs/Screenshot_latest.png](docs/Screenshot_latest.png)
+<img src="docs/Screenshot_latest.png" alt="screenshot of Itchy" width="300px">
 
 ## Developing
 ### Prerequisites
