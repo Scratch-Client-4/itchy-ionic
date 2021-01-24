@@ -1,6 +1,6 @@
 # itchy-ionic
 
-A more native approach to a Scratch mobile app
+A more native approach to a Scratch mobile app built with the Ionic framework
 
 <img src="docs/Screenshot_latest.png" alt="screenshot of Itchy" width="300px">
 
@@ -11,12 +11,25 @@ A more native approach to a Scratch mobile app
 ### Process
 Before adding new features, check the [issues page](https://github.com/scratch-client-4/itchy-ionic) to make sure there are no issues you can fix.  While developing new features and/or components, please make sure that your code is as modularized and reusable as possible.  
 
-## Building
-### Prerequisites
+## Building for platforms
+### Requirements
 - A properly set-up installation of [Android Studio](https://developer.android.com/studio)
 - [Git](https://git-scm.com/)
 - [NPM](https://www.npmjs.com/)
 - [Node.js](https://nodejs.org/)
 
-### Steps
-Start by `git clone`-ing the repository to your computer or virtual machine.  Once the repository has successfully downloaded, `cd` into the folder and run `npm install` to get all dependencies.  This may take a while.  After the installation has completed, run `npm run production` to build the app's files and open it in Android Studio.  To run on an emulator, press the "Play" icon in the top toolbar or use `Shift+F10`.  To build APK's for production, open the "Build" menu, hover over "Build Bundle(s) / APK(s)", and select "Build APK(s)".
+### Building for android
+First, clone the repository:
+`git clone https://github.com/Scratch-Client-4/itchy-ionic.git`
+Then go into it and install all dependencies:
+```
+cd itchy-ionic
+npm install
+```
+Then run the build script:
+```
+npm run production
+```
+To run on an emulator, press the "Play" icon in the top toolbar or use `Shift+F10`. 
+
+To build APK's for production, open the "Build" menu, hover over "Build Bundle(s) / APK(s)", and select "Build APK(s)".
