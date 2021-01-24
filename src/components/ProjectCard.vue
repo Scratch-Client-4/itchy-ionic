@@ -41,13 +41,16 @@ export default defineComponent({
   },
   methods: {
     async openProject() {
+      console.log(this.instructions);
       const modal = await modalController
         .create({
           component: ProjectModal,
-          cssClass: 'my-custom-class',
+          cssClass: 'open-modal',
           componentProps: {
             title: this.title,
-            embed: `https://turbowarp.org/${this.id}/embed`
+            embed: `https://turbowarp.org/${this.id}/embed`,
+            id: this.id,
+            author: this.author
           },
         })
       return modal.present();

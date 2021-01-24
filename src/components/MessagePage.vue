@@ -1,13 +1,13 @@
 <template>
 <div id="container">
-  <strong>{{ name }} page</strong>
-  <p>This page is under development.</p>
+  <strong>Messages</strong>
+  <p>You opened messages in the browser.</p>
 </div>
 </template>
 
 <script>
 export default {
-  name: 'DevNotice',
+  name: 'MessagePage',
   props: {
     name: String,
     message: String

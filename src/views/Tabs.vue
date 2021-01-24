@@ -12,7 +12,7 @@
         <ion-label>Search</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button tab="tab3" href="/tabs/tab3">
+      <ion-tab-button tab="tab3" href="/tabs/tab3" @click="openMessages">
         <ion-icon :icon="mailOutline" />
         <ion-label>Messages</ion-label>
       </ion-tab-button>
@@ -58,6 +58,11 @@ export default {
       search,
       mailOutline,
       settingsOutline
+    }
+  },
+  methods: {
+    openMessages() {
+      window.open('https://scratch.mit.edu/messages');
     }
   }
 }

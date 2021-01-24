@@ -6,8 +6,35 @@
         <ion-title size="large">Settings</ion-title>
       </ion-toolbar>
     </ion-header>
-
-    <DevNotice name="Settings" />
+    <ion-title class="ion-padding">Settings</ion-title>
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>
+          Account
+        </ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-label v-if="user.signedIn">
+          Signed in as {{ user.name }}
+        </ion-label>
+        <ion-label v-else>
+          Signed out
+        </ion-label>
+        <ion-button v-if="user.signedIn">Sign Out</ion-button>
+        <ion-button v-else>Sign In</ion-button>
+      </ion-item>
+      <ion-item-divider>
+        <ion-label>
+          Display
+        </ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-label>
+          Force dark theme
+        </ion-label>
+        <ion-toggle></ion-toggle>
+      </ion-item>
+    </ion-item-group>
   </ion-content>
 </ion-page>
 </template>
@@ -18,19 +45,34 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonContent
+  IonContent,
+  IonItem,
+  IonItemGroup,
+  IonLabel,
+  IonItemDivider,
+  IonButton
 } from '@ionic/vue';
-import DevNotice from '@/components/DevNotice.vue';
-
 export default {
   name: 'Tab4',
   components: {
-    DevNotice,
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
-    IonPage
+    IonPage,
+    IonItem,
+    IonItemGroup,
+    IonLabel,
+    IonItemDivider,
+    IonButton
+  },
+  data() {
+    return {
+      user: {
+        signedIn: false,
+        name: "-Archon-"
+      }
+    }
   }
 }
 </script>
