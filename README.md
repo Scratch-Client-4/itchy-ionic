@@ -9,7 +9,7 @@ A more native approach to a Scratch mobile app built with the Ionic framework
 - `itchy-ionic` is built with Ionic Vue, which means you'll need to understand [Ionic](https://ionicframework.com/docs/vue/overview) and [Vue.js](https://vuejs.org) as well as [Capacitor](https://capacitorjs.com/) if you're building the app for Android.  
 
 ### Process
-Before adding new features, check the [issues page](https://github.com/scratch-client-4/itchy-ionic) to make sure there are no issues you can fix.  While developing new features and/or components, please make sure that your code is as modularized and reusable as possible.  
+Before adding new features, check the [issues page](https://github.com/scratch-client-4/itchy-ionic) to make sure there are no issues you can fix.  While developing new features and/or components, please make sure that your code is as modularized and is as reusable as possible.  
 
 ## Building for platforms
 ### Requirements
