@@ -121,3 +121,7 @@ ion-content.modaled {
 .author-box {
   display: flex;
 }
+
+ion-item a {
+  text-decoration: none;
+}

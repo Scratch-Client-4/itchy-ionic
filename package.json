@@ -1,6 +1,6 @@
 {
   "name": "itchy-ionic",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -36,5 +36,5 @@
     "eslint-plugin-vue": "^7.0.0-0",
     "vue-jest": "^5.0.0-0"
   },
-  "description": "An Ionic project"
+  "description": "A mobile client for Scratch"
 }

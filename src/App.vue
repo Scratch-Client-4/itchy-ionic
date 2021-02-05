@@ -31,7 +31,7 @@ export default defineComponent({
   },
   data() {
     return {
-      darkModeEnabled: false
+      darkModeEnabled: JSON.parse(window.localStorage.getItem("preferences")) ? JSON.parse(window.localStorage.getItem("preferences")).forceDark : false
     }
   },
   created() {
