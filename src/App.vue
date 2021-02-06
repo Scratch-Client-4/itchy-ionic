@@ -7,13 +7,7 @@
 </template>
 
 <script>
-// const api = require('./requests.js');
-import {
-  Plugins
-} from '@capacitor/core';
-const {
-  DarkMode
-} = Plugins;
+const utils = require('./utils.js');
 import {
   IonApp,
   IonRouterOutlet
@@ -31,15 +25,24 @@ export default defineComponent({
   },
   data() {
     return {
-      darkModeEnabled: JSON.parse(window.localStorage.getItem("preferences")) ? JSON.parse(window.localStorage.getItem("preferences")).forceDark : false
+      darkModeEnabled: false
     }
   },
   created() {
+    /*
     DarkMode.addListener("darkModeStateChanged", (state) => {
       if (state.isDarkModeOn) {
         this.darkModeEnabled = true;
       } else {
         this.darkModeEnabled = false;
+      }
+    }); */
+    window.plugins.intentShim.onIntent(function(intent) {
+      let uri = utils.matchRegexes(intent.data);
+      if (uri.type == "homepage") {
+        return 0;
+      } else if (uri.type == "project" || uri.type == "studio") {
+        window.location.replace(`/tabs/tab1?${uri.type}=${uri.id}`);
       }
     });
   }

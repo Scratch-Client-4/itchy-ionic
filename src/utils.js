@@ -17,6 +17,10 @@ function matchRegexes(string) {
       type: "studio",
       id: 123456
     };
+  } else if (string == "https://scratch.mit.edu/") {
+    return {
+      type: "homepage"
+    }
   } else {
     return null;
   }
