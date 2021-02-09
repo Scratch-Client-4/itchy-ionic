@@ -9,8 +9,12 @@
 <script>
 const utils = require('./utils.js');
 import {
+  isPlatform
+} from '@ionic/vue';
+import {
   IonApp,
-  IonRouterOutlet
+  IonRouterOutlet,
+  alertController
 }
 from '@ionic/vue';
 import {
@@ -37,14 +41,33 @@ export default defineComponent({
         this.darkModeEnabled = false;
       }
     }); */
-    window.plugins.intentShim.onIntent(function(intent) {
-      let uri = utils.matchRegexes(intent.data);
-      if (uri.type == "homepage") {
-        return 0;
-      } else if (uri.type == "project" || uri.type == "studio") {
-        window.location.replace(`/tabs/tab1?${uri.type}=${uri.id}`);
+    if (isPlatform('android')) {
+      try {
+        window.plugins.intentShim.onIntent(function(intent) {
+          let uri = utils.matchRegexes(intent.data);
+          if (uri.type == "homepage") {
+            return 0;
+          } else if (uri.type == "project" || uri.type == "studio") {
+            window.location.replace(`/tabs/tab1?${uri.type}=${uri.id}`);
+          }
+        });
+      } catch {
+        console.error('Could not find Android Intent Shim plugin - see https://ionicframework.com/docs/native/web-intent');
       }
-    });
+    } else if (isPlatform('desktop')) {
+      this.presentAlert('Unsupported Platform', "You're running Itchy on desktop.  Please use Ctrl+Shift+I to open devtools and attempt to emulate a mobile device for the best experience.");
+    }
+  },
+  methods: {
+    async presentAlert(title, message) {
+      const alert = await alertController
+        .create({
+          header: title,
+          message: message,
+          buttons: ['OK']
+        });
+      return alert.present();
+    }
   }
 });
 </script>
