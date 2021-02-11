@@ -1,5 +1,6 @@
 <template>
 <ion-page>
+  <ion-progress-bar v-if="loading" type="indeterminate"></ion-progress-bar>
   <ion-content :fullscreen="true">
     <ion-header collapse="condense">
       <ion-toolbar>
@@ -46,7 +47,6 @@
       </div>
     </div>
   </ion-content>
-  <ion-progress-bar v-if="loading" type="indeterminate"></ion-progress-bar>
 </ion-page>
 </template>
 
@@ -54,13 +54,15 @@
 const axios = require('axios');
 const utils = require('../utils.js');
 import {
+  IonProgressBar,
   IonPage,
   IonHeader,
+  IonRefresher,
+  IonRefresherContent,
   IonToolbar,
   IonTitle,
   IonContent,
   IonText,
-  IonRefresher,
   modalController,
   alertController
 } from '@ionic/vue';
@@ -69,13 +71,15 @@ import ProjectModal from '../components/ProjectModal.vue';
 export default {
   name: 'Tab1',
   components: {
+    IonProgressBar,
     IonHeader,
+    IonRefresher,
+    IonRefresherContent,
     IonToolbar,
     IonTitle,
     IonContent,
     IonPage,
     IonText,
-    IonRefresher,
     ProjectCard
   },
   data() {
@@ -122,6 +126,7 @@ export default {
       return modal.present();
     },
     refreshData(event) {
+      // TODO : Don't chain asynchronous requests
       axios
         .get('https://itchy-api.vercel.app/api/frontpage?page=featured')
         .then((response) => {
