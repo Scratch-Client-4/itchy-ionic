@@ -1,7 +1,7 @@
 <template>
 <ion-page>
-  <ion-progress-bar v-if="loading" type="indeterminate"></ion-progress-bar>
   <ion-content :fullscreen="true">
+    <ion-progress-bar v-if="loading" type="indeterminate"></ion-progress-bar>
     <ion-header collapse="condense">
       <ion-toolbar>
         <ion-title size="large">Front Page</ion-title>
@@ -11,7 +11,7 @@
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
     <!-- FEATURED PROJECTS -->
-    <ion-text v-if="!loading">
+    <ion-text>
       <h2>Featured</h2>
     </ion-text>
     <div class="sidescroll">
@@ -29,7 +29,7 @@
       </div>
     </div>
     <!-- CURATED PROJECTS -->
-    <ion-text v-if="!loading">
+    <ion-text>
       <h2>Curated</h2>
     </ion-text>
     <div class="sidescroll">
@@ -38,7 +38,7 @@
       </div>
     </div>
     <!-- TOP REMIXED PROJECTS -->
-    <ion-text v-if="!loading">
+    <ion-text>
       <h2>Top Remixed</h2>
     </ion-text>
     <div class="sidescroll">
@@ -88,7 +88,8 @@ export default {
       lovedProjects: [],
       curatedProjects: [],
       remixedProjects: [],
-      loading: true
+      loaded: [], // holds what requests were done
+      requestCount: 4 // how many requests are required to fully load the page
     }
   },
   mounted() {
@@ -125,33 +126,44 @@ export default {
         })
       return modal.present();
     },
-    refreshData(event) {
-      // TODO : Don't chain asynchronous requests
-      axios
-        .get('https://itchy-api.vercel.app/api/frontpage?page=featured')
-        .then((response) => {
-          this.featuredProjects = response.data;
-          axios
-            .get('https://itchy-api.vercel.app/api/frontpage?page=toploved')
-            .then((response) => {
-              this.lovedProjects = response.data;
-              axios
-                .get('https://itchy-api.vercel.app/api/frontpage?page=topremixed')
-                .then((response) => {
-                  this.remixedProjects = response.data;
-                  axios
-                    .get('https://itchy-api.vercel.app/api/frontpage?page=curated')
-                    .then((response) => {
-                      this.curatedProjects = response.data;
-                      if (event) {
-                        event.target.complete();
-                      } else {
-                        this.loading = false;
-                      }
-                    })
-                })
-            })
-        })
+    async refreshData(event) {
+      this.loaded = [];
+      axios.get('https://itchy-api.vercel.app/api/frontpage?page=featured')
+      .then((response) => {
+        this.featuredProjects = response.data;
+        this.onRequestComplete("featuredProjects", event);
+      })
+
+      axios.get('https://itchy-api.vercel.app/api/frontpage?page=toploved')
+      .then((response) => {
+        this.lovedProjects = response.data;
+        this.onRequestComplete("lovedProjects", event);
+      })
+
+      axios.get('https://itchy-api.vercel.app/api/frontpage?page=topremixed')
+      .then((response) => {
+        this.remixedProjects = response.data;
+        this.onRequestComplete("remixedProjects", event);
+      })
+
+      axios.get('https://itchy-api.vercel.app/api/frontpage?page=curated')
+      .then((response) => {
+        this.curatedProjects = response.data;
+        this.onRequestComplete("curatedProjects", event);
+      })
+    },
+    onRequestComplete(requestName, event) {
+      this.loaded.push(requestName);
+      // loaded everything?
+      if (this.loaded.length >= this.requestCount) {
+        if (event) {event.target.complete()}
+      }
+    }
+  },
+  computed: {
+    loading: function() {
+      console.log(this.loaded.length);
+      return this.loaded.length < this.requestCount;
     }
   }
 }
