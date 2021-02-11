@@ -31,7 +31,7 @@
             <ion-col style="text-align:center;">
               <ion-button size="medium" expand="block" :disabled="!username || !password" @click="logIn">
                 <ion-icon v-if="!loading" :icon="lockClosed" style="font-size:15px;padding-right:10px;"></ion-icon>
-                <ion-spinner v-if="loading" style="margin-right:10px"></ion-spinner>
+                <ion-spinner v-if="loading" style="height:1.2em;margin-right:5px"></ion-spinner>
                 <ion-label>Sign In</ion-label>
               </ion-button>
               <span style="font-size:11px;margin-top:10px;">Your data will be securely sent to our servers.</span>
