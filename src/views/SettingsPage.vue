@@ -71,7 +71,7 @@ import {
 } from '@ionic/vue';
 import AuthModal from '../components/AuthModal.vue';
 export default {
-  name: 'Tab4',
+  name: 'SettingsPage',
   components: {
     IonPage,
     IonHeader,

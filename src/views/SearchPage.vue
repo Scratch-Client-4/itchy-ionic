@@ -37,7 +37,7 @@ import {
   alertController
 } from '@ionic/vue';
 export default {
-  name: 'Tab2',
+  name: 'SearchPage',
   components: {
     IonHeader,
     IonToolbar,

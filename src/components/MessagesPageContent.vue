@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'MessagePage',
+  name: 'MessagesPageContent',
   props: {
     name: String,
     message: String

@@ -69,7 +69,7 @@ import {
 import ProjectCard from '../components/ProjectCard.vue';
 import ProjectModal from '../components/ProjectModal.vue';
 export default {
-  name: 'Tab1',
+  name: 'ExplorePage',
   components: {
     IonProgressBar,
     IonHeader,

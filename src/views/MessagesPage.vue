@@ -6,7 +6,7 @@
         <ion-title size="large">Messages</ion-title>
       </ion-toolbar>
     </ion-header>
-    <MessagePage />
+    <MessagesPageContent />
   </ion-content>
 </ion-page>
 </template>
@@ -19,11 +19,11 @@ import {
   IonTitle,
   IonContent
 } from '@ionic/vue';
-import MessagePage from '@/components/MessagePage.vue';
+import MessagesPageContent from '@/components/MessagesPageContent.vue';
 export default {
-  name: 'Tab3',
+  name: 'MessagesPage',
   components: {
-    MessagePage,
+    MessagesPageContent,
     IonHeader,
     IonToolbar,
     IonTitle,
