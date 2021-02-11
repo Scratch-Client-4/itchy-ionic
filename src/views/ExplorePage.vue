@@ -126,7 +126,6 @@ export default {
         .get('https://itchy-api.vercel.app/api/frontpage?page=featured')
         .then((response) => {
           this.featuredProjects = response.data;
-          console.log(response.data)
           axios
             .get('https://itchy-api.vercel.app/api/frontpage?page=toploved')
             .then((response) => {
