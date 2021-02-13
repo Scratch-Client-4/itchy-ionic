@@ -62,7 +62,10 @@ export default {
   },
   methods: {
     openMessages() {
-      window.open('https://scratch.mit.edu/messages');
+      const session = window.localStorage.getItem('session');
+      if (!session) {
+        window.open('https://scratch.mit.edu/messages');
+      }
     }
   }
 }

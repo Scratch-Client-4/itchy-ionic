@@ -125,3 +125,15 @@ ion-content.modaled {
 ion-item a {
   text-decoration: none;
 }
+
+.msg-avatar {
+  margin-right: calc(var(--padding-start) + var(--ion-safe-area-left, 0px))
+}
+
+ion-note ion-icon {
+  transform: translateY(2px);
+}
+
+ion-avatar {
+  background: white;
+}

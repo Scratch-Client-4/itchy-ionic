@@ -18,12 +18,20 @@
       </ion-card-content>
     </ion-card>
     <ion-card class="text-box ion-padding">
-      <ion-card-content v-html="instructions">
-      </ion-card-content>
-    </ion-card>
-    <ion-card class="text-box ion-padding">
-      <ion-card-content v-html="credits">
-      </ion-card-content>
+      <div v-if="instructions.length > 1">
+        <h4>Instructions</h4>
+        <ion-card-content>
+          <div v-html="instructions">
+          </div>
+        </ion-card-content>
+      </div>
+      <div v-if="credits.length > 1">
+        <h4>Credits</h4>
+        <ion-card-content>
+          <div v-html="credits">
+          </div>
+        </ion-card-content>
+      </div>
     </ion-card>
   </ion-content>
 </ion-page>
@@ -88,6 +96,7 @@ export default defineComponent({
         .then((response) => {
           this.instructions = utils.prepareText(response.data.instructions);
           this.credits = utils.prepareText(response.data.description);
+          console.log(this.credits.length);
           this.pfp = response.data.author.profile.images["90x90"];
           this.title = response.data.title;
           this.author = response.data.author.username;
