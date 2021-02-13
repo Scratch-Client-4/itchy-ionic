@@ -12,7 +12,7 @@
         <ion-label>{{ result.title }}</ion-label>
       </ion-item>
     </ion-item-group>
-    <ion-infinite-scroll @ionInfinite="search($event, searchString, currentOffset)" threshold="100px" id="infinite-scroll" :disabled="isDisabled">
+    <ion-infinite-scroll @ionInfinite="search($event, searchString, currentOffset)" threshold="100px" id="infinite-scroll">
       <ion-infinite-scroll-content class="ion-padding" loading-spinner="circular" loading-text="Loading more results...">
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>
@@ -37,7 +37,7 @@ import {
   alertController
 } from '@ionic/vue';
 export default {
-  name: 'Tab2',
+  name: 'SearchPage',
   components: {
     IonHeader,
     IonToolbar,

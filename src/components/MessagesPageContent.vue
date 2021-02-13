@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'OpenedMessages',
+  name: 'MessagesPageContent',
   props: {
     name: String,
     message: String

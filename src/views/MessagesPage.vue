@@ -9,7 +9,7 @@
     <ion-refresher slot="fixed" @ionRefresh="getMessages(0, $event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <OpenedMessages v-if="!session" />
+    <MessagesPageContent v-if="!session" />
     <ion-item-group>
       <ion-item button v-for="m in messages" :key="m.id" :href="getLinkFromObj(m)">
         <ion-avatar class="msg-avatar">
@@ -62,11 +62,11 @@ import {
   star,
   images
 } from 'ionicons/icons';
-import OpenedMessages from '@/components/OpenedMessages.vue';
+import MessagesPageContent from '@/components/MessagesPageContent.vue';
 export default {
-  name: 'Tab3',
+  name: 'MessagesPage',
   components: {
-    OpenedMessages,
+    MessagesPageContent,
     IonHeader,
     IonToolbar,
     IonTitle,

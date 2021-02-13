@@ -1,6 +1,7 @@
 <template>
 <ion-page>
   <ion-content :fullscreen="true">
+    <ion-progress-bar v-if="loading" type="indeterminate"></ion-progress-bar>
     <ion-header collapse="condense">
       <ion-toolbar>
         <ion-title size="large">Front Page</ion-title>
@@ -10,7 +11,7 @@
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
     <!-- FEATURED PROJECTS -->
-    <ion-text v-if="!loading">
+    <ion-text>
       <h2>Featured</h2>
     </ion-text>
     <div class="sidescroll">
@@ -28,7 +29,7 @@
       </div>
     </div>
     <!-- CURATED PROJECTS -->
-    <ion-text v-if="!loading">
+    <ion-text>
       <h2>Curated</h2>
     </ion-text>
     <div class="sidescroll">
@@ -37,7 +38,7 @@
       </div>
     </div>
     <!-- TOP REMIXED PROJECTS -->
-    <ion-text v-if="!loading">
+    <ion-text>
       <h2>Top Remixed</h2>
     </ion-text>
     <div class="sidescroll">
@@ -46,7 +47,6 @@
       </div>
     </div>
   </ion-content>
-  <ion-progress-bar v-if="loading" type="indeterminate"></ion-progress-bar>
 </ion-page>
 </template>
 
@@ -54,28 +54,32 @@
 const axios = require('axios');
 const utils = require('../utils.js');
 import {
+  IonProgressBar,
   IonPage,
   IonHeader,
+  IonRefresher,
+  IonRefresherContent,
   IonToolbar,
   IonTitle,
   IonContent,
   IonText,
-  IonRefresher,
   modalController,
   alertController
 } from '@ionic/vue';
 import ProjectCard from '../components/ProjectCard.vue';
 import ProjectModal from '../components/ProjectModal.vue';
 export default {
-  name: 'Tab1',
+  name: 'ExplorePage',
   components: {
+    IonProgressBar,
     IonHeader,
+    IonRefresher,
+    IonRefresherContent,
     IonToolbar,
     IonTitle,
     IonContent,
     IonPage,
     IonText,
-    IonRefresher,
     ProjectCard
   },
   data() {
@@ -84,7 +88,8 @@ export default {
       lovedProjects: [],
       curatedProjects: [],
       remixedProjects: [],
-      loading: true
+      loaded: [], // holds what requests were done
+      requestCount: 4 // how many requests are required to fully load the page
     }
   },
   mounted() {
@@ -121,33 +126,46 @@ export default {
         })
       return modal.present();
     },
-    refreshData(event) {
-      axios
-        .get('https://itchy-api.vercel.app/api/frontpage?page=featured')
+    async refreshData(event) {
+      this.loaded = [];
+      axios.get('https://itchy-api.vercel.app/api/frontpage?page=featured')
         .then((response) => {
           this.featuredProjects = response.data;
-          console.log(response.data)
-          axios
-            .get('https://itchy-api.vercel.app/api/frontpage?page=toploved')
-            .then((response) => {
-              this.lovedProjects = response.data;
-              axios
-                .get('https://itchy-api.vercel.app/api/frontpage?page=topremixed')
-                .then((response) => {
-                  this.remixedProjects = response.data;
-                  axios
-                    .get('https://itchy-api.vercel.app/api/frontpage?page=curated')
-                    .then((response) => {
-                      this.curatedProjects = response.data;
-                      if (event) {
-                        event.target.complete();
-                      } else {
-                        this.loading = false;
-                      }
-                    })
-                })
-            })
+          this.onRequestComplete("featuredProjects", event);
         })
+
+      axios.get('https://itchy-api.vercel.app/api/frontpage?page=toploved')
+        .then((response) => {
+          this.lovedProjects = response.data;
+          this.onRequestComplete("lovedProjects", event);
+        })
+
+      axios.get('https://itchy-api.vercel.app/api/frontpage?page=topremixed')
+        .then((response) => {
+          this.remixedProjects = response.data;
+          this.onRequestComplete("remixedProjects", event);
+        })
+
+      axios.get('https://itchy-api.vercel.app/api/frontpage?page=curated')
+        .then((response) => {
+          this.curatedProjects = response.data;
+          this.onRequestComplete("curatedProjects", event);
+        })
+    },
+    onRequestComplete(requestName, event) {
+      this.loaded.push(requestName);
+      // loaded everything?
+      if (this.loaded.length >= this.requestCount) {
+        if (event) {
+          event.target.complete()
+        }
+      }
+    }
+  },
+  computed: {
+    loading: function() {
+      console.log(this.loaded.length);
+      return this.loaded.length < this.requestCount;
     }
   }
 }

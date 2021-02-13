@@ -6,30 +6,30 @@ import Tabs from '../views/Tabs.vue'
 
 const routes = [{
     path: '/',
-    redirect: '/tabs/tab1'
+    redirect: '/tabs/explore'
   },
   {
     path: '/tabs/',
     component: Tabs,
     children: [{
         path: '',
-        redirect: '/tabs/tab1'
+        redirect: '/tabs/explore'
       },
       {
-        path: 'tab1',
-        component: () => import('@/views/Tab1.vue')
+        path: 'expore',
+        component: () => import('@/views/ExplorePage.vue')
       },
       {
-        path: 'tab2',
-        component: () => import('@/views/Tab2.vue')
+        path: 'search',
+        component: () => import('@/views/SearchPage.vue')
       },
       {
-        path: 'tab3',
-        component: () => import('@/views/Tab3.vue')
+        path: 'messages',
+        component: () => import('@/views/MessagesPage.vue')
       },
       {
-        path: 'tab4',
-        component: () => import('@/views/Tab4.vue')
+        path: 'settings',
+        component: () => import('@/views/SettingsPage.vue')
       }
     ]
   }

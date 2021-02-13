@@ -66,22 +66,24 @@ import {
   IonLabel,
   IonItemDivider,
   IonButton,
+  IonToggle,
   modalController
 } from '@ionic/vue';
 import AuthModal from '../components/AuthModal.vue';
 export default {
-  name: 'Tab4',
+  name: 'SettingsPage',
   components: {
+    IonPage,
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
-    IonPage,
     IonItem,
     IonItemGroup,
     IonLabel,
     IonItemDivider,
-    IonButton
+    IonButton,
+    IonToggle
   },
   data() {
     return {}
