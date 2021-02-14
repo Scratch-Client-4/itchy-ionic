@@ -164,7 +164,6 @@ export default {
   },
   computed: {
     loading: function() {
-      console.log(this.loaded.length);
       return this.loaded.length < this.requestCount;
     }
   }
