@@ -16,7 +16,7 @@ const routes = [{
         redirect: '/tabs/explore'
       },
       {
-        path: 'expore',
+        path: 'explore',
         component: () => import('@/views/ExplorePage.vue')
       },
       {
