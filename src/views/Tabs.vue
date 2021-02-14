@@ -12,7 +12,7 @@
         <ion-label>Search</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button tab="tab3" href="/tabs/message" @click="openMessages">
+      <ion-tab-button tab="tab3" href="/tabs/messages" @click="openMessages">
         <ion-icon :icon="mailOutline" />
         <ion-label>Messages</ion-label>
       </ion-tab-button>
