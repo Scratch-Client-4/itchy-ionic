@@ -30,6 +30,74 @@ Then run the build script:
 ```
 npm run production
 ```
+<details>
+  
+  
+  ###<summary>Windows Build</summary>
+  
+  
+  
+  If you're on Windows, you should get a few errors:
+  ![image](https://user-images.githubusercontent.com/36968271/107888864-f7a1e000-6f06-11eb-93fd-480e1027ada3.png)
+  This is normal, to fix the errors, replace your *package.json* with this:
+  <details>
+  <summary>package.json</summary>
+  
+  ```
+  {
+  "name": "itchy-ionic",
+  "version": "0.5.0",
+  "private": true,
+  "scripts": {
+    "serve": "npx vue-cli-service serve",
+    "build": "npx vue-cli-service build",
+    "ionic:build": "npx vue-cli-service build",
+    "ionic:serve": "npx vue-cli-service serve",
+    "test:unit": "npx vue-cli-service test:unit",
+    "test:e2e": "npx vue-cli-service test:e2e",
+    "lint": "npx vue-cli-service lint",
+    "production": "npx vue-cli-service build && npx cap copy && ionic capacitor update && npx cap open android",
+    "genDarkSplashes": "npx cordova-res android --skip-config --splash-source ./resources/android/splash-night.jpg --type splash --resources ./resources/android/splash && mv ./resources/android/splash/android/splash/* ./resources/android/splash/night && rmdir ./resources/android/splash/android/splash && rmdir ./resources/android/splash/android && cordova-res android --skip-config --copy",
+    "genIcons": "npx cordova-res android --icon-background-source '#15a3ff' --copy"
+  },
+  "dependencies": {
+    "@capacitor/android": "^2.4.6",
+    "@capacitor/core": "2.4.6",
+    "@ionic-native/web-intent": "^5.31.1",
+    "@ionic/vue": "^5.4.0",
+    "@ionic/vue-router": "^5.4.0",
+    "axios": "^0.21.1",
+    "capacitor-dark-mode": "^1.0.5",
+    "com-darryncampbell-cordova-plugin-intent": "^2.0.0",
+    "cordova-webintent": "github:cordova-misc/cordova-webintent",
+    "core-js": "^3.6.5",
+    "vue": "^3.0.5",
+    "vue-async-computed": "^3.9.0",
+    "vue-router": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "2.4.6",
+    "@ionic/lab": "3.2.10",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-e2e-cypress": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-unit-jest": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0-0",
+    "@vue/test-utils": "^2.0.0-0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.0.0-0",
+    "vue-jest": "^5.0.0-0"
+  },
+  "description": "A mobile client for Scratch"
+}
+
+  ```
+  </details>
+  
+</details>
+
 To run on an emulator, press the "Play" icon in the top toolbar or use `Shift+F10`.
 
 To build APK's for production, open the "Build" menu, hover over "Build Bundle(s) / APK(s)", and select "Build APK(s)".
