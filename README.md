@@ -39,7 +39,7 @@ npm run production
   
   If you're on Windows, you should get a few errors:
   ![image](https://user-images.githubusercontent.com/36968271/107888864-f7a1e000-6f06-11eb-93fd-480e1027ada3.png)
-  This is normal, to fix the errors, replace your *package.json* with this:
+  This is normal, to fix the errors, add npx to the start of all the scripts, an example is down below:
   <details>
   <summary>package.json</summary>
   
