@@ -81,7 +81,7 @@ export default {
   },
   data() {
     return {
-      session: JSON.parse(window.localStorage.getItem('session'))[0],
+      session: (JSON.parse(window.localStorage.getItem('session')) || false)[0],
       messages: [],
       chatbubbleEllipses,
       personAdd,
@@ -91,7 +91,9 @@ export default {
     }
   },
   created() {
-    this.getMessages();
+    if (this.session) {
+      this.getMessages();
+    }
   },
   methods: {
     getLinkFromObj(o) {
