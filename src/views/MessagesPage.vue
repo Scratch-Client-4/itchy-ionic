@@ -94,7 +94,9 @@ export default {
     }
   },
   created() {
-    this.getMessages();
+    if (this.session) {
+      this.getMessages();
+    }
   },
   methods: {
     getLinkFromObj(o) {
