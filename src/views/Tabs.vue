@@ -12,7 +12,7 @@
         <ion-label>Search</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button tab="tab3" href="/tabs/messages" @click="openMessages">
+      <ion-tab-button tab="tab3" href="/tabs/messages">
         <ion-icon :icon="mailOutline" />
         <ion-label>Messages</ion-label>
       </ion-tab-button>
@@ -58,14 +58,6 @@ export default {
       search,
       mailOutline,
       settingsOutline
-    }
-  },
-  methods: {
-    openMessages() {
-      const session = window.localStorage.getItem('session');
-      if (!session) {
-        window.open('https://scratch.mit.edu/messages');
-      }
     }
   }
 }

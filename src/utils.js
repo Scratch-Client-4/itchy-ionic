@@ -35,7 +35,7 @@ function prepareText(str) {
   proto.forEach((word) => {
     let reg = matchRegexes(word);
     if (reg) {
-      toReturn += `<a href="/tabs/tab1?${reg.type}=${reg.id}">${reg.type}:${reg.id}</a>`
+      toReturn += `<a href="/?${reg.type}=${reg.id}">${reg.type}:${reg.id}</a>`
     } else {
       toReturn += `${word} `;
     }

@@ -9,33 +9,35 @@
     <ion-refresher slot="fixed" @ionRefresh="getMessages(0, $event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <MessagesPageContent v-if="!session" />
-    <ion-item-group>
-      <ion-item button v-for="m in messages" :key="m.id" :href="getLinkFromObj(m)">
-        <ion-avatar class="msg-avatar">
-          <img :src="getPfpFromObj(m)">
-        </ion-avatar>
-        <ion-label>
-          <h2 v-if="m.type == 'studioactivity'">{{ m.title }}</h2>
-          <h2 v-else>{{ m.actor_username }}</h2>
-          <ion-note v-if="m.type == 'addcomment'">
-            <ion-icon :icon="chatbubbleEllipses"></ion-icon> {{ m.comment_fragment }}
-          </ion-note>
-          <ion-note v-if="m.type == 'followuser'">
-            <ion-icon :icon="personAdd"></ion-icon> followed you
-          </ion-note>
-          <ion-note v-if="m.type == 'loveproject'">
-            <ion-icon :icon="heart"></ion-icon> loved {{ m.title }}
-          </ion-note>
-          <ion-note v-if="m.type == 'favoriteproject'">
-            <ion-icon :icon="star"></ion-icon> favorited {{ m.project_title }}
-          </ion-note>
-          <ion-note v-if="m.type == 'studioactivity'">
-            <ion-icon :icon="images"></ion-icon> new activity in studio
-          </ion-note>
-        </ion-label>
-      </ion-item>
-    </ion-item-group>
+    <MessagesSignIn v-if="!session" />
+    <div v-else>
+      <ion-item-group>
+        <ion-item button v-for="m in messages" :key="m.id" :href="getLinkFromObj(m)">
+          <ion-avatar class="msg-avatar">
+            <img :src="getPfpFromObj(m)">
+          </ion-avatar>
+          <ion-label>
+            <h2 v-if="m.type == 'studioactivity'">{{ m.title }}</h2>
+            <h2 v-else>{{ m.actor_username }}</h2>
+            <ion-note v-if="m.type == 'addcomment'">
+              <ion-icon :icon="chatbubbleEllipses"></ion-icon> {{ m.comment_fragment }}
+            </ion-note>
+            <ion-note v-if="m.type == 'followuser'">
+              <ion-icon :icon="personAdd"></ion-icon> followed you
+            </ion-note>
+            <ion-note v-if="m.type == 'loveproject'">
+              <ion-icon :icon="heart"></ion-icon> loved {{ m.title }}
+            </ion-note>
+            <ion-note v-if="m.type == 'favoriteproject'">
+              <ion-icon :icon="star"></ion-icon> favorited {{ m.project_title }}
+            </ion-note>
+            <ion-note v-if="m.type == 'studioactivity'">
+              <ion-icon :icon="images"></ion-icon> new activity in studio
+            </ion-note>
+          </ion-label>
+        </ion-item>
+      </ion-item-group>
+    </div>
   </ion-content>
 </ion-page>
 </template>
@@ -62,11 +64,11 @@ import {
   star,
   images
 } from 'ionicons/icons';
-import MessagesPageContent from '@/components/MessagesPageContent.vue';
+import MessagesSignIn from '@/components/MessagesSignIn.vue';
 export default {
   name: 'MessagesPage',
   components: {
-    MessagesPageContent,
+    MessagesSignIn,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -80,8 +82,9 @@ export default {
     IonRefresher
   },
   data() {
+
     return {
-      session: JSON.parse(window.localStorage.getItem('session'))[0],
+      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session'))[0] : null,
       messages: [],
       chatbubbleEllipses,
       personAdd,
@@ -108,7 +111,7 @@ export default {
       } else if (o.type == 'favoriteproject' || o.type == 'loveproject') {
         return `https://scratch.mit.edu/projects/${o.project_id}`
       } else if (o.type == 'studioactivity') {
-        return `https://scratch.mit.edu/studios/${o.gallery_id}/activity`
+        return `/?studio=${o.gallery_id}`
       }
     },
     getPfpFromObj(o) {
@@ -119,15 +122,36 @@ export default {
       }
     },
     async getMessages(offset, event) {
-      const response = await fetch(`https://itchy-api.vercel.app/api/messages?user=${this.session.username}&offset=${offset || 0}&token=${this.session.token}`, {
-        method: "GET"
-      });
-      let messages = await response.json();
-      messages = this.htmlDecode(JSON.stringify(messages));
-      messages = JSON.parse(messages);
-      if (response.status == 200) {
+      if (this.session) {
+        const response = await fetch(`https://itchy-api.vercel.app/api/messages?user=${this.session.username}&offset=${offset || 0}&token=${this.session.token}`, {
+          method: "GET"
+        });
+        let messages = await response.json();
         console.log(messages);
-        this.messages = messages;
+        messages.forEach((m) => {
+          if (m.comment_fragment) {
+            //eslint-disable-next-line
+            let str = m.comment_fragment.replace(/&quot;/g, '\"');
+            m.comment_fragment = str;
+          }
+          if (m.title) {
+            //eslint-disable-next-line
+            let str = m.title.replace(/&quot;/g, '\"');
+            m.title = str;
+          }
+        })
+        messages = this.htmlDecode(JSON.stringify(messages));
+        messages = JSON.parse(messages);
+        if (response.status == 200) {
+          console.log(messages);
+          this.messages = messages;
+          if (event) {
+            event.target.complete();
+          } else {
+            this.loading = false;
+          }
+        }
+      } else {
         if (event) {
           event.target.complete();
         } else {
