@@ -48,7 +48,7 @@ export default defineComponent({
           if (uri.type == "homepage") {
             return 0;
           } else if (uri.type == "project" || uri.type == "studio") {
-            window.location.replace(`/tabs/tab1?${uri.type}=${uri.id}`);
+            window.location.replace(`/tabs/explore?${uri.type}=${uri.id}`);
           }
         });
       } catch {
