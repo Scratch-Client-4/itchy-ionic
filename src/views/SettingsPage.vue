@@ -48,7 +48,7 @@
       </ion-item-divider>
       <ion-item>
         <ion-label>
-          Itchy v0.6.0
+          Itchy v0.6.2
         </ion-label>
       </ion-item>
       <ion-item>
