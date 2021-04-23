@@ -3,7 +3,7 @@
   <ion-header>
     <ion-toolbar>
       <ion-buttons>
-        <ion-back-button default-href="tab1" @click="closeModal"></ion-back-button>
+        <ion-back-button default-href="explore" @click="closeModal"></ion-back-button>
         <ion-title>{{ title }}</ion-title>
       </ion-buttons>
     </ion-toolbar>
