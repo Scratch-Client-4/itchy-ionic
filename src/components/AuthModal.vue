@@ -34,7 +34,7 @@
                 <ion-spinner v-if="loading" style="height:1.2em;margin-right:5px"></ion-spinner>
                 <ion-label>Sign In</ion-label>
               </ion-button>
-              <span style="font-size:11px;margin-top:10px;">Your data will be securely sent to our servers.</span>
+              <span style="font-size:11px;margin-top:10px;">Your data will only be sent to Scratch and will only be stored on this device. We cannot view your password.</span>
             </ion-col>
           </ion-row>
         </ion-grid>
