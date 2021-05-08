@@ -15,19 +15,29 @@
     "genIcons": "cordova-res android --icon-background-source '#15a3ff' --copy"
   },
   "dependencies": {
+    "@capacitor-community/http": "^0.3.0",
     "@capacitor/android": "^2.4.6",
-    "@capacitor/core": "2.4.6",
+    "@capacitor/core": "^2.4.6",
+    "@ionic-native/http": "^5.32.1",
     "@ionic-native/web-intent": "^5.31.1",
-    "@ionic/vue": "^5.4.0",
+    "@ionic/vue": "^5.6.6",
     "@ionic/vue-router": "^5.4.0",
     "axios": "^0.21.1",
     "capacitor-dark-mode": "^1.0.5",
     "com-darryncampbell-cordova-plugin-intent": "^2.0.0",
+    "cordova-plugin-advanced-http": "^3.1.0",
+    "cordova-plugin-file": "^6.0.2",
     "cordova-webintent": "github:cordova-misc/cordova-webintent",
     "core-js": "^3.6.5",
+    "ionicons": "^5.5.1",
+    "node-html-parser": "^3.2.0",
+    "node-vibrant": "^3.1.6",
+    "vague-time": "^2.4.2",
     "vue": "^3.0.5",
     "vue-async-computed": "^3.9.0",
-    "vue-router": "^4.0.0-0"
+    "vue-directive-long-press": "^1.1.0",
+    "vue-router": "^4.0.0-0",
+    "vue-safe-html": "^1.0.1"
   },
   "devDependencies": {
     "@capacitor/cli": "2.4.6",

@@ -2,6 +2,7 @@ function matchRegexes(string) {
   let numberPattern = new RegExp(`\\d+`, `g`);
   let projectRegex = new RegExp(`.(\\/scratch.mit.edu/projects/)[0-9]\\d*`, `g`);
   let studioRegex = new RegExp(`.(\\/scratch.mit.edu/studios/)[0-9]\\d*`, `g`);
+  let userRegex = new RegExp(`.(\\/scratch.mit.edu/users/)\\w*`, `g`);
   if (string.match(projectRegex)) {
     console.log(`${string} is a link to a project`);
     console.log(string.match(projectRegex)[0])
@@ -21,6 +22,15 @@ function matchRegexes(string) {
     return {
       type: "homepage"
     }
+  } else if (string.match(userRegex)) {
+    console.log(`${string} is a link to a user`);
+    let username = string.match(userRegex)[0];
+    username = username.split('//scratch.mit.edu/users/')[1];
+    username = username.split('/')[0];
+    return {
+      type: "user",
+      id: username
+    };
   } else {
     return null;
   }
@@ -30,6 +40,7 @@ function prepareText(str) {
   let proto = str;
   proto = proto.split("<").join("&lt;").split(">").join("&gt;");
   proto = proto.replace(/(\n)+/g, ' <br /> ');
+  proto = proto.replace(/(\n)+/g, ' <br> ');
   proto = proto.split(" ");
   let toReturn = "";
   proto.forEach((word) => {

@@ -27,9 +27,12 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import './theme/custom.css';
+import VueSafeHTML from 'vue-safe-html';
+
 const app = createApp(App)
   .use(IonicVue)
-  .use(router);
+  .use(router)
+  .use(VueSafeHTML);
 
 router.isReady().then(() => {
   app.mount('#app');

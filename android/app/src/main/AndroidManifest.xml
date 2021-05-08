@@ -30,6 +30,7 @@
                 <data android:scheme="https" />
                 <data android:pathPattern="/" />
                 <data android:pathPattern="/projects/.*" />
+                <data android:pathPattern="/users/.*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.darryncampbell.cordova.plugin.intent.ACTION" />

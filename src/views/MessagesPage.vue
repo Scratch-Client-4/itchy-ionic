@@ -122,7 +122,7 @@ export default {
       } else if (o.type == 'favoriteproject' || o.type == 'loveproject') {
         return `https://scratch.mit.edu/projects/${o.project_id}`
       } else if (o.type == 'studioactivity') {
-        return `/?studio=${o.gallery_id}`
+        return `https://scratch.mit.edu/studios/${o.gallery_id}`
       }
     },
     getPfpFromObj(o) {

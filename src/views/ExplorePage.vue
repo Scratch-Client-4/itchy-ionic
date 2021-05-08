@@ -12,7 +12,9 @@
     </ion-refresher>
     <!-- FEATURED PROJECTS -->
     <ion-text>
-      <h2>Featured</h2>
+      <h2>
+        <ion-icon :icon="ribbonOutline"></ion-icon>Featured
+      </h2>
     </ion-text>
     <div class="sidescroll">
       <div v-for="project in featuredProjects" :key="project.thumbnail_url">
@@ -21,7 +23,9 @@
     </div>
     <!-- TOP LOVED PROJECTS -->
     <ion-text>
-      <h2>Top Loved</h2>
+      <h2>
+        <ion-icon :icon="heartOutline"></ion-icon>Top Loved
+      </h2>
     </ion-text>
     <div class="sidescroll">
       <div v-for="project in lovedProjects" :key="project.thumbnail_url">
@@ -30,7 +34,9 @@
     </div>
     <!-- CURATED PROJECTS -->
     <ion-text>
-      <h2>Curated</h2>
+      <h2>
+        <ion-icon :icon="diamondOutline"></ion-icon>Curated
+      </h2>
     </ion-text>
     <div class="sidescroll">
       <div v-for="project in curatedProjects" :key="project.thumbnail_url">
@@ -39,7 +45,9 @@
     </div>
     <!-- TOP REMIXED PROJECTS -->
     <ion-text>
-      <h2>Top Remixed</h2>
+      <h2>
+        <ion-icon :icon="syncOutline"></ion-icon>Top Remixed
+      </h2>
     </ion-text>
     <div class="sidescroll">
       <div v-for="project in remixedProjects" :key="project.thumbnail_url">
@@ -51,6 +59,7 @@
 </template>
 
 <script>
+import LongPress from 'vue-directive-long-press';
 const axios = require('axios');
 const utils = require('../utils.js');
 import {
@@ -63,11 +72,20 @@ import {
   IonTitle,
   IonContent,
   IonText,
+  IonIcon,
   modalController,
-  alertController
+  alertController,
+  // actionSheetController
 } from '@ionic/vue';
 import ProjectCard from '../components/ProjectCard.vue';
 import ProjectModal from '../components/ProjectModal.vue';
+import UserModal from '../components/UserModal.vue';
+import {
+  ribbonOutline,
+  heartOutline,
+  diamondOutline,
+  syncOutline
+} from 'ionicons/icons';
 export default {
   name: 'ExplorePage',
   components: {
@@ -80,7 +98,19 @@ export default {
     IonContent,
     IonPage,
     IonText,
+    IonIcon,
     ProjectCard
+  },
+  directives: {
+    'long-press': LongPress
+  },
+  setup() {
+    return {
+      ribbonOutline,
+      heartOutline,
+      diamondOutline,
+      syncOutline
+    };
   },
   data() {
     return {
@@ -93,15 +123,24 @@ export default {
     }
   },
   mounted() {
-    let params = utils.getParams(window.location.href)
+    console.log(utils.matchRegexes('https://scratch.mit.edu/users/MicahLT/projects'))
+    let params = utils.getParams(window.location.href);
     if (params.project) {
       this.openProject(params.project)
     } else if (params.studio) {
       this.presentAlert('Under construction', '', "Studios have not yet been implemented.  We're working on it!");
+    } else if (params.user) {
+      this.openUser(params.user);
     }
     this.refreshData();
   },
   methods: {
+    onLongPressStart() {
+      console.log('long-press')
+    },
+    onLongPressStop() {
+      console.log('long-press-stop')
+    },
     async presentAlert(title, code, message) {
       const alert = await alertController
         .create({
@@ -122,6 +161,17 @@ export default {
             embed: `https://turbowarp.org/${id}/embed`,
             id: id,
             author: 'loading...'
+          },
+        })
+      return modal.present();
+    },
+    async openUser(name) {
+      const modal = await modalController
+        .create({
+          component: UserModal,
+          cssClass: 'open-modal',
+          componentProps: {
+            username: name
           },
         })
       return modal.present();
@@ -169,3 +219,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+ion-icon {
+  color: white;
+  transform: translateY(4px);
+  padding-right: 10px;
+}
+</style>
