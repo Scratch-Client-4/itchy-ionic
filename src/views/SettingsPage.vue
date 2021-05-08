@@ -23,6 +23,13 @@
         <ion-button v-if="user.signedIn" @click="signOut">Sign Out</ion-button>
         <ion-button v-else @click="openAuthWindow">Sign In</ion-button>
       </ion-item>
+      <ion-item v-if="user.signedIn" @click="openUserProfile">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-label>
+          Open your profile
+        </ion-label>
+
+      </ion-item>
       <ion-item-divider>
         <ion-label>
           Display
@@ -41,7 +48,7 @@
       </ion-item-divider>
       <ion-item>
         <ion-label>
-          Itchy v0.5.8
+          Itchy v0.7.0
         </ion-label>
       </ion-item>
       <ion-item>
@@ -113,6 +120,9 @@ export default {
     }
   },
   methods: {
+    openUserProfile() {
+      window.open(`https://scratch.mit.edu/users/${this.user.username}`);
+    },
     async openAuthWindow() {
       const modal = await modalController
         .create({

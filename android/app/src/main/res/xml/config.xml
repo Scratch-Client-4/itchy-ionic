@@ -7,6 +7,15 @@
     <param name="onload" value="true"/>
   </feature>
 
+  <feature name="CordovaHttpPlugin">
+    <param name="android-package" value="com.silkimen.cordovahttp.CordovaHttpPlugin"/>
+  </feature>
+
+  <feature name="File">
+    <param name="android-package" value="org.apache.cordova.file.FileUtils"/>
+    <param name="onload" value="true"/>
+  </feature>
+
   <feature name="WebIntent">
     <param name="android-package" value="com.borismus.webintent.WebIntent"/>
   </feature>

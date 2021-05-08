@@ -24,6 +24,7 @@ import {
   defineComponent
 } from 'vue';
 import ProjectModal from './ProjectModal.vue';
+import UserModal from './UserModal.vue';
 export default defineComponent({
   components: {
     IonCard,
@@ -55,10 +56,18 @@ export default defineComponent({
         })
       return modal.present();
     },
-    openAuthor(event) {
+    async openAuthor(event) {
       event.stopPropagation();
-      window.open(`https://scratch.mit.edu/users/${this.author}`);
-    }
+      const modal = await modalController
+        .create({
+          component: UserModal,
+          cssClass: 'open-modal',
+          componentProps: {
+            username: this.author
+          },
+        })
+      return modal.present();
+    },
   }
 });
 </script>

@@ -15,6 +15,7 @@
       <ion-tab-button tab="tab3" href="/tabs/messages">
         <ion-icon :icon="mailOutline" />
         <ion-label>Messages</ion-label>
+        <ion-badge v-if="userSignedIn" color="primary">{{ messageCount }}</ion-badge>
       </ion-tab-button>
 
       <ion-tab-button tab="tab4" href="/tabs/settings">
@@ -33,7 +34,8 @@ import {
   IonTabs,
   IonLabel,
   IonIcon,
-  IonPage
+  IonPage,
+  IonBadge
 } from '@ionic/vue';
 import {
   earthOutline,
@@ -50,14 +52,41 @@ export default {
     IonTabBar,
     IonTabButton,
     IonIcon,
-    IonPage
+    IonPage,
+    IonBadge
   },
   setup() {
+    let userSignedIn, username;
+    let user = JSON.parse(window.localStorage.getItem("session"));
+    if (window.localStorage.getItem("session")) {
+      let session = user[0];
+      username = session.username;
+      userSignedIn = true;
+    } else {
+      userSignedIn = false;
+    }
     return {
       earthOutline,
       search,
       mailOutline,
-      settingsOutline
+      settingsOutline,
+      userSignedIn,
+      username
+    }
+  },
+  data() {
+    return {
+      messageCount: ''
+    }
+  },
+  created() {
+    if (this.userSignedIn) {
+      fetch(`https://itchy-api.vercel.app/api/messages?user=${this.username}&count=true`).then((res) => {
+        return res.json();
+      }).then((data) => {
+        this.messageCount = data.count;
+        return data.count;
+      })
     }
   }
 }

@@ -100,8 +100,8 @@ ion-content.modaled {
   width: 95%;
 }
 
-.text-box:nth-of-type(3) {
-  margin-bottom: 18%;
+.text-box:last-of-type {
+  margin-bottom: 16.5%;
 }
 
 .author-pfp {
@@ -136,4 +136,8 @@ ion-note ion-icon {
 
 ion-avatar {
   background: white;
+}
+
+ion-card-title {
+  padding-bottom: 7px;
 }

@@ -47,8 +47,8 @@ export default defineComponent({
           let uri = utils.matchRegexes(intent.data);
           if (uri.type == "homepage") {
             return 0;
-          } else if (uri.type == "project" || uri.type == "studio") {
-            window.location.replace(`/tabs/tab1?${uri.type}=${uri.id}`);
+          } else if (uri.type == "project" || uri.type == "studio" || uri.type == "user") {
+            window.location.replace(`/tabs/explore?${uri.type}=${uri.id}`);
           }
         });
       } catch {

@@ -6,8 +6,8 @@
         <ion-title size="large">Messages</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-refresher slot="fixed" @ionRefresh="getMessages(0, $event)">
-      <ion-refresher-content></ion-refresher-content>
+    <ion-refresher slot="fixed" @ionRefresh="getMessages(0, $event, true)">
+      <ion-refresher-content pulling-text="refresh messages" refreshing-text="refreshing messages..."></ion-refresher-content>
     </ion-refresher>
     <MessagesSignIn v-if="!session" />
     <div v-else>
@@ -37,6 +37,10 @@
           </ion-label>
         </ion-item>
       </ion-item-group>
+      <ion-infinite-scroll @ionInfinite="getMessages(currentOffset, $event, false)" threshold="100px" id="infinite-scroll">
+        <ion-infinite-scroll-content class="ion-padding" loading-spinner="circular" loading-text="Loading more messages...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </div>
   </ion-content>
 </ion-page>
@@ -55,7 +59,9 @@ import {
   IonLabel,
   IonNote,
   IonAvatar,
-  IonRefresher
+  IonRefresher,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
 } from '@ionic/vue';
 import {
   chatbubbleEllipses,
@@ -79,7 +85,9 @@ export default {
     IonLabel,
     IonNote,
     IonAvatar,
-    IonRefresher
+    IonRefresher,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
   },
   data() {
 
@@ -90,7 +98,8 @@ export default {
       personAdd,
       heart,
       star,
-      images
+      images,
+      currentOffset: 0
     }
   },
   created() {
@@ -113,7 +122,7 @@ export default {
       } else if (o.type == 'favoriteproject' || o.type == 'loveproject') {
         return `https://scratch.mit.edu/projects/${o.project_id}`
       } else if (o.type == 'studioactivity') {
-        return `/?studio=${o.gallery_id}`
+        return `https://scratch.mit.edu/studios/${o.gallery_id}`
       }
     },
     getPfpFromObj(o) {
@@ -123,7 +132,15 @@ export default {
         return `https://uploads.scratch.mit.edu/users/avatars/${o.actor_id}.png`;
       }
     },
-    async getMessages(offset, event) {
+    async getMessages(offset, event, reset) {
+      if (reset) {
+        this.noMoreMessages = false;
+        this.messages = [];
+        this.currentOffset = 0;
+      }
+      if (this.noMoreMessages) {
+        return 0;
+      }
       if (this.session) {
         const response = await fetch(`https://itchy-api.vercel.app/api/messages?user=${this.session.username}&offset=${offset || 0}&token=${this.session.token}`, {
           method: "GET"
@@ -141,12 +158,16 @@ export default {
             let str = m.title.replace(/&quot;/g, '\"');
             m.title = str;
           }
+          this.messages.push(m);
         })
         messages = this.htmlDecode(JSON.stringify(messages));
         messages = JSON.parse(messages);
         if (response.status == 200) {
           console.log(messages);
-          this.messages = messages;
+          this.currentOffset += this.messages.length;
+          if (messages.length < 20) {
+            this.noMoreMessages = true;
+          }
           if (event) {
             event.target.complete();
           } else {

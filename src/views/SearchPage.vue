@@ -91,7 +91,7 @@ export default {
           data.forEach((item) => {
             let matchesRegex = this.matchRegexes(item.url);
             if (matchesRegex) {
-              item.url = `/tabs/tab1?${matchesRegex.type}=${matchesRegex.id}`
+              item.url = `/tabs/explore?${matchesRegex.type}=${matchesRegex.id}`
               this.searchData.push(item);
             }
           });
