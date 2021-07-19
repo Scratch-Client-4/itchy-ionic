@@ -48,7 +48,7 @@
       </ion-item-divider>
       <ion-item>
         <ion-label>
-          Itchy v0.7.0
+          Itchy v0.7.4
         </ion-label>
       </ion-item>
       <ion-item>
@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     openUserProfile() {
-      window.open(`https://scratch.mit.edu/users/${this.user.username}`);
+      window.location.replace(`/tabs/explore?user=${this.user.name}`);
     },
     async openAuthWindow() {
       const modal = await modalController

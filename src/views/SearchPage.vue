@@ -7,6 +7,12 @@
       </ion-toolbar>
     </ion-header>
     <ion-searchbar id="search" animated="true" autocorrect="on" enterkeyhint="search" inputmode="search" spellcheck="true" @search="search($event, $event.target.value, 0)"></ion-searchbar>
+    <div id="container">
+      <span>
+        <ion-icon :icon="constructOutline"></ion-icon>
+      </span>
+      <p>Itchy's built-in custom search is still in beta, so you may experience some issues!</p>
+    </div>
     <ion-item-group v-if="searchData.length > 0">
       <ion-item v-for="(result, i) in searchData" :key="i" :href="result.url">
         <ion-label>{{ result.title }}</ion-label>
@@ -32,10 +38,14 @@ import {
   IonItem,
   IonItemGroup,
   IonLabel,
+  IonIcon,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   alertController
 } from '@ionic/vue';
+import {
+  constructOutline
+} from 'ionicons/icons';
 export default {
   name: 'SearchPage',
   components: {
@@ -48,6 +58,7 @@ export default {
     IonItem,
     IonItemGroup,
     IonLabel,
+    IonIcon,
     IonInfiniteScroll,
     IonInfiniteScrollContent
   },
@@ -56,7 +67,8 @@ export default {
       searchData: [],
       currentOffset: 0,
       searchString: "",
-      completedSearch: false
+      completedSearch: false,
+      constructOutline
     }
   },
   methods: {
@@ -139,3 +151,27 @@ export default {
   }
 }
 </script>
+<style scoped>
+#container {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#container span {
+  font-size: 40px;
+  line-height: 26px;
+  --ionicon-stroke-width: 20px;
+}
+
+#container p {
+  font-size: 16px;
+  line-height: 22px;
+  color: #8c8c8c;
+  margin: 0;
+  padding: 0.5em 2em;
+}
+</style>
