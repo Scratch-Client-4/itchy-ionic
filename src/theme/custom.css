@@ -2,6 +2,25 @@
   user-select: none;
 }
 
+.fade-off {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: calc(100vh - 57px);
+  width: 25px;
+  background: transparent;
+  background: linear-gradient(90deg, rgba(18, 18, 18, 0) 0%, rgba(18, 18, 18, 1) 100%);
+  z-index: 100;
+}
+
+@media (prefers-color-scheme: light) {
+  .fade-off {
+    background: transparent;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    z-index: 100;
+  }
+}
+
 ion-searchbar {
   margin: 5vw;
   width: 90vw !important;
@@ -28,15 +47,17 @@ ion-searchbar input {
 
 ion-card {
   height: max-content;
-  width: 35vh;
+  width: 28vh;
   text-overflow: ellipsis;
+  margin: 7px;
 }
 
 ion-card-title {
-  font-size: 18px !important;
+  font-size: 17px !important;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  padding-bottom: 0 !important;
 }
 
 ion-card img {
@@ -45,10 +66,12 @@ ion-card img {
 
 ion-card-header {
   padding: 0.7em;
+  padding-bottom: 0;
 }
 
 ion-card-content {
   padding-left: 0.7em !important;
+  font-size: 13px !important;
 }
 
 h2 {
@@ -76,7 +99,7 @@ ion-title {
 .tw-wrapper {
   position: relative;
   width: 100%;
-  height: 50vh;
+  height: 42vh;
   padding-bottom: 80%;
   overflow: hidden;
 }
@@ -132,12 +155,13 @@ ion-item a {
 
 ion-note ion-icon {
   transform: translateY(2px);
+  padding-right: 0.15em !important;
 }
 
 ion-avatar {
   background: white;
 }
 
-ion-card-title {
-  padding-bottom: 7px;
+.sidescroll:last-child {
+  margin-bottom: 20px;
 }

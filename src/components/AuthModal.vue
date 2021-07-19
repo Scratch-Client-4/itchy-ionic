@@ -14,17 +14,17 @@
         <ion-grid>
           <ion-row>
             <ion-col style="text-align:center;">
-              <ion-icon :icon="personCircleOutline" style="font-size: 5em;color: var(---ion-color-primary-tint)"></ion-icon>
+              <img src="../../resources/android/icon.png" alt="Itchy Login" class="center-image">
             </ion-col>
           </ion-row>
         </ion-grid>
         <ion-item>
-          <ion-label position="floating">Username</ion-label>
+          <ion-label position="floating">Scratch Username</ion-label>
           <ion-input type="text" required v-model="username"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Password</ion-label>
-          <ion-input type="password" required v-model="password"></ion-input>
+          <ion-input type="password" required v-model="password" @keyup.enter="logIn"></ion-input>
         </ion-item>
         <ion-grid>
           <ion-row>
@@ -34,7 +34,7 @@
                 <ion-spinner v-if="loading" style="height:1.2em;margin-right:5px"></ion-spinner>
                 <ion-label>Sign In</ion-label>
               </ion-button>
-              <span style="font-size:11px;margin-top:10px;">Your data will be securely sent to our servers.</span>
+              <div class="disclaimer">Your data will be redirected from our servers to Scratch. See our <a href="#">Privacy Policy</a> for more info.</div>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -45,6 +45,10 @@
 </template>
 
 <script>
+/*
+import {
+  parse
+} from 'node-html-parser'; */
 import {
   IonContent,
   IonHeader,
@@ -61,7 +65,8 @@ import {
   alertController,
   IonGrid,
   IonRow,
-  IonCol
+  IonCol,
+  IonIcon
 } from '@ionic/vue';
 import {
   lockClosed,
@@ -99,7 +104,8 @@ export default defineComponent({
     IonCardContent,
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IonIcon
   },
   setup() {
     return {
@@ -133,7 +139,6 @@ export default defineComponent({
           }),
           method: "POST"
         });
-
         if (response.status == 200) {
           let json = await response.json();
           window.localStorage.setItem("session", JSON.stringify(json));
@@ -145,9 +150,25 @@ export default defineComponent({
           );
         }
       }
-
       this.loading = false;
     }
   }
 });
 </script>
+<style scoped>
+.disclaimer {
+  font-size: 11px;
+  margin-top: 10px;
+  line-height: 12px;
+}
+
+.disclaimer a {
+  text-decoration: none;
+}
+
+.center-image {
+  border-radius: 100%;
+  height: 10vh;
+  width: 10vh;
+}
+</style>

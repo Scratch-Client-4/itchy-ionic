@@ -4,7 +4,6 @@ function matchRegexes(string) {
   let studioRegex = new RegExp(`.(\\/scratch.mit.edu/studios/)[0-9]\\d*`, `g`);
   let userRegex = new RegExp(`.(\\/scratch.mit.edu/users/)\\w*`, `g`);
   if (string.match(projectRegex)) {
-    console.log(`${string} is a link to a project`);
     console.log(string.match(projectRegex)[0])
     let id = string.match(projectRegex)[0];
     id = id.match(numberPattern)[0];
@@ -23,7 +22,6 @@ function matchRegexes(string) {
       type: "homepage"
     }
   } else if (string.match(userRegex)) {
-    console.log(`${string} is a link to a user`);
     let username = string.match(userRegex)[0];
     username = username.split('//scratch.mit.edu/users/')[1];
     username = username.split('/')[0];
@@ -69,8 +67,29 @@ var getParams = function(url) {
   return params; // return the parameters as an object
 };
 
+var decodeEntities = (function() {
+  // this prevents any overhead from creating the object each time
+  var element = document.createElement('div');
+
+  function decodeHTMLEntities(str) {
+    if (str && typeof str === 'string') {
+      // strip script/html tags
+      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+      element.innerHTML = str;
+      str = element.textContent;
+      element.textContent = '';
+    }
+
+    return str;
+  }
+
+  return decodeHTMLEntities;
+})();
+
 export {
   matchRegexes,
   prepareText,
-  getParams
+  getParams,
+  decodeEntities
 }

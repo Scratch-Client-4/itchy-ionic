@@ -1,12 +1,13 @@
 <template>
 <ion-page>
   <ion-content :fullscreen="true">
-    <ion-progress-bar v-if="loading" type="indeterminate"></ion-progress-bar>
+    <ion-progress-bar v-if="!loaded" type="indeterminate"></ion-progress-bar>
     <ion-header collapse="condense">
       <ion-toolbar>
         <ion-title size="large">Front Page</ion-title>
       </ion-toolbar>
     </ion-header>
+    <div class="fade-off"></div>
     <ion-refresher slot="fixed" @ionRefresh="refreshData($event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
@@ -60,7 +61,13 @@
 
 <script>
 import LongPress from 'vue-directive-long-press';
-const axios = require('axios');
+import '@capacitor-community/http';
+import {
+  Plugins
+} from '@capacitor/core';
+const {
+  Http
+} = Plugins;
 const utils = require('../utils.js');
 import {
   IonProgressBar,
@@ -118,12 +125,10 @@ export default {
       lovedProjects: [],
       curatedProjects: [],
       remixedProjects: [],
-      loaded: [], // holds what requests were done
-      requestCount: 4 // how many requests are required to fully load the page
+      loaded: false
     }
   },
   mounted() {
-    console.log(utils.matchRegexes('https://scratch.mit.edu/users/MicahLT/projects'))
     let params = utils.getParams(window.location.href);
     if (params.project) {
       this.openProject(params.project)
@@ -177,38 +182,24 @@ export default {
       return modal.present();
     },
     async refreshData(event) {
-      this.loaded = [];
-      axios.get('https://itchy-api.vercel.app/api/frontpage?page=featured')
-        .then((response) => {
-          this.featuredProjects = response.data;
-          this.onRequestComplete("featuredProjects", event);
+      this.loaded = false;
+      Http.request({
+          method: 'GET',
+          url: 'https://api.scratch.mit.edu/proxy/featured'
         })
-
-      axios.get('https://itchy-api.vercel.app/api/frontpage?page=toploved')
         .then((response) => {
-          this.lovedProjects = response.data;
-          this.onRequestComplete("lovedProjects", event);
+          if (response.status == 200) {
+            this.featuredProjects = response.data.community_featured_projects;
+            this.lovedProjects = response.data.community_most_loved_projects;
+            this.remixedProjects = response.data.community_most_remixed_projects;
+            this.curatedProjects = response.data.curator_top_projects;
+            this.loaded = true;
+          } else {
+            this.presentAlert(response.status, '', 'We encountered an error while fetching data.')
+          }
         })
-
-      axios.get('https://itchy-api.vercel.app/api/frontpage?page=topremixed')
-        .then((response) => {
-          this.remixedProjects = response.data;
-          this.onRequestComplete("remixedProjects", event);
-        })
-
-      axios.get('https://itchy-api.vercel.app/api/frontpage?page=curated')
-        .then((response) => {
-          this.curatedProjects = response.data;
-          this.onRequestComplete("curatedProjects", event);
-        })
-    },
-    onRequestComplete(requestName, event) {
-      this.loaded.push(requestName);
-      // loaded everything?
-      if (this.loaded.length >= this.requestCount) {
-        if (event) {
-          event.target.complete()
-        }
+      if (event) {
+        event.target.complete();
       }
     }
   },

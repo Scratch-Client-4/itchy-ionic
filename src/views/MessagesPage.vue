@@ -20,19 +20,19 @@
             <h2 v-if="m.type == 'studioactivity'">{{ m.title }}</h2>
             <h2 v-else>{{ m.actor_username }}</h2>
             <ion-note v-if="m.type == 'addcomment'">
-              <ion-icon :icon="chatbubbleEllipses"></ion-icon> {{ m.comment_fragment }}
+              <ion-icon :icon="chatbubbleEllipses" class="blue"></ion-icon> {{ m.comment_fragment }}
             </ion-note>
             <ion-note v-if="m.type == 'followuser'">
-              <ion-icon :icon="personAdd"></ion-icon> followed you
+              <ion-icon :icon="personAdd" class="blue"></ion-icon> followed you
             </ion-note>
             <ion-note v-if="m.type == 'loveproject'">
-              <ion-icon :icon="heart"></ion-icon> loved {{ m.title }}
+              <ion-icon :icon="heart" class="red"></ion-icon> loved {{ m.title }}
             </ion-note>
             <ion-note v-if="m.type == 'favoriteproject'">
-              <ion-icon :icon="star"></ion-icon> favorited {{ m.project_title }}
+              <ion-icon :icon="star" class="yellow"></ion-icon> favorited {{ m.project_title }}
             </ion-note>
             <ion-note v-if="m.type == 'studioactivity'">
-              <ion-icon :icon="images"></ion-icon> new activity in studio
+              <ion-icon :icon="images" class="blue"></ion-icon> new activity in studio
             </ion-note>
           </ion-label>
         </ion-item>
@@ -47,7 +47,14 @@
 </template>
 
 <script>
-// const utils = require('../utils.js');
+import '@capacitor-community/http';
+import {
+  Plugins
+} from '@capacitor/core';
+const {
+  Http
+} = Plugins;
+const utils = require('../utils.js');
 import {
   IonPage,
   IonHeader,
@@ -90,7 +97,6 @@ export default {
     IonInfiniteScrollContent,
   },
   data() {
-
     return {
       session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session'))[0] : null,
       messages: [],
@@ -135,31 +141,40 @@ export default {
     async getMessages(offset, event, reset) {
       if (reset) {
         this.noMoreMessages = false;
-        this.messages = [];
         this.currentOffset = 0;
       }
       if (this.noMoreMessages) {
         return 0;
       }
       if (this.session) {
-        const response = await fetch(`https://itchy-api.vercel.app/api/messages?user=${this.session.username}&offset=${offset || 0}&token=${this.session.token}`, {
-          method: "GET"
+        const response = await Http.request({
+          method: 'GET',
+          url: `https://api.scratch.mit.edu/users/${this.session.username}/messages?offset=${offset || 0}`,
+          headers: {
+            "x-requested-with": "XMLHttpRequest",
+            "origin": "https://scratch.mit.edu/",
+            "referer": `https://scratch.mit.edu/`,
+            "x-token": this.session.token
+          }
         });
-        let messages = await response.json();
+        let messages = await response.data;
         console.log(messages);
+        if (reset) {
+          this.messages = [];
+        }
         messages.forEach((m) => {
           if (m.comment_fragment) {
             //eslint-disable-next-line
             let str = m.comment_fragment.replace(/&quot;/g, '\"');
-            m.comment_fragment = str;
+            m.comment_fragment = utils.decodeEntities(str);
           }
           if (m.title) {
             //eslint-disable-next-line
             let str = m.title.replace(/&quot;/g, '\"');
-            m.title = str;
+            m.title = utils.decodeEntities(str);
           }
           this.messages.push(m);
-        })
+        });
         messages = this.htmlDecode(JSON.stringify(messages));
         messages = JSON.parse(messages);
         if (response.status == 200) {
@@ -173,6 +188,8 @@ export default {
           } else {
             this.loading = false;
           }
+        } else {
+          this.presentAlert('Error', response.status, 'OK');
         }
       } else {
         if (event) {
@@ -189,3 +206,16 @@ export default {
   }
 }
 </script>
+<style>
+ion-icon.blue {
+  color: #4D97FF;
+}
+
+ion-icon.red {
+  color: #FF6680;
+}
+
+ion-icon.yellow {
+  color: #FFBF00;
+}
+</style>

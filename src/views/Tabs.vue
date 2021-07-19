@@ -28,6 +28,13 @@
 </template>
 
 <script>
+import '@capacitor-community/http';
+import {
+  Plugins
+} from '@capacitor/core';
+const {
+  Http
+} = Plugins;
 import {
   IonTabBar,
   IonTabButton,
@@ -81,11 +88,11 @@ export default {
   },
   created() {
     if (this.userSignedIn) {
-      fetch(`https://itchy-api.vercel.app/api/messages?user=${this.username}&count=true`).then((res) => {
-        return res.json();
-      }).then((data) => {
-        this.messageCount = data.count;
-        return data.count;
+      Http.request({
+        method: "GET",
+        url: `https://api.scratch.mit.edu/users/${this.username}/messages/count`
+      }).then((response) => {
+        this.messageCount = response.data.count;
       })
     }
   }
