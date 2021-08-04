@@ -4,7 +4,7 @@
     <ion-toolbar>
       <ion-buttons>
         <ion-back-button default-href="explore" @click="closeModal"></ion-back-button>
-        <ion-title>{{ title }} :D</ion-title>
+        <ion-title>{{ title }}</ion-title>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -87,6 +87,9 @@ import {
   defineComponent
 } from 'vue';
 import UserModal from './UserModal.vue';
+import {
+  Browser
+} from '@capacitor/browser';
 export default defineComponent({
   name: 'ProjectModal',
   props: {
@@ -183,8 +186,11 @@ export default defineComponent({
       this.closeModal();
       return modal.present();
     },
-    openInBrowser() {
-      window.open(`https://scratch.mit.edu/projects/${this.id}`);
+    async openInBrowser() {
+      await Browser.open({
+        url: `https://scratch.mit.edu/projects/${this.id}`,
+        toolbarColor: "#4E97FF"
+      })
     },
     favorite() {
       Http.request({
@@ -231,7 +237,7 @@ export default defineComponent({
           "x-token": this.session.token
         }
       }).then((response) => {
-        if (response.data.userFavorite) {
+        if (response.data.userLove) {
           Http.request({
             method: 'DELETE',
             url: `https://api.scratch.mit.edu/projects/${this.id}/loves/user/${this.session.username}`,

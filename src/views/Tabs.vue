@@ -2,23 +2,23 @@
 <ion-page>
   <ion-tabs>
     <ion-tab-bar slot="bottom">
-      <ion-tab-button tab="tab1" href="/tabs/explore">
+      <ion-tab-button tab="tab1" href="/tabs/explore" @click="vibrate">
         <ion-icon :icon="earthOutline" />
         <ion-label>Explore</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button tab="tab2" href="/tabs/search">
+      <ion-tab-button tab="tab2" href="/tabs/search" @click="vibrate">
         <ion-icon :icon="search" />
         <ion-label>Search</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button tab="tab3" href="/tabs/messages">
+      <ion-tab-button tab="tab3" href="/tabs/messages" @click="vibrate">
         <ion-icon :icon="mailOutline" />
         <ion-label>Messages</ion-label>
         <ion-badge v-if="userSignedIn" color="primary">{{ messageCount }}</ion-badge>
       </ion-tab-button>
 
-      <ion-tab-button tab="tab4" href="/tabs/settings">
+      <ion-tab-button tab="tab4" href="/tabs/settings" @click="vibrate">
         <ion-icon :icon="settingsOutline" />
         <ion-label>Settings</ion-label>
       </ion-tab-button>
@@ -29,6 +29,10 @@
 
 <script>
 import '@capacitor-community/http';
+import {
+  Haptics,
+  ImpactStyle
+} from '@capacitor/haptics';
 import {
   Plugins
 } from '@capacitor/core';
@@ -83,7 +87,7 @@ export default {
   },
   data() {
     return {
-      messageCount: ''
+      messageCount: '-'
     }
   },
   created() {
@@ -93,7 +97,24 @@ export default {
         url: `https://api.scratch.mit.edu/users/${this.username}/messages/count`
       }).then((response) => {
         this.messageCount = response.data.count;
-      })
+      });
+    }
+  },
+  methods: {
+    async vibrate() {
+      await Haptics.impact({
+        style: ImpactStyle.Light
+      });
+    },
+    refreshMessages() {
+      window.setInterval(() => {
+        Http.request({
+          method: "GET",
+          url: `https://api.scratch.mit.edu/users/${this.username}/messages/count`
+        }).then((response) => {
+          this.messageCount = response.data.count;
+        });
+      }, 180000);
     }
   }
 }

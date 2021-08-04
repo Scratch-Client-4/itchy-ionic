@@ -12,30 +12,7 @@
     <MessagesSignIn v-if="!session" />
     <div v-else>
       <ion-item-group>
-        <ion-item button v-for="m in messages" :key="m.id" :href="getLinkFromObj(m)">
-          <ion-avatar class="msg-avatar">
-            <img :src="getPfpFromObj(m)">
-          </ion-avatar>
-          <ion-label>
-            <h2 v-if="m.type == 'studioactivity'">{{ m.title }}</h2>
-            <h2 v-else>{{ m.actor_username }}</h2>
-            <ion-note v-if="m.type == 'addcomment'">
-              <ion-icon :icon="chatbubbleEllipses" class="blue"></ion-icon> {{ m.comment_fragment }}
-            </ion-note>
-            <ion-note v-if="m.type == 'followuser'">
-              <ion-icon :icon="personAdd" class="blue"></ion-icon> followed you
-            </ion-note>
-            <ion-note v-if="m.type == 'loveproject'">
-              <ion-icon :icon="heart" class="red"></ion-icon> loved {{ m.title }}
-            </ion-note>
-            <ion-note v-if="m.type == 'favoriteproject'">
-              <ion-icon :icon="star" class="yellow"></ion-icon> favorited {{ m.project_title }}
-            </ion-note>
-            <ion-note v-if="m.type == 'studioactivity'">
-              <ion-icon :icon="images" class="blue"></ion-icon> new activity in studio
-            </ion-note>
-          </ion-label>
-        </ion-item>
+        <Message v-for="m in messages" :key="m.id" :selectedMessage="selectedMessage" :m="m" @expand="expandMessage(m.id)"></Message>
       </ion-item-group>
       <ion-infinite-scroll @ionInfinite="getMessages(currentOffset, $event, false)" threshold="100px" id="infinite-scroll">
         <ion-infinite-scroll-content class="ion-padding" loading-spinner="circular" loading-text="Loading more messages...">
@@ -55,6 +32,7 @@ const {
   Http
 } = Plugins;
 const utils = require('../utils.js');
+import Message from '@/components/Message.vue';
 import {
   IonPage,
   IonHeader,
@@ -62,21 +40,10 @@ import {
   IonTitle,
   IonContent,
   IonItemGroup,
-  IonItem,
-  IonLabel,
-  IonNote,
-  IonAvatar,
   IonRefresher,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
 } from '@ionic/vue';
-import {
-  chatbubbleEllipses,
-  personAdd,
-  heart,
-  star,
-  images
-} from 'ionicons/icons';
 import MessagesSignIn from '@/components/MessagesSignIn.vue';
 export default {
   name: 'MessagesPage',
@@ -88,24 +55,17 @@ export default {
     IonContent,
     IonPage,
     IonItemGroup,
-    IonItem,
-    IonLabel,
-    IonNote,
-    IonAvatar,
     IonRefresher,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
+    Message
   },
   data() {
     return {
       session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session'))[0] : null,
       messages: [],
-      chatbubbleEllipses,
-      personAdd,
-      heart,
-      star,
-      images,
-      currentOffset: 0
+      currentOffset: 0,
+      selectedMessage: null
     }
   },
   created() {
@@ -114,29 +74,8 @@ export default {
     }
   },
   methods: {
-    getLinkFromObj(o) {
-      if (o.type == 'addcomment') {
-        if (o.comment_type == 0) {
-          return `https://scratch.mit.edu/projects/${o.comment_obj_id}/#comments-${o.comment_id}`
-        } else if (o.comment_type == 1) {
-          return `https://scratch.mit.edu/users/${o.comment_obj_title}/#comments-${o.comment_id}`
-        } else if (o.comment_type == 2) {
-          return `https://scratch.mit.edu/studios/${o.comment_obj_id}/comments/#comments-${o.comment_id}`
-        }
-      } else if (o.type == 'followuser') {
-        return `https://scratch.mit.edu/users/${o.actor_username}`
-      } else if (o.type == 'favoriteproject' || o.type == 'loveproject') {
-        return `https://scratch.mit.edu/projects/${o.project_id}`
-      } else if (o.type == 'studioactivity') {
-        return `https://scratch.mit.edu/studios/${o.gallery_id}`
-      }
-    },
-    getPfpFromObj(o) {
-      if (o.type == "studioactivity") {
-        return `https://uploads.scratch.mit.edu/galleries/thumbnails/${o.gallery_id}.png`
-      } else {
-        return `https://uploads.scratch.mit.edu/users/avatars/${o.actor_id}.png`;
-      }
+    expandMessage(id) {
+      this.selectedMessage = id;
     },
     async getMessages(offset, event, reset) {
       if (reset) {
@@ -206,16 +145,3 @@ export default {
   }
 }
 </script>
-<style>
-ion-icon.blue {
-  color: #4D97FF;
-}
-
-ion-icon.red {
-  color: #FF6680;
-}
-
-ion-icon.yellow {
-  color: #FFBF00;
-}
-</style>

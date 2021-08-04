@@ -1,6 +1,6 @@
 <template>
 <ion-card class="ion-activatable ripple-parent" @click="openProject">
-  <img :src="thumb" alt="ion">
+  <img alt="ion" :src="imageLoading ? './assets/project.png' : thumb" @load="imageLoading = false">
   <ion-card-header>
     <ion-card-title>{{ title }}</ion-card-title>
   </ion-card-header>
@@ -33,11 +33,18 @@ export default defineComponent({
     IonCardHeader,
     IonRippleEffect
   },
-  setup() {},
+  data() {
+    return {
+      imageLoading: true
+    }
+  },
   props: {
     title: String,
     author: String,
-    thumb: String,
+    thumb: {
+      type: String,
+      default: './assets/project.png'
+    },
     id: Number
   },
   methods: {

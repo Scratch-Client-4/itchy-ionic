@@ -129,17 +129,24 @@ export default {
     }
   },
   mounted() {
-    let params = utils.getParams(window.location.href);
-    if (params.project) {
-      this.openProject(params.project)
-    } else if (params.studio) {
-      this.presentAlert('Under construction', '', "Studios have not yet been implemented.  We're working on it!");
-    } else if (params.user) {
-      this.openUser(params.user);
-    }
+    this.detectParams();
     this.refreshData();
   },
+  watch: {
+    // call again the method if the route changes
+    '$route': 'detectParams'
+  },
   methods: {
+    detectParams() {
+      let params = utils.getParams(window.location.href);
+      if (params.project) {
+        this.openProject(params.project);
+      } else if (params.studio) {
+        this.presentAlert('Under construction', '', "Studios have not yet been implemented.  We're working on it!");
+      } else if (params.user) {
+        this.openUser(params.user);
+      }
+    },
     onLongPressStart() {
       console.log('long-press')
     },

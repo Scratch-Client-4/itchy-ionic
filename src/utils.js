@@ -1,3 +1,11 @@
+import '@capacitor-community/http';
+import {
+  Plugins
+} from '@capacitor/core';
+const {
+  Http
+} = Plugins;
+
 function matchRegexes(string) {
   let numberPattern = new RegExp(`\\d+`, `g`);
   let projectRegex = new RegExp(`.(\\/scratch.mit.edu/projects/)[0-9]\\d*`, `g`);
@@ -52,7 +60,7 @@ function prepareText(str) {
   return toReturn;
 }
 
-var getParams = function(url) {
+function getParams(url) {
   // set up the getParams function
   var params = {}; // set up a params object
   var parser = document.createElement("a"); // create a link parse
@@ -65,7 +73,7 @@ var getParams = function(url) {
     params[pair[0]] = decodeURIComponent(pair[1]); // decode the component
   }
   return params; // return the parameters as an object
-};
+}
 
 var decodeEntities = (function() {
   // this prevents any overhead from creating the object each time
@@ -80,16 +88,87 @@ var decodeEntities = (function() {
       str = element.textContent;
       element.textContent = '';
     }
-
     return str;
   }
 
   return decodeHTMLEntities;
 })();
 
+let searchResultProto = {
+  title: "String",
+  type: "Project/Studio/User",
+  id: 1234567,
+  image: "url"
+}
+
+async function unifiedSearch(query, offset) {
+  var results = [];
+  query = encodeURI(query);
+  const doRequests = async () => {
+    if (offset == 0) {
+      var user = await Http.request({
+        method: 'GET',
+        url: `https://api.scratch.mit.edu/users/${query}`
+      });
+      var secondUser = await Http.request({
+        method: 'GET',
+        url: `https://api.scratch.mit.edu/users/-${query}-`
+      });
+      if (user.status == 200) {
+        results.push({
+          title: user.data.username,
+          type: "User profile",
+          id: user.data.id,
+          image: user.data.profile.images['50x50']
+        });
+      }
+      if (secondUser.status == 200) {
+        results.push({
+          title: secondUser.data.username,
+          type: "User profile",
+          id: secondUser.data.id,
+          image: secondUser.data.profile.images['50x50']
+        });
+      }
+    }
+    var projects = await Http.request({
+      method: 'GET',
+      url: `https://api.scratch.mit.edu/search/projects?limit=5&offset=${offset}&language=en&mode=popular&q=${query}`
+    });
+    if (projects.status == 200) {
+      projects.data.forEach((item) => {
+        results.push({
+          title: item.title,
+          type: `Project by ${item.author.username}`,
+          id: item.id,
+          image: item.images['100x80']
+        })
+      });
+    }
+    var studios = await Http.request({
+      method: 'GET',
+      url: `https://api.scratch.mit.edu/search/studios?limit=5&offset=${offset}&language=en&mode=popular&q=${query}`
+    });
+    if (studios.status == 200) {
+      studios.data.forEach((item) => {
+        results.push({
+          title: item.title,
+          type: `Studio`,
+          id: item.id,
+          image: item.image
+        })
+      });
+    }
+  }
+  await doRequests();
+  return results;
+}
+
 export {
   matchRegexes,
   prepareText,
   getParams,
-  decodeEntities
+  decodeEntities,
+  unifiedSearch,
+  searchResultProto
 }
