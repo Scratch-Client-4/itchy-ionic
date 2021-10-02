@@ -24,6 +24,12 @@
     <ion-note v-if="m.type == 'remixproject'">
       <ion-icon :icon="colorPalette" class="blue"></ion-icon> remixed your project {{ m.parent_title }}
     </ion-note>
+    <ion-note v-if="m.type == 'remixproject'">
+      <ion-icon :icon="colorPalette" class="blue"></ion-icon> remixed your project {{ m.parent_title }}
+    </ion-note>
+    <ion-note class="time" v-if="selectedMessage==m.id"><br>
+      {{ friendlyTime(new Date(m.datetime_created)) }}
+    </ion-note>
     <ion-grid v-if="selectedMessage==m.id">
       <ion-row>
         <ion-col v-if="m.type == 'studioactivity'" @click="openStudio(m)">
@@ -99,6 +105,8 @@ import {
 const {
   Http
 } = Plugins;
+const friendlyTime = require('friendly-time');
+import UserModal from './UserModal.vue';
 import {
   defineComponent
 } from 'vue';
@@ -109,7 +117,8 @@ import {
   IonAvatar,
   IonRippleEffect,
   IonBadge,
-  toastController
+  toastController,
+  modalController
 } from '@ionic/vue';
 import {
   chatbubbleEllipses,
@@ -146,6 +155,7 @@ export default defineComponent({
       image,
       colorPalette,
       arrowRedoCircle,
+      friendlyTime,
       session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session'))[0] : null,
       followText: "Follow back"
     }
@@ -317,5 +327,8 @@ ion-badge {
   transform: translateX(-50%);
   padding: 0.5em;
   font-size: 0.8em;
+.time {
+  opacity: 0.7;
+  font-size: 0.7em;
 }
 </style>
