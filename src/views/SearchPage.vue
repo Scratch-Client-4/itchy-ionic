@@ -117,6 +117,7 @@ export default {
       const toPush = await utils.unifiedSearch(query, offset);
       this.searchData = this.searchData.concat(toPush);
       this.currentOffset += 5;
+      event.target.blur();
     },
     async openResult(result) {
       if (result.type == "User profile") {
