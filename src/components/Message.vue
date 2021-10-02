@@ -1,7 +1,10 @@
 <template>
 <ion-item button @click="expandMessage()" :class="{ 'message-wrapped': selectedMessage==m.id, 'no-ripple': false }">
-  <ion-avatar class="msg-avatar">
+  <ion-avatar class="msg-avatar" @click="openAuthor(m)">
     <img :src="getPfpFromObj(m)">
+    <ion-badge v-if="isUnread">
+      <ion-icon :icon="ellipse" class="blue"></ion-icon>
+    </ion-badge>
   </ion-avatar>
   <ion-label :class="{ 'ion-text-wrap': selectedMessage==m.id }">
     <h2 v-if="m.type == 'studioactivity'">{{ m.title }}</h2>
@@ -128,7 +131,8 @@ import {
   images,
   image,
   colorPalette,
-  arrowRedoCircle
+  arrowRedoCircle,
+  ellipse
 } from 'ionicons/icons';
 export default defineComponent({
   name: 'Message',
@@ -142,7 +146,8 @@ export default defineComponent({
   },
   props: {
     selectedMessage: String,
-    m: Object
+    m: Object,
+    isUnread: Boolean
   },
   emits: ["expand"],
   data() {
@@ -153,6 +158,7 @@ export default defineComponent({
       star,
       images,
       image,
+      ellipse,
       colorPalette,
       arrowRedoCircle,
       friendlyTime,
@@ -161,6 +167,17 @@ export default defineComponent({
     }
   },
   methods: {
+    async openAuthor(o) {
+      const modal = await modalController
+        .create({
+          component: UserModal,
+          cssClass: 'open-modal',
+          componentProps: {
+            username: o.actor_username
+          },
+        })
+      return modal.present();
+    },
     expandMessage() {
       this.$emit("expand");
     },
@@ -306,7 +323,7 @@ ion-col div.btn-div {
   border-radius: 4px;
   margin: 5px;
   margin-top: 8px;
-  background: var(--ion-color-step-150);
+  background: var(--ion-color-light-tint);
   position: relative;
   overflow: hidden;
 }
@@ -320,13 +337,28 @@ ion-col .btn-div ion-icon {
   max-width: 80%;
 }
 
-ion-badge {
+/*ion-badge {
   position: fixed;
   bottom: -0.2em;
   left: 50%;
   transform: translateX(-50%);
   padding: 0.5em;
   font-size: 0.8em;
+}*/
+
+ion-avatar {
+  position: relative;
+}
+
+ion-avatar ion-badge {
+  border-radius: 100%;
+  top: 0;
+  position: absolute;
+  right: 0;
+  height: 10px;
+  width: 5px;
+}
+
 .time {
   opacity: 0.7;
   font-size: 0.7em;

@@ -68,9 +68,8 @@ export default {
   },
   setup() {
     let userSignedIn, username;
-    let user = JSON.parse(window.localStorage.getItem("session"));
     if (window.localStorage.getItem("session")) {
-      let session = user[0];
+      let session = JSON.parse(window.localStorage.getItem("session"));
       username = session.username;
       userSignedIn = true;
     } else {

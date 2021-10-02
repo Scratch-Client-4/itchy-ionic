@@ -12,7 +12,7 @@
     <MessagesSignIn v-if="!session" />
     <div v-else>
       <ion-item-group>
-        <Message v-for="m in messages" :key="m.id" :selectedMessage="selectedMessage" :m="m" @expand="expandMessage(m.id)"></Message>
+        <Message v-for="(m, i) in messages" :key="m.id" :selectedMessage="selectedMessage" :m="m" @expand="expandMessage(m.id)" :isUnread="i < messageCount"></Message>
       </ion-item-group>
       <ion-infinite-scroll @ionInfinite="getMessages(currentOffset, $event, false)" threshold="100px" id="infinite-scroll">
         <ion-infinite-scroll-content class="ion-padding" loading-spinner="circular" loading-text="Loading more messages...">
@@ -62,10 +62,11 @@ export default {
   },
   data() {
     return {
-      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session'))[0] : null,
+      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session')) : null,
       messages: [],
       currentOffset: 0,
-      selectedMessage: null
+      selectedMessage: null,
+      messageCount: 0
     }
   },
   created() {
@@ -101,6 +102,16 @@ export default {
         if (reset) {
           this.messages = [];
         }
+        const count = await Http.request({
+          method: 'GET',
+          url: `https://api.scratch.mit.edu/users/${this.session.username}/messages/count`,
+          headers: {
+            "x-requested-with": "XMLHttpRequest",
+            "origin": "https://scratch.mit.edu/",
+            "referer": `https://scratch.mit.edu/`
+          }
+        });
+        this.messageCount = await count.data.count;
         messages.forEach((m) => {
           if (m.comment_fragment) {
             //eslint-disable-next-line
