@@ -74,7 +74,7 @@ export default defineComponent({
           },
         })
       return modal.present();
-    },
+    }
   }
 });
 </script>
