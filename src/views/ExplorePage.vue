@@ -196,7 +196,9 @@ export default {
     },
     async refreshData(event) {
       this.loaded = false;
-      this.$refs.feed.loadFeed();
+      if (window.localStorage.getItem('session')) {
+        this.$refs.feed.loadFeed();
+      }
       Http.request({
           method: 'GET',
           url: 'https://api.scratch.mit.edu/proxy/featured'
