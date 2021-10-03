@@ -7,15 +7,24 @@
       </ion-toolbar>
     </ion-header>
     <ion-searchbar id="search" animated="true" autocorrect="on" enterkeyhint="search" inputmode="search" spellcheck="true" @search="search($event, $event.target.value, 0)"></ion-searchbar>
-    <div id="container">
+    <div id="container" v-if="searchData.length < 1">
       <span>
         <ion-icon :icon="constructOutline"></ion-icon>
       </span>
       <p>Itchy's built-in custom search is still in beta, so you may experience some issues!</p>
     </div>
     <ion-item-group v-if="searchData.length > 0">
-      <ion-item v-for="(result, i) in searchData" :key="i" :href="result.url">
-        <ion-label>{{ result.title }}</ion-label>
+      <ion-item class="ion-activatable" v-for="(result, i) in searchData" :key="i" @click="openResult(result)">
+        <ion-avatar class="msg-avatar">
+          <img :src="result.image">
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ result.title }}</h2>
+          <ion-note>
+            {{ result.type }}
+          </ion-note>
+        </ion-label>
+        <ion-ripple-effect></ion-ripple-effect>
       </ion-item>
     </ion-item-group>
     <ion-infinite-scroll @ionInfinite="search($event, searchString, currentOffset)" threshold="100px" id="infinite-scroll">
@@ -27,7 +36,7 @@
 </template>
 
 <script>
-// const root = 'https://itchy-api.vercel.app' // 'http://localhost:3000'
+const utils = require('../utils.js');
 import {
   IonPage,
   IonHeader,
@@ -37,15 +46,24 @@ import {
   IonSearchbar,
   IonItem,
   IonItemGroup,
+  IonAvatar,
   IonLabel,
+  IonNote,
   IonIcon,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonRippleEffect,
   alertController
 } from '@ionic/vue';
 import {
+  useRouter
+} from 'vue-router';
+import {
   constructOutline
 } from 'ionicons/icons';
+import {
+  Browser
+} from '@capacitor/browser';
 export default {
   name: 'SearchPage',
   components: {
@@ -57,87 +75,26 @@ export default {
     IonSearchbar,
     IonItem,
     IonItemGroup,
+    IonAvatar,
     IonLabel,
+    IonNote,
     IonIcon,
     IonInfiniteScroll,
-    IonInfiniteScrollContent
+    IonInfiniteScrollContent,
+    IonRippleEffect
   },
   data() {
+    const router = useRouter();
     return {
       searchData: [],
       currentOffset: 0,
       searchString: "",
       completedSearch: false,
-      constructOutline
+      constructOutline,
+      router
     }
   },
   methods: {
-    async search(event, query, offset) {
-      if (this.completedSearch) {
-        return 0;
-      }
-      this.searchString = query;
-      query = encodeURI(query);
-      offset = this.currentOffset;
-      // Define the variable to store search result JSON
-      let toReturn;
-      // Make an awaiting fetch call to our personal CORS proxy but limit the results to ten (the maximum for Qwant)
-      await fetch(`https://itchy-api.vercel.app/api/search?q=${query}&offset=${offset}`, {
-          mode: 'cors'
-        })
-        // Once the response has competed
-        .then((response) => {
-          // Convert the response to JSON
-          if (response.status == 429) {
-            this.presentAlert('Search Error', '429', 'Please allow a cooldown period for search');
-            return 1;
-          } else if (!response.ok) {
-            this.presentAlert('Unknown Error', response.status, response.statusText);
-            return 1;
-          }
-          return response.json();
-          // Once the response has been converted
-        }).then((data) => {
-          console.log(data);
-          // Set toReturn equal to the returned data
-          data.forEach((item) => {
-            let matchesRegex = this.matchRegexes(item.url);
-            if (matchesRegex) {
-              item.url = `/tabs/explore?${matchesRegex.type}=${matchesRegex.id}`
-              this.searchData.push(item);
-            }
-          });
-          console.log(data);
-          if (data.length < 10) {
-            this.completedSearch = true;
-          }
-          this.currentOffset += this.searchData.length;
-          event.target.complete();
-        });
-      // Return the toReturn variable
-      return toReturn;
-    },
-    matchRegexes(string) {
-      let numberPattern = new RegExp(`\\d+`, `g`);
-      let projectRegex = new RegExp(`.(\\/scratch.mit.edu/projects/)[0-9]\\d*`, `g`);
-      let studioRegex = new RegExp(`.(\\/scratch.mit.edu/studios/)[0-9]\\d*`, `g`);
-      if (string.match(projectRegex)) {
-        console.log(`${string} is a link to a project`);
-        let id = string.match(projectRegex)[0].match(numberPattern)[0];
-        return {
-          type: "project",
-          id: id
-        };
-      } else if (studioRegex.test(string)) {
-        console.log(`${string} is a link to a studio`);
-        return {
-          type: "studio",
-          id: 123456
-        };
-      } else {
-        return null;
-      }
-    },
     async presentAlert(title, code, message) {
       const alert = await alertController
         .create({
@@ -147,6 +104,42 @@ export default {
           buttons: ['OK']
         });
       return alert.present();
+    },
+    async search(event, query, offset) {
+      if (offset == 0) {
+        this.currentOffset = 0;
+        this.searchData = [];
+      }
+      if (this.completedSearch) {
+        return 0;
+      }
+      this.searchString = query;
+      const toPush = await utils.unifiedSearch(query, offset);
+      this.searchData = this.searchData.concat(toPush);
+      this.currentOffset += 5;
+      event.target.blur();
+    },
+    async openResult(result) {
+      if (result.type == "User profile") {
+        this.router.push({
+          path: "/tabs/explore",
+          query: {
+            user: result.title
+          }
+        })
+      } else if (result.type[0] == "P") {
+        this.router.push({
+          path: "/tabs/explore",
+          query: {
+            project: result.id
+          }
+        })
+      } else if (result.type == "Studio") {
+        await Browser.open({
+          url: `https://scratch.mit.edu/studios/${result.id}`,
+          toolbarColor: "#4E97FF"
+        })
+      }
     }
   }
 }

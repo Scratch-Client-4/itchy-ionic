@@ -3,20 +3,19 @@
 }
 
 .fade-off {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: calc(100vh - 57px);
-  width: 25px;
-  background: transparent;
-  background: linear-gradient(90deg, rgba(18, 18, 18, 0) 0%, rgba(18, 18, 18, 1) 100%);
-  z-index: 100;
+  display: none;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   .fade-off {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: calc(100vh - 57px);
+    width: 25px;
     background: transparent;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    background: linear-gradient(90deg, rgba(18, 18, 18, 0) 0%, rgba(18, 18, 18, 1) 100%);
     z-index: 100;
   }
 }
@@ -164,4 +163,8 @@ ion-avatar {
 
 .sidescroll:last-child {
   margin-bottom: 20px;
+}
+
+.no-ripple {
+  --ripple-color: transparent;
 }

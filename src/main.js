@@ -3,6 +3,15 @@ import {
 } from 'vue'
 import App from './App.vue'
 import router from './router';
+import {
+  SplashScreen
+} from '@capacitor/splash-screen';
+
+window.addEventListener("DOMContentLoaded", () => {
+  window.setTimeout(() => {
+    SplashScreen.hide();
+  }, 400);
+})
 
 import {
   IonicVue

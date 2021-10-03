@@ -169,6 +169,6 @@ export default defineComponent({
 .center-image {
   border-radius: 100%;
   height: 10vh;
-  width: 10vh;
+  width: auto !important;
 }
 </style>

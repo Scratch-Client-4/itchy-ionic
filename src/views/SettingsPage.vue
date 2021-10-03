@@ -39,7 +39,13 @@
         <ion-label>
           Force dark theme
         </ion-label>
-        <ion-toggle :checked="prefs.forceDark" @ionChange="toggleDarkMode"></ion-toggle>
+        <ion-toggle :checked="prefs.forceDark" @ionChange="toggle('forceDark')"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Enable personal feed
+        </ion-label>
+        <ion-toggle :checked="prefs.enableFeed" @ionChange="toggle('enableFeed')"></ion-toggle>
       </ion-item>
       <ion-item-divider>
         <ion-label>
@@ -48,7 +54,7 @@
       </ion-item-divider>
       <ion-item>
         <ion-label>
-          Itchy v0.7.4
+          Itchy v0.8.7
         </ion-label>
       </ion-item>
       <ion-item>
@@ -98,7 +104,6 @@ export default {
   setup() {
     let user = JSON.parse(window.localStorage.getItem("session"));
     if (window.localStorage.getItem("session")) {
-      user = user[0];
       user.signedIn = true;
     } else {
       user = {
@@ -108,7 +113,8 @@ export default {
     let prefs;
     if (!window.localStorage.getItem("preferences")) {
       prefs = {
-        "forceDark": false
+        "forceDark": false,
+        "enableFeed": true
       }
       window.localStorage.setItem("preferences", JSON.stringify(prefs));
     } else {
@@ -138,9 +144,12 @@ export default {
       window.localStorage.removeItem("session");
       window.location.reload();
     },
-    toggleDarkMode() {
-      this.prefs.forceDark = !this.prefs.forceDark;
+    toggle(setting) {
+      this.prefs[setting] = !this.prefs[setting];
       window.localStorage.setItem("preferences", JSON.stringify(this.prefs));
+      window.setTimeout(() => {
+        window.location.reload()
+      }, 150);
     }
   }
 }

@@ -88,7 +88,7 @@ export default defineComponent({
         wiwo: '',
         about: ''
       },
-      pfp: 'https://u.cubeupload.com/darkness3560/newscratchavataropti.png'
+      pfp: './assets/avatar.png'
     }
   },
   components: {

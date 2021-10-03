@@ -11,6 +11,8 @@
     <ion-refresher slot="fixed" @ionRefresh="refreshData($event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
+    <!-- WHAT'S HAPPENING FEED -->
+    <Feed ref="feed" v-if="session && prefs.enableFeed"></Feed>
     <!-- FEATURED PROJECTS -->
     <ion-text>
       <h2>
@@ -84,6 +86,7 @@ import {
   alertController,
   // actionSheetController
 } from '@ionic/vue';
+import Feed from '../components/Feed.vue';
 import ProjectCard from '../components/ProjectCard.vue';
 import ProjectModal from '../components/ProjectModal.vue';
 import UserModal from '../components/UserModal.vue';
@@ -106,7 +109,8 @@ export default {
     IonPage,
     IonText,
     IonIcon,
-    ProjectCard
+    ProjectCard,
+    Feed
   },
   directives: {
     'long-press': LongPress
@@ -125,21 +129,30 @@ export default {
       lovedProjects: [],
       curatedProjects: [],
       remixedProjects: [],
-      loaded: false
+      loaded: false,
+      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session')) : null,
+      prefs: JSON.parse(window.localStorage.getItem('preferences')) ? JSON.parse(window.localStorage.getItem('preferences')) : null
     }
   },
   mounted() {
-    let params = utils.getParams(window.location.href);
-    if (params.project) {
-      this.openProject(params.project)
-    } else if (params.studio) {
-      this.presentAlert('Under construction', '', "Studios have not yet been implemented.  We're working on it!");
-    } else if (params.user) {
-      this.openUser(params.user);
-    }
+    this.detectParams();
     this.refreshData();
   },
+  watch: {
+    // call again the method if the route changes
+    '$route': 'detectParams'
+  },
   methods: {
+    detectParams() {
+      let params = utils.getParams(window.location.href);
+      if (params.project) {
+        this.openProject(params.project);
+      } else if (params.studio) {
+        this.presentAlert('Under construction', '', "Studios have not yet been implemented.  We're working on it!");
+      } else if (params.user) {
+        this.openUser(params.user);
+      }
+    },
     onLongPressStart() {
       console.log('long-press')
     },
@@ -183,6 +196,9 @@ export default {
     },
     async refreshData(event) {
       this.loaded = false;
+      if (window.localStorage.getItem('session')) {
+        this.$refs.feed.loadFeed();
+      }
       Http.request({
           method: 'GET',
           url: 'https://api.scratch.mit.edu/proxy/featured'
@@ -212,7 +228,7 @@ export default {
 </script>
 <style scoped>
 ion-icon {
-  color: white;
+  color: var(--ion-text-color);
   transform: translateY(4px);
   padding-right: 10px;
 }
