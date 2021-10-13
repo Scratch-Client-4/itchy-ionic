@@ -11,10 +11,12 @@
     <ion-list>
       <ion-item button v-for="i in events" :key="i" class="transparent-item ripple-parent ion-activatable" @click="visit(i)" lines="none">
         <ion-avatar slot="start">
-          <img :src="`https://cdn2.scratch.mit.edu/get_image/user/${i.actor_id}_60x60.png`">
+          <img v-if="i.type != 'becomeownerstudio'" :src="`https://cdn2.scratch.mit.edu/get_image/user/${i.actor_id}_60x60.png`">
+          <img v-else :src="`https://cdn2.scratch.mit.edu/get_image/user/${i.recipient_id}_60x60.png`">
         </ion-avatar>
         <ion-label>
-          <h2>{{ i.actor_username }}</h2>
+          <h2 v-if="i.type != 'becomeownerstudio'">{{ i.actor_username }}</h2>
+          <h2 v-else>{{ i.recipient_username }}</h2>
           <h3>
             <span v-if="i.type == 'shareproject'">shared {{ i.title }}</span>
             <span v-if="i.type == 'loveproject'">loved {{ i.title }}</span>
@@ -22,6 +24,7 @@
             <span v-if="i.type == 'remixproject'">remixed {{ i.parent_title }} as {{ i.title }}</span>
             <span v-if="i.type == 'followuser'">followed {{ i.followed_username }}</span>
             <span v-if="i.type == 'becomecurator'">started curating {{ i.title }}</span>
+            <span v-if="i.type == 'becomeownerstudio'"> was promoted to manager of {{ i.gallery_title }}</span>
           </h3>
           <p>{{ i.datetime_created }}</p>
         </ion-label>
