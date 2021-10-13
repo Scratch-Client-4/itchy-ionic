@@ -11,7 +11,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "production": "vue-cli-service build && npx cap copy && ionic capacitor update && npx cap open android",
-    "genDarkSplashes": "cordova-res android --skip-config --splash-source ./resources/android/splash-night.jpg --type splash --resources ./resources/android/splash && mv ./resources/android/splash/android/splash/* ./resources/android/splash/night && rmdir ./resources/android/splash/android/splash && rmdir ./resources/android/splash/android && cordova-res android --skip-config --copy",
+    "genDarkSplashes": "cordova-res android --skip-config --splash-source .\\resources\\android\\splash-night.jpg --type splash --resources .\\resources\\android\\splash && mv .\\resources\\android\\splash\\android\\splash\\* .\\resources\\android\\splash\\night && rmdir .\\resources\\android\\splash\\android\\splash && rmdir .\\resources\\android\\splash\\android && cordova-res android --skip-config --copy",
     "genIcons": "cordova-res android --icon-background-source '#15a3ff' --copy"
   },
   "dependencies": {

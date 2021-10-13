@@ -6,7 +6,12 @@
   "webDir": "dist",
   "plugins": {
     "SplashScreen": {
-      "launchAutoHide": false
+      "launchAutoHide": false,
+      "androidScaleType": "CENTER_CROP",
+      "androidSpinnerStyle": "small",
+      "showSpinner": true,
+      "splashFullScreen": false,
+      "splashImmersive": true
     }
   },
   "cordova": {}

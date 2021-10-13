@@ -8,9 +8,7 @@ import {
 } from '@capacitor/splash-screen';
 
 window.addEventListener("DOMContentLoaded", () => {
-  window.setTimeout(() => {
-    SplashScreen.hide();
-  }, 400);
+  SplashScreen.hide();
 })
 
 import {
