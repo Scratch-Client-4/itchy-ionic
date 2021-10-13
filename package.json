@@ -28,7 +28,7 @@
     "@ionic-native/web-intent": "^5.31.1",
     "@ionic/vue": "^5.6.6",
     "@ionic/vue-router": "^5.4.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "capacitor-dark-mode": "git://github.com/micahlt/ionicCapacitorDarkMode.git",
     "com-darryncampbell-cordova-plugin-intent": "^2.0.0",
     "cordova-plugin-advanced-http": "^3.1.0",
