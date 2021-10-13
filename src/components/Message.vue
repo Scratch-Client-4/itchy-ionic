@@ -240,29 +240,37 @@ export default defineComponent({
     },
     async followUser(o, session) {
       session = JSON.parse(window.localStorage.getItem('session'));
-      const cookieOpts = {
-        url: 'https://scratch.mit.edu',
-        key: 'scratchcsrftoken',
-        value: 'a'
+      const setCookie = async () => {
+        const options = {
+          url: 'https://scratch.mit.edu/',
+          key: 'scratchsessionsid',
+          value: session.session,
+        };
+
+        await Http.setCookie(options);
       };
-      await Http.setCookie(cookieOpts);
+      setCookie();
       const reqOpts = {
         method: 'PUT',
-        url: `https://scratch.mit.edu/site-api/users/followers/${o.actor_username}/add/?usernames=${session.username}`,
+        url: `https://scratch.mit.edu/site-api/users/followers/${o.actor_username}/add/`,
         headers: {
           "x-requested-with": "XMLHttpRequest",
           "origin": "https://scratch.mit.edu/",
           "referer": `https://scratch.mit.edu/`,
           "x-token": session.token,
-          "x-csrftoken": "a",
-          "cookie": "scratchcsrftoken=a;"
+          "X-CSRFToken": "a",
+          "Content-Type": "application/json",
+          "Cookie": `scratchcsrftoken=a;scratchsessionsid=${session.session}`
+        },
+        data: {
+          usernames: session.username
         }
       }
       const res = await Http.request(reqOpts);
       if (res.status == 200) {
         this.toastNotif(`You are following ${o.actor_username}`);
       } else {
-        console.error(res.statusText);
+        this.toastNotif(`Error: ${res.status}`);
       }
     },
     async thankUser(o) {
