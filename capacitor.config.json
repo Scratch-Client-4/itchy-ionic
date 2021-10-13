@@ -8,10 +8,9 @@
     "SplashScreen": {
       "launchAutoHide": false,
       "androidScaleType": "CENTER_CROP",
-      "androidSpinnerStyle": "small",
-      "showSpinner": true,
+      "showSpinner": false,
       "splashFullScreen": false,
-      "splashImmersive": true
+      "splashImmersive": false
     }
   },
   "cordova": {}
