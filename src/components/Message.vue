@@ -30,12 +30,18 @@
     <ion-note v-if="m.type == 'curatorinvite'">
       <ion-icon :icon="images" class="blue"></ion-icon> wants you to curate {{ m.title }}
     </ion-note>
+    <ion-note v-if="m.type == 'becomeownerstudio'">
+      <ion-icon :icon="images" class="blue"></ion-icon> promoted you to curator of {{ m.gallery_title }}
+    </ion-note>
+    <ion-note v-if="m.type == 'becomehoststudio'">
+      <ion-icon :icon="images" class="blue"></ion-icon> made you host of {{ m.gallery_title }}
+    </ion-note>
     <ion-note class="time" v-if="selectedMessage==m.id"><br>
       {{ friendlyTime(new Date(m.datetime_created)) }}
     </ion-note>
     <ion-grid v-if="selectedMessage==m.id">
       <ion-row>
-        <ion-col v-if="m.type == 'studioactivity' || m.type == 'curatorinvite'" @click="openStudio(m)">
+        <ion-col v-if="m.type == 'studioactivity' || m.type == 'curatorinvite' || m.type == 'becomeownerstudio'|| m.type == 'becomehoststudio'" @click="openStudio(m)">
           <div class="ion-activatable btn-div">
             <ion-icon :icon="arrowRedoCircle" class="blue action"></ion-icon>
             <div>Open on Scratch</div>
@@ -64,7 +70,7 @@
             <ion-ripple-effect></ion-ripple-effect>
           </div>
         </ion-col>
-        <ion-col v-if="m.type == 'followuser' || m.type == 'loveproject' || m.type == 'favoriteproject'" @click="thankUser(m)">
+        <ion-col v-if="m.type == 'followuser' || m.type == 'loveproject' || m.type == 'favoriteproject'|| m.type == 'becomeownerstudio' || m.type == 'becomehoststudio'" @click="thankUser(m)">
           <div class="ion-activatable btn-div">
             <ion-icon :icon="chatbubbleEllipses" class="blue action"></ion-icon>
             <div>Say thanks</div>
@@ -172,7 +178,7 @@ export default defineComponent({
       arrowRedoCircle,
       checkmarkCircle,
       friendlyTime,
-      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session'))[0] : null,
+      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session')) : null,
       followText: "Follow back"
     }
   },
