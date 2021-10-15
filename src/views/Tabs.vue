@@ -1,7 +1,6 @@
 <template>
 <ion-page>
   <ion-tabs>
-    <ion-router-outlet></ion-router-outlet>
     <ion-tab-bar slot="bottom">
       <ion-tab-button tab="tab1" href="/tabs/explore" @click="vibrate">
         <ion-icon :icon="earthOutline" />
@@ -44,7 +43,6 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  IonRouterOutlet,
   IonLabel,
   IonIcon,
   IonPage,
@@ -64,7 +62,6 @@ export default {
     IonTabs,
     IonTabBar,
     IonTabButton,
-    IonRouterOutlet,
     IonIcon,
     IonPage,
     IonBadge
