@@ -11,6 +11,7 @@ import android.content.res.Configuration;
 import com.capacitorjs.plugins.browser.BrowserPlugin;
 import com.capacitorjs.plugins.haptics.HapticsPlugin;
 import com.capacitorjs.plugins.splashscreen.SplashScreenPlugin;
+import com.capacitorjs.plugins.share.SharePlugin;
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.plugin.http.Http;
@@ -28,6 +29,7 @@ public class MainActivity extends BridgeActivity {
       registerPlugin(BrowserPlugin.class);
       registerPlugin(HapticsPlugin.class);
       registerPlugin(SplashScreenPlugin.class);
+      registerPlugin(SharePlugin.class);
     }});
     int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
     WebSettings webSettings = this.bridge.getWebView().getSettings();

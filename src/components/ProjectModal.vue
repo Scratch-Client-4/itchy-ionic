@@ -35,6 +35,10 @@
         <ion-icon :icon="eye"></ion-icon>
         <ion-label>{{ stats.views }}</ion-label>
       </ion-chip>
+      <ion-chip color="secondary" @click="shareProject">
+        <ion-icon :icon="shareSocial"></ion-icon>
+        <ion-label>Share</ion-label>
+      </ion-chip>
     </div>
     <ion-card class="text-box ion-padding ion-activatable" v-if="remix.parent != null" @click="openRemixed()">
       <ion-card-content>
@@ -78,6 +82,9 @@ import '@capacitor-community/http';
 import {
   Plugins
 } from '@capacitor/core';
+import {
+  Share
+} from '@capacitor/share';
 const {
   Http
 } = Plugins;
