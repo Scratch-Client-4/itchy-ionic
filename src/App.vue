@@ -14,7 +14,8 @@ import {
 import {
   IonApp,
   IonRouterOutlet,
-  alertController
+  alertController,
+  modalController
 }
 from '@ionic/vue';
 import {
@@ -27,6 +28,8 @@ import {
 import {
   Plugins
 } from '@capacitor/core';
+import UserModal from '@/components/UserModal.vue';
+import ProjectModal from '@/components/ProjectModal.vue';
 const {
   Http,
 } = Plugins;
@@ -74,8 +77,8 @@ export default defineComponent({
             let uri = utils.matchRegexes(intent.data);
             if (uri.type == "homepage") {
               return 0;
-            } else if (uri.type == "project" || uri.type == "studio" || uri.type == "user") {
-              window.location.replace(`/tabs/explore?${uri.type}=${uri.id}`);
+            } else if (uri.type == "project") {
+              this.openUser(uri.id);
             }
           }
         });
@@ -117,6 +120,31 @@ export default defineComponent({
     }
   },
   methods: {
+    async openUser(name) {
+      const modal = await modalController
+        .create({
+          component: UserModal,
+          cssClass: 'open-modal',
+          componentProps: {
+            username: name
+          },
+        })
+      return modal.present();
+    },
+    async openProject(id) {
+      const modal = await modalController
+        .create({
+          component: ProjectModal,
+          cssClass: 'open-modal',
+          componentProps: {
+            title: "loading...",
+            embed: `https://turbowarp.org/${this.id}/embed`,
+            id: id,
+            author: 'loading...'
+          },
+        })
+      return modal.present();
+    },
     async scheduleNotifs() {
       await LocalNotifications.schedule({
         notifications: [{
