@@ -88,6 +88,9 @@ import {
 const {
   Http
 } = Plugins;
+import {
+  StatusBar
+} from '@capacitor/status-bar';
 const utils = require('../utils.js');
 import {
   IonContent,
@@ -113,7 +116,8 @@ import {
   star,
   heart,
   sync,
-  eye
+  eye,
+  shareSocial
 } from 'ionicons/icons';
 import {
   defineComponent
@@ -132,6 +136,9 @@ export default defineComponent({
     id: Number
   },
   data() {
+    StatusBar.setBackgroundColor({
+      color: '#1f1f1f'
+    });
     return {
       session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session')) : null,
       title: 'loading...',
@@ -146,6 +153,7 @@ export default defineComponent({
       favText: 'Favorite',
       loveIcon: heartOutline,
       loveText: 'Love',
+      shareSocial,
       stats: {},
       remix: null,
       selected: null,
@@ -176,10 +184,21 @@ export default defineComponent({
     this.loadProject();
   },
   methods: {
+    async shareProject() {
+      await Share.share({
+        title: this.title,
+        text: 'Check out this Scratch project I found with Itchy!',
+        url: `https://scratch.mit.edu/projects/${this.id}`,
+        dialogTitle: 'Share this project'
+      });
+    },
     openRemixed() {
       window.open(`/?project=${this.remix.parent}`);
     },
     closeModal() {
+      StatusBar.setBackgroundColor({
+        color: '#121212'
+      });
       modalController.dismiss();
     },
     select(item) {
@@ -395,12 +414,12 @@ ion-card-content {
 }
 
 .instructions.selected {
-  max-height: 100% !important;
+  max-height: max-content !important;
   transition: max-height 0.3s ease-out;
 }
 
 .credits.selected {
-  max-height: 100% !important;
+  max-height: max-content !important;
   transition: max-height 0.3s ease-out;
 }
 

@@ -97,6 +97,9 @@ export default {
       }).then((response) => {
         this.messageCount = response.data.count;
       });
+      window.setInterval(() => {
+        this.refreshMessages()
+      }, 30000)
     }
   },
   methods: {
@@ -106,14 +109,12 @@ export default {
       });
     },
     refreshMessages() {
-      window.setInterval(() => {
-        Http.request({
-          method: "GET",
-          url: `https://api.scratch.mit.edu/users/${this.username}/messages/count`
-        }).then((response) => {
-          this.messageCount = response.data.count;
-        });
-      }, 180000);
+      Http.request({
+        method: "GET",
+        url: `https://api.scratch.mit.edu/users/${this.username}/messages/count`
+      }).then((response) => {
+        this.messageCount = response.data.count;
+      });
     }
   }
 }
