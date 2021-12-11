@@ -23,12 +23,11 @@
         <ion-button v-if="user.signedIn" @click="signOut">Sign Out</ion-button>
         <ion-button v-else @click="openAuthWindow">Sign In</ion-button>
       </ion-item>
-      <ion-item v-if="user.signedIn" @click="openUserProfile">
-        <ion-ripple-effect></ion-ripple-effect>
+      <ion-item class="ion-activatable" v-if="user.signedIn" @click="openUserProfile">
         <ion-label>
           Open your profile
         </ion-label>
-
+        <ion-ripple-effect></ion-ripple-effect>
       </ion-item>
       <ion-item-divider>
         <ion-label>
@@ -83,6 +82,7 @@ import {
   modalController
 } from '@ionic/vue';
 import AuthModal from '../components/AuthModal.vue';
+import UserModal from '../components/UserModal.vue';
 export default {
   name: 'SettingsPage',
   components: {
@@ -126,8 +126,16 @@ export default {
     }
   },
   methods: {
-    openUserProfile() {
-      window.location.replace(`/tabs/explore?user=${this.user.name}`);
+    async openUserProfile() {
+      const modal = await modalController
+        .create({
+          component: UserModal,
+          cssClass: 'open-modal',
+          componentProps: {
+            username: this.user.username
+          },
+        })
+      return modal.present();
     },
     async openAuthWindow() {
       const modal = await modalController
