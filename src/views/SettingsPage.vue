@@ -43,7 +43,7 @@
       </ion-item>
       <ion-item>
         <ion-label>
-          Enable personal feed
+          Enable personal data on Explore
         </ion-label>
         <ion-toggle :checked="prefs.enableFeed" @ionChange="toggle('enableFeed')"></ion-toggle>
       </ion-item>

@@ -24,6 +24,17 @@
         <ProjectCard :title="project.title" :author="project.creator" :thumb="project.thumbnail_url" :id="project.id" :instructions="project.instructions" :credits="project.description"></ProjectCard>
       </div>
     </div>
+    <!-- PROJECTS FRIENDS LOVED -->
+    <ion-text v-if="session && prefs.enableFeed">
+      <h2>
+        <ion-icon :icon="happyOutline"></ion-icon>Friends Loved
+      </h2>
+    </ion-text>
+    <div class="sidescroll" v-if="session && prefs.enableFeed">
+      <div v-for="project in followingLovedProjects" :key="project.thumbnail_url">
+        <ProjectCard :title="project.title" :author="project.author.username" :thumb="project.image" :id="project.id" :instructions="project.instructions" :credits="project.description"></ProjectCard>
+      </div>
+    </div>
     <!-- TOP LOVED PROJECTS -->
     <ion-text>
       <h2>
@@ -94,7 +105,8 @@ import {
   ribbonOutline,
   heartOutline,
   diamondOutline,
-  syncOutline
+  syncOutline,
+  happyOutline
 } from 'ionicons/icons';
 export default {
   name: 'ExplorePage',
@@ -120,7 +132,8 @@ export default {
       ribbonOutline,
       heartOutline,
       diamondOutline,
-      syncOutline
+      syncOutline,
+      happyOutline
     };
   },
   data() {
@@ -129,6 +142,7 @@ export default {
       lovedProjects: [],
       curatedProjects: [],
       remixedProjects: [],
+      followingLovedProjects: [],
       loaded: false,
       session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session')) : null,
       prefs: JSON.parse(window.localStorage.getItem('preferences')) ? JSON.parse(window.localStorage.getItem('preferences')) : null
@@ -214,6 +228,25 @@ export default {
             this.presentAlert(response.status, '', 'We encountered an error while fetching data.')
           }
         })
+      if (this.session && this.prefs.enableFeed) {
+        Http.request({
+            method: 'GET',
+            url: `https://api.scratch.mit.edu/users/${this.session.username}/following/users/loves`,
+            headers: {
+              "x-requested-with": "XMLHttpRequest",
+              "origin": "https://scratch.mit.edu/",
+              "referer": `https://scratch.mit.edu/`,
+              "x-token": this.session.token
+            }
+          })
+          .then((response) => {
+            if (response.status == 200) {
+              this.followingLovedProjects = response.data;
+            } else {
+              this.presentAlert(response.status, '', 'We encountered an error while fetching data.')
+            }
+          })
+      }
       if (event) {
         event.target.complete();
       }
@@ -231,5 +264,11 @@ ion-icon {
   color: var(--ion-text-color);
   transform: translateY(4px);
   padding-right: 10px;
+}
+
+@media (orientation: landscape) {
+  ion-card {
+    width: 30vw;
+  }
 }
 </style>
