@@ -28,7 +28,7 @@
       <ion-icon :icon="colorPalette" class="blue"></ion-icon> remixed your project {{ m.parent_title }}
     </ion-note>
     <ion-note v-if="m.type == 'curatorinvite'">
-      <ion-icon :icon="images" class="blue"></ion-icon> wants you to curate {{ m.title }}
+      <ion-icon :icon="images" class="blue"></ion-icon> invited you to curate {{ m.title }}
     </ion-note>
     <ion-note v-if="m.type == 'becomeownerstudio'">
       <ion-icon :icon="images" class="blue"></ion-icon> promoted you to curator of {{ m.gallery_title }}
@@ -70,7 +70,7 @@
             <ion-ripple-effect></ion-ripple-effect>
           </div>
         </ion-col>
-        <ion-col v-if="m.type == 'followuser' || m.type == 'loveproject' || m.type == 'favoriteproject'|| m.type == 'becomeownerstudio' || m.type == 'becomehoststudio'" @click="thankUser(m)">
+        <ion-col v-if="m.type == 'followuser' || m.type == 'loveproject' || m.type == 'favoriteproject'|| m.type == 'becomeownerstudio' || m.type == 'becomehoststudio'" @click="openUserInBrowser(m)">
           <div class="ion-activatable btn-div">
             <ion-icon :icon="chatbubbleEllipses" class="blue action"></ion-icon>
             <div>Say thanks</div>
@@ -273,7 +273,7 @@ export default defineComponent({
         this.toastNotif(`Error: ${res.status}`);
       }
     },
-    async thankUser(o) {
+    async openUserInBrowser(o) {
       await Browser.open({
         url: `https://scratch.mit.edu/users/${o.actor_username}`,
         toolbarColor: "#4E97FF"

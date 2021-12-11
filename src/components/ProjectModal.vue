@@ -187,7 +187,6 @@ export default defineComponent({
     async shareProject() {
       await Share.share({
         title: this.title,
-        text: 'Check out this Scratch project I found with Itchy!',
         url: `https://scratch.mit.edu/projects/${this.id}`,
         dialogTitle: 'Share this project'
       });
