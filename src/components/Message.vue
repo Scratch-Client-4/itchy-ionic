@@ -240,33 +240,60 @@ export default defineComponent({
     },
     async followUser(o, session) {
       session = JSON.parse(window.localStorage.getItem('session'));
-      const setCookie = async () => {
-        const options = {
-          url: 'https://scratch.mit.edu/',
-          key: 'scratchsessionsid',
-          value: session.session,
-        };
-
-        await Http.setCookie(options);
-      };
-      setCookie();
+      session.session = session.session.replace('\\', '');
+      session.session = session.session.replace('"', '');
+      console.log(session);
+      await Http.setCookie({
+        url: 'https://scratch.mit.edu',
+        key: 'scratchsessionsid',
+        value: `"${session.session}"`
+      });
+      await Http.setCookie({
+        url: 'https://scratch.mit.edu',
+        key: 'scratchcsrftoken',
+        value: 'a'
+      });
+      console.log(await Http.getCookies({
+        url: 'https://scratch.mit.edu',
+      }));
       const reqOpts = {
         method: 'PUT',
-        url: `https://scratch.mit.edu/site-api/users/followers/${o.actor_username}/add/`,
+        url: `https://scratch.mit.edu/site-api/users/followers/${o.actor_username}/add/?usernames=${session.username}`,
         headers: {
-          "x-requested-with": "XMLHttpRequest",
-          "origin": "https://scratch.mit.edu/",
-          "referer": `https://scratch.mit.edu/`,
-          "x-token": session.token,
-          "X-CSRFToken": "a",
-          "Content-Type": "application/json",
-          "Cookie": `scratchcsrftoken=a;scratchsessionsid=${session.session}`
+          "X-Requested-With": "XMLHttpRequest",
+          "Origin": "https://scratch.mit.edu",
+          "Referer": `https://scratch.mit.edu/users/${o.actor_username}`,
+          "x-csrftoken": "a",
+          "Cookie": `scratchcsrftoken=a;scratchsessionsid="${session.session}"`,
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
         },
         data: {
-          usernames: session.username
-        }
+          id: o.actor_username,
+          userId: o.actor_id,
+          username: o.actor_username,
+          thumbnail_url: `//uploads.scratch.mit.edu/users/avatars/${o.actor_id}.png`,
+          comments_allowed: true
+        },
+        webFetchExtra: {
+          credentials: "include",
+        },
       }
       const res = await Http.request(reqOpts);
+      await Http.request({
+        method: 'GET',
+        url: `https://scratch.mit.edu/csrf_token`,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "Origin": "https://scratch.mit.edu",
+          "Referer": `https://scratch.mit.edu/`,
+          "x-csrftoken": "a",
+          "Cookie": `scratchcsrftoken=a;scratchsessionsid="${session.session}"`,
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+        },
+        webFetchExtra: {
+          credentials: "include",
+        },
+      })
       if (res.status == 200) {
         this.toastNotif(`You are following ${o.actor_username}`);
       } else {

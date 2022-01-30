@@ -39,7 +39,5 @@ const app = createApp(App)
 
 router.isReady().then(() => {
   app.mount('#app');
-  window.setTimeout(() => {
-    SplashScreen.hide();
-  }, 500);
+  SplashScreen.hide();
 });
