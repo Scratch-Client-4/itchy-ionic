@@ -24,8 +24,8 @@
           >Joined {{ joinDate
           }}<span v-if="followers != 'dontshow'">
             • {{ followers }} followers</span
-          ></ion-text
-        >
+          >
+        </ion-text>
         <p><br /></p>
       </div>
       <!--
