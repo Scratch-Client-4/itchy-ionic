@@ -107,11 +107,7 @@
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button>
           <ion-spinner v-if="opening" />
-          <ion-icon
-            :icon="exitOutline"
-            @click="openInBrowser"
-            v-else
-          ></ion-icon>
+          <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
         </ion-fab-button>
       </ion-fab>
     </ion-content>

@@ -93,6 +93,14 @@ var decodeEntities = (function () {
   return decodeHTMLEntities;
 })();
 
+var formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const m = date.getMonth() + 1; // stupid zero-indexed months
+  const d = date.getDate();
+  const y = date.getFullYear();
+  return `${m}/${d}/${y}`;
+};
+
 let searchResultProto = {
   title: "String",
   type: "Project/Studio/User",
@@ -170,4 +178,5 @@ export {
   decodeEntities,
   unifiedSearch,
   searchResultProto,
+  formatDate,
 };

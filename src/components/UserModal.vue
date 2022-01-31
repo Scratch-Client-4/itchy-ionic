@@ -1,12 +1,21 @@
-<template @scroll="scroll($event)">
+<template>
   <ion-page>
-    <ion-content class="modaled ion-padding">
+    <ion-content
+      class="modaled ion-padding"
+      :scroll-events="true"
+      @ionScroll="scroll($event)"
+    >
       <ion-progress-bar v-if="loading" type="indeterminate"></ion-progress-bar>
-      <div class="backbutton" :style="{ background: backgroundColor }">
+      <div class="backbutton" :style="{ background: headerColor }">
         <ion-back-button
           default-href="explore"
           @click="closeModal"
         ></ion-back-button>
+        <ion-text>
+          <transition name="fade">
+            <h2 v-if="showHeader">{{ username }}</h2>
+          </transition>
+        </ion-text>
       </div>
       <div class="user-header" :style="{ background: backgroundColor }">
         <ion-avatar class="pfp" :style="`border: 3px solid ${textColor};`">
@@ -21,9 +30,9 @@
           class="under-pfp"
           v-if="!loading"
           :style="{ color: textColor }"
-          >Joined {{ joinDate
-          }}<span v-if="followers != 'dontshow'">
-            • {{ followers }} followers</span
+          ><ion-icon :icon="calendar" /> {{ joinDate
+          }}<span class="followers-space" v-if="followers != 'dontshow'"
+            ><ion-icon :icon="personAdd" /> {{ followers }}</span
           >
         </ion-text>
         <p><br /></p>
@@ -45,12 +54,7 @@
         :id="featuredProject.id"
       />
       <ion-card
-        :class="[
-          'text-box',
-          'ion-padding',
-          'top-shift',
-          { selected: selected == 'about' },
-        ]"
+        :class="['text-box', 'ion-padding', { selected: selected == 'about' }]"
         v-if="bio.about.length > 0"
       >
         <ion-card-content @click="select('about')">
@@ -69,12 +73,18 @@
         </ion-card-content>
         <div class="shadow" v-if="selected != 'wiwo'"></div>
       </ion-card>
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button>
+          <ion-spinner v-if="opening" />
+          <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
+        </ion-fab-button>
+      </ion-fab>
     </ion-content>
   </ion-page>
 </template>
 
 <script>
-// const utils = require('../utils.js');
+const utils = require("../utils.js");
 import ProjectCard from "@/components/ProjectCard.vue";
 import { parse } from "node-html-parser";
 //import * as Vibrant from 'node-vibrant';
@@ -82,6 +92,7 @@ import "@capacitor-community/http";
 import { Plugins } from "@capacitor/core";
 import { App } from "@capacitor/app";
 import { StatusBar } from "@capacitor/status-bar";
+import { Browser } from "@capacitor/browser";
 import { useRouter } from "vue-router";
 const { Http } = Plugins;
 import {
@@ -96,7 +107,11 @@ import {
   IonText,
   IonSpinner,
   IonAvatar,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from "@ionic/vue";
+import { exitOutline, personAdd, calendar } from "ionicons/icons";
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "UserModal",
@@ -122,6 +137,12 @@ export default defineComponent({
       pfp: "./assets/avatar.png",
       selected: null,
       featuredProject: {},
+      showHeader: false,
+      headerColor: "transparent",
+      opening: false,
+      exitOutline,
+      personAdd,
+      calendar,
     };
   },
   components: {
@@ -135,6 +156,9 @@ export default defineComponent({
     IonText,
     IonSpinner,
     IonAvatar,
+    IonFab,
+    IonFabButton,
+    IonIcon,
     ProjectCard,
   },
   setup() {
@@ -144,6 +168,9 @@ export default defineComponent({
     };
   },
   mounted() {
+    StatusBar.setBackgroundColor({
+      color: this.backgroundColor,
+    });
     this.router.push("/user/" + this.username);
     App.addListener("backButton", () => {
       this.closeModal();
@@ -162,7 +189,13 @@ export default defineComponent({
       modalController.dismiss();
     },
     scroll(e) {
-      console.log(e);
+      if (e.detail.scrollTop > 135) {
+        this.showHeader = true;
+        this.headerColor = this.backgroundColor;
+      } else {
+        this.showHeader = false;
+        this.headerColor = "transparent";
+      }
     },
     async loadUser() {
       let user,
@@ -196,6 +229,8 @@ export default defineComponent({
         loadingStatus++;
         isLoading();
         user = res.data;
+        this.bio.about = user.profile.bio;
+        this.bio.wiwo = user.profile.status;
         let fake = document.createElement("img");
         fake.src = `https://cdn2.scratch.mit.edu/get_image/user/${user.id}_500x500.png`;
         fake.onload = () => {
@@ -223,7 +258,7 @@ export default defineComponent({
           /*});
           })*/
         };
-        this.joinDate = new Date(user.history.joined).toDateString();
+        this.joinDate = utils.formatDate(user.history.joined);
         if (user.followers) {
           this.followers = user.followers;
         } else {
@@ -256,6 +291,16 @@ export default defineComponent({
           this.activity.push(obj);
         }
         console.log(this.activity);
+      });
+    },
+    async openInBrowser() {
+      this.opening = true;
+      await Browser.open({
+        url: `https://scratch.mit.edu/users/${this.username}`,
+        toolbarColor: "#4E97FF",
+      });
+      Browser.addListener("browserFinished", () => {
+        this.opening = false;
       });
     },
   },
@@ -325,20 +370,49 @@ ion-card-title {
   font-size: 0.8em;
 }
 
+.under-pfp ion-icon {
+  transform: translateY(2px);
+}
+
+.followers-space {
+  padding-left: 12px;
+}
+
 p {
   margin: 0;
 }
 
 .backbutton {
+  background: transparent;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 1;
 }
 
 .backbutton ion-back-button {
   float: left;
   padding: 3px;
+}
+
+.backbutton h2 {
+  margin-top: 0.6em;
+  font-size: 1.3em;
+}
+
+.fade-enter-active {
+  transition: all 0.2s ease-out;
+}
+
+.fade-leave-active {
+  transition: all 0.05s ease-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(20%);
 }
 
 h1 {
@@ -353,6 +427,7 @@ ion-card {
   z-index: -1;
   max-height: 18vh;
   transition: max-height 0.3s ease-out;
+  margin-bottom: 0.5em;
 }
 
 .shadow {
