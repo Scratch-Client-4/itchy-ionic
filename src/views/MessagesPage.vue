@@ -18,6 +18,11 @@
         <ion-infinite-scroll-content class="ion-padding" loading-spinner="circular" loading-text="Loading more messages...">
         </ion-infinite-scroll-content>
       </ion-infinite-scroll>
+      <!--<ion-fab vertical="bottom" horizontal="end" edge slot="fixed">
+        <ion-fab-button @click="markAsRead">
+          <ion-icon :icon="mailOpenOutline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab> -->
     </div>
   </ion-content>
 </ion-page>
@@ -43,7 +48,12 @@ import {
   IonRefresher,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  //IonFab,
+  //IonFabButton
 } from '@ionic/vue';
+import {
+  mailOpenOutline
+} from 'ionicons/icons';
 import MessagesSignIn from '@/components/MessagesSignIn.vue';
 export default {
   name: 'MessagesPage',
@@ -58,6 +68,8 @@ export default {
     IonRefresher,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
+    //IonFab,
+    //IonFabButton,
     Message
   },
   data() {
@@ -66,7 +78,8 @@ export default {
       messages: [],
       currentOffset: 0,
       selectedMessage: null,
-      messageCount: 0
+      messageCount: 0,
+      mailOpenOutline
     }
   },
   created() {
@@ -106,9 +119,7 @@ export default {
           method: 'GET',
           url: `https://api.scratch.mit.edu/users/${this.session.username}/messages/count`,
           headers: {
-            "x-requested-with": "XMLHttpRequest",
-            "origin": "https://scratch.mit.edu/",
-            "referer": `https://scratch.mit.edu/`
+            "x-requested-with": "XMLHttpRequest"
           }
         });
         this.messageCount = await count.data.count;
@@ -149,6 +160,33 @@ export default {
         }
       }
     },
+    markAsRead() {
+      Http.request({
+        method: "GET",
+        url: "https://itchy-api.vercel.app/api/csrf"
+      }).then((token) => {
+        token = token.data;
+        Http.setCookie({
+          url: "scratch.mit.edu",
+          key: "scratchsessionsid",
+          value: "\".eJxVUEFugzAQ_IvPCcUYsJMbzaWnSI2qVj2hxV7AkNgITKO26t-7lrjktprZmZ3ZX7YuODu4ITuyfTXr3rs927Ea1tDXkautISrnGS-llEQFXIL2frRRcvfziOZR0IAe0UVVxNAFqyFY75KNWJILTtcNfN6WydfTQCLUedZAnpqSJgklHGQh2jJPVarUQRyOJ1HJ09sEX99h0OEynHVRvbzO_fvHnWyuvrNubydy4iIpyoQXRZIJETNewXUrdDE4ndoxMxDg62Bv-ONdhKsbzpTs6Yz3-pO6PTbrYelpKeP0DgFYKFCtRoOyFblOM8N5I0qFQhvJpVLs7x9aonDA:1mvq2n:ZdhLIy6HClCUD55nHvh2jdFjXJA\""
+        }).then(() => {
+          Http.request({
+            method: "POST",
+            url: "https://scratch.mit.edu/site-api/messages/messages-clear/?sareferer",
+            headers: {
+              "x-requested-with": "XMLHttpRequest",
+              "origin": "https://scratch.mit.edu/",
+              "referer": `https://scratch.mit.edu/messages`,
+              "x-token": this.session.token,
+              "x-csrftoken": token.replace(/(\r\n|\n|\r)/gm, ""),
+              "Cookie": `scratchlanguage=en; scratchcsrftoken=${token}; scratchsessionsid=".eJxVUEFugzAQ_IvPCcUYsJMbzaWnSI2qVj2hxV7AkNgITKO26t-7lrjktprZmZ3ZX7YuODu4ITuyfTXr3rs927Ea1tDXkautISrnGS-llEQFXIL2frRRcvfziOZR0IAe0UVVxNAFqyFY75KNWJILTtcNfN6WydfTQCLUedZAnpqSJgklHGQh2jJPVarUQRyOJ1HJ09sEX99h0OEynHVRvbzO_fvHnWyuvrNubydy4iIpyoQXRZIJETNewXUrdDE4ndoxMxDg62Bv-ONdhKsbzpTs6Yz3-pO6PTbrYelpKeP0DgFYKFCtRoOyFblOM8N5I0qFQhvJpVLs7x9aonDA:1mvq2n:ZdhLIy6HClCUD55nHvh2jdFjXJA"`
+                .replace(/(\r\n|\n|\r)/gm, "")
+            }
+          });
+        })
+      })
+    },
     htmlDecode(input) {
       var doc = new DOMParser().parseFromString(input, "text/html");
       return doc.documentElement.textContent;
@@ -156,3 +194,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+ion-fab {
+  position: fixed;
+  bottom: 10px;
+}
+</style>

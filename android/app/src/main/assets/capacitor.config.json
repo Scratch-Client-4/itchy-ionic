@@ -1,8 +1,17 @@
 {
-  "appId": "org.scratchclient4.itchy",
-  "appName": "Itchy",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "dist",
-  "cordova": {}
+	"appId": "org.scratchclient4.itchy",
+	"appName": "Itchy",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "dist",
+	"plugins": {
+		"SplashScreen": {
+			"launchAutoHide": false,
+			"androidScaleType": "CENTER_CROP",
+			"showSpinner": false,
+			"splashFullScreen": false,
+			"splashImmersive": false
+		}
+	},
+	"cordova": {}
 }

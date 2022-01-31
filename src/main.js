@@ -7,12 +7,6 @@ import {
   SplashScreen
 } from '@capacitor/splash-screen';
 
-window.addEventListener("DOMContentLoaded", () => {
-  window.setTimeout(() => {
-    SplashScreen.hide();
-  }, 400);
-})
-
 import {
   IonicVue
 } from '@ionic/vue';
@@ -45,4 +39,5 @@ const app = createApp(App)
 
 router.isReady().then(() => {
   app.mount('#app');
+  SplashScreen.hide();
 });

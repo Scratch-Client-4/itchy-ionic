@@ -49,7 +49,6 @@ export default defineComponent({
   },
   methods: {
     async openProject() {
-      console.log(this.instructions);
       const modal = await modalController
         .create({
           component: ProjectModal,

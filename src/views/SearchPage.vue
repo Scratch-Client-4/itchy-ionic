@@ -1,42 +1,66 @@
 <template>
-<ion-page>
-  <ion-content :fullscreen="true">
-    <ion-header collapse="condense">
-      <ion-toolbar>
-        <ion-title size="large">Search</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-searchbar id="search" animated="true" autocorrect="on" enterkeyhint="search" inputmode="search" spellcheck="true" @search="search($event, $event.target.value, 0)"></ion-searchbar>
-    <div id="container" v-if="searchData.length < 1">
-      <span>
-        <ion-icon :icon="constructOutline"></ion-icon>
-      </span>
-      <p>Itchy's built-in custom search is still in beta, so you may experience some issues!</p>
-    </div>
-    <ion-item-group v-if="searchData.length > 0">
-      <ion-item class="ion-activatable" v-for="(result, i) in searchData" :key="i" @click="openResult(result)">
-        <ion-avatar class="msg-avatar">
-          <img :src="result.image">
-        </ion-avatar>
-        <ion-label>
-          <h2>{{ result.title }}</h2>
-          <ion-note>
-            {{ result.type }}
-          </ion-note>
-        </ion-label>
-        <ion-ripple-effect></ion-ripple-effect>
-      </ion-item>
-    </ion-item-group>
-    <ion-infinite-scroll @ionInfinite="search($event, searchString, currentOffset)" threshold="100px" id="infinite-scroll">
-      <ion-infinite-scroll-content class="ion-padding" loading-spinner="circular" loading-text="Loading more results...">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-  </ion-content>
-</ion-page>
+  <ion-page>
+    <ion-content :fullscreen="true">
+      <ion-header collapse="condense">
+        <ion-toolbar>
+          <ion-title size="large">Search</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-searchbar
+        id="search"
+        animated="true"
+        autocorrect="on"
+        enterkeyhint="search"
+        inputmode="search"
+        spellcheck="true"
+        @search="search($event, $event.target.value, 0, 'searchbar')"
+      ></ion-searchbar>
+      <div id="container" v-if="searchData.length < 1">
+        <span>
+          <ion-icon :icon="constructOutline"></ion-icon>
+        </span>
+        <p>
+          Itchy's built-in custom search is still in beta, so you may experience
+          some issues!
+        </p>
+      </div>
+      <ion-item-group v-if="searchData.length > 0">
+        <ion-item
+          class="ion-activatable"
+          v-for="(result, i) in searchData"
+          :key="i"
+          @click="openResult(result)"
+        >
+          <ion-avatar class="msg-avatar">
+            <img :src="result.image" />
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ result.title }}</h2>
+            <ion-note>
+              {{ result.type }}
+            </ion-note>
+          </ion-label>
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-item>
+      </ion-item-group>
+      <ion-infinite-scroll
+        @ionInfinite="search($event, searchString, currentOffset, 'infinite')"
+        threshold="100px"
+        id="infinite-scroll"
+      >
+        <ion-infinite-scroll-content
+          class="ion-padding"
+          loading-spinner="circular"
+          loading-text="Loading more results..."
+        >
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script>
-const utils = require('../utils.js');
+const utils = require("../utils.js");
 import {
   IonPage,
   IonHeader,
@@ -53,19 +77,16 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonRippleEffect,
-  alertController
-} from '@ionic/vue';
-import {
-  useRouter
-} from 'vue-router';
-import {
-  constructOutline
-} from 'ionicons/icons';
-import {
-  Browser
-} from '@capacitor/browser';
+  alertController,
+  modalController,
+} from "@ionic/vue";
+import { useRouter } from "vue-router";
+import { constructOutline } from "ionicons/icons";
+import { Browser } from "@capacitor/browser";
+import UserModal from "@/components/UserModal.vue";
+import ProjectModal from "@/components/ProjectModal.vue";
 export default {
-  name: 'SearchPage',
+  name: "SearchPage",
   components: {
     IonHeader,
     IonToolbar,
@@ -81,7 +102,7 @@ export default {
     IonIcon,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
-    IonRippleEffect
+    IonRippleEffect,
   },
   data() {
     const router = useRouter();
@@ -91,21 +112,21 @@ export default {
       searchString: "",
       completedSearch: false,
       constructOutline,
-      router
-    }
+      router,
+    };
   },
   methods: {
     async presentAlert(title, code, message) {
-      const alert = await alertController
-        .create({
-          header: title,
-          subHeader: code,
-          message: message,
-          buttons: ['OK']
-        });
+      const alert = await alertController.create({
+        header: title,
+        subHeader: code,
+        message: message,
+        buttons: ["OK"],
+      });
       return alert.present();
     },
-    async search(event, query, offset) {
+    async search(event, query, offset, calledFrom) {
+      console.log("TRIGGERING A SEARCH");
       if (offset == 0) {
         this.currentOffset = 0;
         this.searchData = [];
@@ -116,33 +137,51 @@ export default {
       this.searchString = query;
       const toPush = await utils.unifiedSearch(query, offset);
       this.searchData = this.searchData.concat(toPush);
-      this.currentOffset += 5;
-      event.target.blur();
+      this.currentOffset += 10;
+      console.log(this.currentOffset, "<-- current offset");
+      if (calledFrom == "searchbar") {
+        event.target.blur();
+      } else if (calledFrom == "infinite") {
+        event.target.complete();
+      }
     },
     async openResult(result) {
       if (result.type == "User profile") {
-        this.router.push({
-          path: "/tabs/explore",
-          query: {
-            user: result.title
-          }
-        })
+        this.openUser(result.title);
       } else if (result.type[0] == "P") {
-        this.router.push({
-          path: "/tabs/explore",
-          query: {
-            project: result.id
-          }
-        })
+        this.openProject(result.title, result.id);
       } else if (result.type == "Studio") {
         await Browser.open({
           url: `https://scratch.mit.edu/studios/${result.id}`,
-          toolbarColor: "#4E97FF"
-        })
+          toolbarColor: "#4E97FF",
+        });
       }
-    }
-  }
-}
+    },
+    async openUser(name) {
+      const modal = await modalController.create({
+        component: UserModal,
+        cssClass: "open-modal",
+        componentProps: {
+          username: name,
+        },
+      });
+      return modal.present();
+    },
+    async openProject(title, id) {
+      const modal = await modalController.create({
+        component: ProjectModal,
+        cssClass: "open-modal",
+        componentProps: {
+          title,
+          embed: `https://turbowarp.org/${id}/embed`,
+          id,
+          author: "loading...",
+        },
+      });
+      return modal.present();
+    },
+  },
+};
 </script>
 <style scoped>
 #container {

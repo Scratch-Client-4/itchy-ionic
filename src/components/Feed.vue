@@ -1,82 +1,60 @@
 <template>
-<ion-card>
-  <ion-card-header>
-    <ion-card-title>
-      <h2>
-        <ion-icon :icon="sparklesOutline"></ion-icon>Your Feed
-      </h2>
-    </ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-list>
-      <ion-item button v-for="i in events" :key="i" class="transparent-item ripple-parent ion-activatable" @click="visit(i)" lines="none">
-        <ion-avatar slot="start">
-          <img :src="`https://cdn2.scratch.mit.edu/get_image/user/${i.actor_id}_60x60.png`">
-        </ion-avatar>
-        <ion-label>
-          <h2>{{ i.actor_username }}</h2>
-          <h3>
-            <span v-if="i.type == 'shareproject'">shared {{ i.title }}</span>
-            <span v-if="i.type == 'loveproject'">loved {{ i.title }}</span>
-            <span v-if="i.type == 'favoriteproject'">favorited {{ i.project_title }}</span>
-            <span v-if="i.type == 'remixproject'">remixed {{ i.parent_title }} as {{ i.title }}</span>
-            <span v-if="i.type == 'followuser'">followed {{ i.followed_username }}</span>
-            <span v-if="i.type == 'becomecurator'">started curating {{ i.title }}</span>
-          </h3>
-          <p>{{ i.datetime_created }}</p>
-        </ion-label>
-        <ion-ripple-effect></ion-ripple-effect>
-      </ion-item>
-    </ion-list>
-  </ion-card-content>
-</ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <h2><ion-icon :icon="sparklesOutline"></ion-icon>Your Feed</h2>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <FeedItem
+          v-for="i in events"
+          :key="i"
+          :i="i"
+          @openProject="this.$emit('openProject', $event)"
+          @openUser="this.$emit('openUser', $event)"
+        />
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </template>
 
 <script>
-import '@capacitor-community/http';
-import {
-  Plugins
-} from '@capacitor/core';
-const {
-  Http
-} = Plugins;
+import "@capacitor-community/http";
+import { Plugins } from "@capacitor/core";
+const { Http } = Plugins;
 import {
   IonCard,
   IonCardContent,
   IonCardTitle,
   IonCardHeader,
-  IonItem,
   IonList,
-  IonLabel,
-  IonRippleEffect,
-  IonIcon
-} from '@ionic/vue';
-import {
-  sparklesOutline
-} from 'ionicons/icons';
-import {
-  defineComponent
-} from 'vue';
-const friendlyTime = require('friendly-time');
+  IonIcon,
+} from "@ionic/vue";
+import { sparklesOutline } from "ionicons/icons";
+import { defineComponent } from "vue";
+import FeedItem from "@/components/FeedItem.vue";
+const friendlyTime = require("friendly-time");
 export default defineComponent({
   components: {
     IonCard,
     IonCardContent,
     IonCardTitle,
     IonCardHeader,
-    IonItem,
     IonList,
-    IonLabel,
-    IonRippleEffect,
-    IonIcon
+    IonIcon,
+    FeedItem,
   },
+  emits: ["openProject", "openUser"],
   data() {
     return {
       imageLoading: true,
       sparklesOutline,
-      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session')) : null,
-      events: []
-    }
+      session: JSON.parse(window.localStorage.getItem("session"))
+        ? JSON.parse(window.localStorage.getItem("session"))
+        : null,
+      events: [],
+    };
   },
   mounted() {
     this.loadFeed();
@@ -84,29 +62,39 @@ export default defineComponent({
   methods: {
     loadFeed() {
       Http.request({
-        method: 'GET',
+        method: "GET",
         url: `https://api.scratch.mit.edu/users/${this.session.username}/following/users/activity?limit=4`,
         headers: {
-          'X-Token': this.session.token
-        }
+          "X-Token": this.session.token,
+        },
       }).then((response) => {
         if (response.status == 200) {
           this.events = [];
-          console.log('Feed data: ', response.data);
+          console.log("Feed data: ", response.data);
           response.data.forEach((item) => {
-            item.datetime_created = friendlyTime(new Date(item.datetime_created));
+            item.datetime_created = friendlyTime(
+              new Date(item.datetime_created)
+            );
             this.events.push(item);
           });
         }
-      })
+      });
     },
     visit(i) {
-      const projectLinks = ['remixproject', 'shareproject', 'loveproject', 'favoriteproject'];
+      const projectLinks = [
+        "remixproject",
+        "shareproject",
+        "loveproject",
+        "favoriteproject",
+      ];
+      const userLinks = ["followuser"];
       if (projectLinks.includes(i.type)) {
-        window.open('/?project=' + i.project_id);
+        this.$emit("openProject", i.project_id);
+      } else if (userLinks.includes(i.type)) {
+        this.$emit("openUser", i.followed_username);
       }
-    }
-  }
+    },
+  },
 });
 </script>
 <style scoped>

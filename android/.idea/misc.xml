@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Documents/Code/itchy-ionic/android/app/src/main/res/layout/activity_main.xml" value="0.1984375" />
+        <entry key="..\:/Documents/Code/itchy-ionic/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.21458333333333332" />
+        <entry key="..\:/Documents/Code/itchy-ionic/android/app/src/main/res/mipmap-hdpi-v26/ic_launcher.xml" value="0.21458333333333332" />
+        <entry key="..\:/Documents/Code/itchy-ionic/android/app/src/main/res/mipmap-ldpi-v26/ic_launcher.xml" value="0.21458333333333332" />
+        <entry key="..\:/Documents/Code/itchy-ionic/android/app/src/main/res/mipmap-mdpi-v26/ic_launcher.xml" value="0.21458333333333332" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

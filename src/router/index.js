@@ -9,6 +9,9 @@ const routes = [{
     redirect: '/tabs/explore'
   },
   {
+    path: '/user/:name',
+  },
+  {
     path: '/tabs/',
     component: Tabs,
     children: [{

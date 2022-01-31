@@ -27,15 +27,21 @@
     <ion-note v-if="m.type == 'remixproject'">
       <ion-icon :icon="colorPalette" class="blue"></ion-icon> remixed your project {{ m.parent_title }}
     </ion-note>
-    <ion-note v-if="m.type == 'remixproject'">
-      <ion-icon :icon="colorPalette" class="blue"></ion-icon> remixed your project {{ m.parent_title }}
+    <ion-note v-if="m.type == 'curatorinvite'">
+      <ion-icon :icon="images" class="blue"></ion-icon> invited you to curate {{ m.title }}
+    </ion-note>
+    <ion-note v-if="m.type == 'becomeownerstudio'">
+      <ion-icon :icon="images" class="blue"></ion-icon> promoted you to curator of {{ m.gallery_title }}
+    </ion-note>
+    <ion-note v-if="m.type == 'becomehoststudio'">
+      <ion-icon :icon="images" class="blue"></ion-icon> made you host of {{ m.gallery_title }}
     </ion-note>
     <ion-note class="time" v-if="selectedMessage==m.id"><br>
       {{ friendlyTime(new Date(m.datetime_created)) }}
     </ion-note>
     <ion-grid v-if="selectedMessage==m.id">
       <ion-row>
-        <ion-col v-if="m.type == 'studioactivity'" @click="openStudio(m)">
+        <ion-col v-if="m.type == 'studioactivity' || m.type == 'curatorinvite' || m.type == 'becomeownerstudio'|| m.type == 'becomehoststudio'" @click="openStudio(m)">
           <div class="ion-activatable btn-div">
             <ion-icon :icon="arrowRedoCircle" class="blue action"></ion-icon>
             <div>Open on Scratch</div>
@@ -58,13 +64,13 @@
         </ion-col>
         <ion-col v-if="m.type == 'followuser'" @click="followUser(m)" style="transform: translate(0,0);">
           <div class="ion-activatable btn-div">
-            <ion-badge color="primary">COMING SOON</ion-badge>
+            <ion-badge color="primary">BETA</ion-badge>
             <ion-icon :icon="personAdd" class="blue action"></ion-icon>
             <div>Follow back</div>
             <ion-ripple-effect></ion-ripple-effect>
           </div>
         </ion-col>
-        <ion-col v-if="m.type == 'followuser' || m.type == 'loveproject' || m.type == 'favoriteproject'" @click="thankUser(m)">
+        <ion-col v-if="m.type == 'followuser' || m.type == 'loveproject' || m.type == 'favoriteproject'|| m.type == 'becomeownerstudio' || m.type == 'becomehoststudio'" @click="openUserInBrowser(m)">
           <div class="ion-activatable btn-div">
             <ion-icon :icon="chatbubbleEllipses" class="blue action"></ion-icon>
             <div>Say thanks</div>
@@ -89,6 +95,14 @@
           <div class="ion-activatable btn-div">
             <ion-icon :icon="image" class="blue action"></ion-icon>
             <div>Open project</div>
+            <ion-ripple-effect></ion-ripple-effect>
+          </div>
+        </ion-col>
+        <ion-col v-if="m.type == 'curatorinvite'" @click="joinStudio(m)">
+          <div class="ion-activatable btn-div">
+            <ion-badge color="primary">BETA</ion-badge>
+            <ion-icon :icon="checkmarkCircle" class="blue action"></ion-icon>
+            <div>Accept invite</div>
             <ion-ripple-effect></ion-ripple-effect>
           </div>
         </ion-col>
@@ -132,7 +146,8 @@ import {
   image,
   colorPalette,
   arrowRedoCircle,
-  ellipse
+  ellipse,
+  checkmarkCircle
 } from 'ionicons/icons';
 export default defineComponent({
   name: 'Message',
@@ -161,8 +176,9 @@ export default defineComponent({
       ellipse,
       colorPalette,
       arrowRedoCircle,
+      checkmarkCircle,
       friendlyTime,
-      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session'))[0] : null,
+      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session')) : null,
       followText: "Follow back"
     }
   },
@@ -222,7 +238,77 @@ export default defineComponent({
         });
       }
     },
-    async followUser(o) {
+    async followUser(o, session) {
+      session = JSON.parse(window.localStorage.getItem('session'));
+      session.session = session.session.replace('\\', '');
+      session.session = session.session.replace('"', '');
+      console.log(session);
+      await Http.setCookie({
+        url: 'https://scratch.mit.edu',
+        key: 'scratchsessionsid',
+        value: `"${session.session}"`
+      });
+      await Http.setCookie({
+        url: 'https://scratch.mit.edu',
+        key: 'scratchcsrftoken',
+        value: 'a'
+      });
+      console.log(await Http.getCookies({
+        url: 'https://scratch.mit.edu',
+      }));
+      const reqOpts = {
+        method: 'PUT',
+        url: `https://scratch.mit.edu/site-api/users/followers/${o.actor_username}/add/?usernames=${session.username}`,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "Origin": "https://scratch.mit.edu",
+          "Referer": `https://scratch.mit.edu/users/${o.actor_username}`,
+          "x-csrftoken": "a",
+          "Cookie": `scratchcsrftoken=a;scratchsessionsid="${session.session}"`,
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+        },
+        data: {
+          id: o.actor_username,
+          userId: o.actor_id,
+          username: o.actor_username,
+          thumbnail_url: `//uploads.scratch.mit.edu/users/avatars/${o.actor_id}.png`,
+          comments_allowed: true
+        },
+        webFetchExtra: {
+          credentials: "include",
+        },
+      }
+      const res = await Http.request(reqOpts);
+      await Http.request({
+        method: 'GET',
+        url: `https://scratch.mit.edu/csrf_token`,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "Origin": "https://scratch.mit.edu",
+          "Referer": `https://scratch.mit.edu/`,
+          "x-csrftoken": "a",
+          "Cookie": `scratchcsrftoken=a;scratchsessionsid="${session.session}"`,
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+        },
+        webFetchExtra: {
+          credentials: "include",
+        },
+      })
+      if (res.status == 200) {
+        this.toastNotif(`You are following ${o.actor_username}`);
+      } else {
+        this.toastNotif(`Error: ${res.status}`);
+      }
+    },
+    async openUserInBrowser(o) {
+      await Browser.open({
+        url: `https://scratch.mit.edu/users/${o.actor_username}`,
+        toolbarColor: "#4E97FF"
+      });
+    },
+    async joinStudio(o, session) {
+      session = JSON.parse(window.localStorage.getItem('session'));
+      console.log(session);
       const cookieOpts = {
         url: 'https://scratch.mit.edu',
         key: 'scratchcsrftoken',
@@ -231,34 +317,29 @@ export default defineComponent({
       await Http.setCookie(cookieOpts);
       const reqOpts = {
         method: 'PUT',
-        url: `https://scratch.mit.edu/site-api/users/followers/${o.actor_username}/add/?usernames=${this.session.username}`,
+        url: `https://scratch.mit.edu/site-api/users/curators-in/${o.gallery_id}/add/?usernames=${session.username}`,
         headers: {
           "x-requested-with": "XMLHttpRequest",
           "origin": "https://scratch.mit.edu/",
-          "referer": `https://scratch.mit.edu/`,
-          "x-token": this.session.token,
+          "referer": `https://scratch.mit.edu/studios/${o.gallery_id}/curators`,
+          "x-token": session.token,
           "x-csrftoken": "a",
           "cookie": "scratchcsrftoken=a;"
         }
       }
       const res = await Http.request(reqOpts);
       if (res.status == 200) {
-        this.toastNotif(`Followed user ${o.actor_username}`);
+        this.toastNotif(`You are a curator of ${o.title}`);
       } else {
         console.error(res.statusText);
       }
-    },
-    async thankUser(o) {
-      await Browser.open({
-        url: `https://scratch.mit.edu/users/${o.actor_username}`,
-        toolbarColor: "#4E97FF"
-      });
     },
     async toastNotif(content) {
       const toast = await toastController
         .create({
           message: content,
-          duration: 3500
+          duration: 3500,
+          color: 'light'
         })
       return toast.present();
     },
@@ -330,6 +411,10 @@ ion-col div.btn-div {
 
 ion-col .btn-div ion-icon {
   font-size: 20px;
+}
+
+ion-col .btn-div ion-badge {
+  margin-right: 5px;
 }
 
 .item-input.sc-ion-label-md-h,

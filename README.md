@@ -1,6 +1,6 @@
 # itchy-ionic
 
-A more native approach to a Scratch mobile app built with the Ionic framework
+A hybrid-native approach to a Scratch mobile app built with the Ionic framework
 
 <img src="docs/Screenshot_latest.png" alt="screenshot of Itchy" width="300px">
 
