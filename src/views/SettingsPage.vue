@@ -50,7 +50,7 @@
           <ion-label> About </ion-label>
         </ion-item-divider>
         <ion-item>
-          <ion-label> Itchy v${version} </ion-label>
+          <ion-label> Itchy v{{ version }} </ion-label>
         </ion-item>
         <ion-item>
           <ion-label>
