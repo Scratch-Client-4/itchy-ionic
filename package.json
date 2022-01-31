@@ -1,6 +1,6 @@
 {
   "name": "itchy-ionic",
-  "version": "0.7.4",
+  "version": "0.9.3",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
