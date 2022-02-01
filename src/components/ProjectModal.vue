@@ -135,6 +135,8 @@ import {
   IonIcon,
   IonRippleEffect,
   IonSpinner,
+  IonFab,
+  IonFabButton,
 } from "@ionic/vue";
 import {
   addOutline,
@@ -205,6 +207,8 @@ export default defineComponent({
     IonIcon,
     IonRippleEffect,
     IonSpinner,
+    IonFab,
+    IonFabButton,
   },
   mounted() {
     console.log(`Session`);
@@ -384,10 +388,6 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-ion-fab {
-  transform: translateY(-56px);
-}
-
 ion-fab-button[data-desc] {
   position: relative;
 }
@@ -396,8 +396,6 @@ ion-fab-button[data-desc]::after {
   position: absolute;
   content: attr(data-desc);
   z-index: 1;
-  right: 55px;
-  bottom: 4px;
   background-color: var(--ion-color-light);
   padding: 9px;
   border-radius: 5px;

@@ -15,6 +15,18 @@
       <MessagesSignIn v-if="!session" />
       <div v-else>
         <ion-item-group>
+          <ion-item-divider v-if="adminMessages.length > 0">
+            <ion-label>From the Scratch Team</ion-label>
+          </ion-item-divider>
+          <Message
+            v-for="m in adminMessages"
+            :key="m.id"
+            :selectedMessage="selectedMessage"
+            :m="m"
+            @expand="expandMessage(m.id)"
+            :isUnread="true"
+            :isAdmin="true"
+          />
           <Message
             v-for="(m, i) in messages"
             :key="m.id"
@@ -24,7 +36,7 @@
             :isUnread="i < messageCount"
             :lastRead="i == messageCount"
             :firstUnread="i == 0 && messageCount > 0"
-          ></Message>
+          />
         </ion-item-group>
         <ion-infinite-scroll
           @ionInfinite="getMessages(currentOffset, $event, false)"
@@ -61,7 +73,10 @@ import {
   IonTitle,
   IonContent,
   IonItemGroup,
+  IonItemDivider,
+  IonLabel,
   IonRefresher,
+  IonRefresherContent,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   //IonFab,
@@ -79,7 +94,10 @@ export default {
     IonContent,
     IonPage,
     IonItemGroup,
+    IonItemDivider,
+    IonLabel,
     IonRefresher,
+    IonRefresherContent,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     //IonFab,
@@ -96,6 +114,7 @@ export default {
       selectedMessage: null,
       messageCount: 0,
       mailOpenOutline,
+      adminMessages: [],
     };
   },
   created() {
@@ -140,7 +159,24 @@ export default {
             "x-requested-with": "XMLHttpRequest",
           },
         });
-        this.messageCount = await count.data.count;
+
+        const adminMessages = await Http.request({
+          method: "GET",
+          url: `https://api.scratch.mit.edu/users/${this.session.username}/messages/admin`,
+          headers: {
+            "x-requested-with": "XMLHttpRequest",
+            origin: "https://scratch.mit.edu/",
+            referer: `https://scratch.mit.edu/`,
+            "x-token": this.session.token,
+          },
+        });
+        this.adminMessages = [];
+        await adminMessages.data.forEach((message) => {
+          message.type = "admin";
+          this.adminMessages.push(message);
+        });
+        this.messageCount =
+          (await count.data.count) - this.adminMessages.length;
         messages.forEach((m) => {
           if (m.comment_fragment) {
             //eslint-disable-next-line

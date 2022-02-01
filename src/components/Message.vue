@@ -19,6 +19,7 @@
     </ion-avatar>
     <ion-label :class="{ 'ion-text-wrap': selectedMessage == m.id }">
       <h2 v-if="m.type == 'studioactivity'">{{ m.title }}</h2>
+      <h2 v-else-if="m.type == 'admin'">Notification</h2>
       <h2 v-else>{{ m.actor_username }}</h2>
       <ion-note v-if="m.type == 'addcomment'">
         <ion-icon :icon="chatbubbleEllipses" class="blue"></ion-icon>
@@ -52,6 +53,9 @@
       <ion-note v-if="m.type == 'becomehoststudio'">
         <ion-icon :icon="images" class="blue"></ion-icon> made you host of
         {{ m.gallery_title }}
+      </ion-note>
+      <ion-note v-if="m.type == 'admin'">
+        <ion-icon :icon="images" class="blue"></ion-icon> {{ m.message }}
       </ion-note>
       <ion-note class="time" v-if="selectedMessage == m.id"
         ><br />
@@ -241,7 +245,7 @@ export default defineComponent({
         component: UserModal,
         cssClass: "open-modal",
         componentProps: {
-          username: o.actor_username,
+          username: o.type == "admin" ? "ScratchCat" : o.actor_username,
         },
       });
       return modal.present();
@@ -401,6 +405,8 @@ export default defineComponent({
     getPfpFromObj(o) {
       if (o.type == "studioactivity") {
         return `https://uploads.scratch.mit.edu/galleries/thumbnails/${o.gallery_id}.png`;
+      } else if (o.type == "admin") {
+        return `https://uploads.scratch.mit.edu/users/avatars/15883188.png`;
       } else {
         return `https://uploads.scratch.mit.edu/users/avatars/${o.actor_id}.png`;
       }
