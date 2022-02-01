@@ -338,6 +338,7 @@ ion-card-title {
   margin-bottom: 15px;
   padding: 15px 0;
   text-align: center;
+  color: white;
 }
 
 .pfp ion-spinner {
@@ -366,8 +367,9 @@ ion-card-title {
 }
 
 .under-pfp {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   font-size: 0.8em;
+  opacity: 0.7;
 }
 
 .under-pfp ion-icon {
@@ -389,6 +391,7 @@ p {
   left: 0;
   width: 100%;
   z-index: 1;
+  color: white;
 }
 
 .backbutton ion-back-button {
@@ -417,6 +420,7 @@ p {
 
 h1 {
   margin-top: 0;
+  margin-bottom: 0.1em;
 }
 
 ion-progress-bar {
