@@ -1,6 +1,7 @@
 import "@capacitor-community/http";
 import { Plugins } from "@capacitor/core";
 const { Http } = Plugins;
+const approx = require("./approximate-number.js");
 
 function matchRegexes(string) {
   let numberPattern = new RegExp(`\\d+`, `g`);
@@ -101,6 +102,10 @@ var formatDate = (dateString) => {
   return `${m}/${d}/${y}`;
 };
 
+var formatNumber = (number) => {
+  return approx(number);
+};
+
 let searchResultProto = {
   title: "String",
   type: "Project/Studio/User",
@@ -179,4 +184,5 @@ export {
   unifiedSearch,
   searchResultProto,
   formatDate,
+  formatNumber,
 };

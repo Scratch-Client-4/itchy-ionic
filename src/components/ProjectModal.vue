@@ -30,7 +30,7 @@
       </ion-chip>
       <ion-chip color="danger" :outline="loveText == 'Love'" @click="love">
         <ion-icon :icon="loveIcon"></ion-icon>
-        <ion-label>{{ stats.loves }}</ion-label>
+        <ion-label>{{ utils.formatNumber(stats.loves) }}</ion-label>
       </ion-chip>
       <ion-chip
         color="warning"
@@ -38,15 +38,15 @@
         @click="favorite"
       >
         <ion-icon :icon="favIcon"></ion-icon>
-        <ion-label>{{ stats.favorites }}</ion-label>
+        <ion-label>{{ utils.formatNumber(stats.favorites) }}</ion-label>
       </ion-chip>
-      <ion-chip color="success">
+      <ion-chip color="success" @click="openRemixes">
         <ion-icon :icon="sync"></ion-icon>
-        <ion-label>{{ stats.remixes }}</ion-label>
+        <ion-label>{{ utils.formatNumber(stats.remixes) }}</ion-label>
       </ion-chip>
       <ion-chip color="primary">
         <ion-icon :icon="eye"></ion-icon>
-        <ion-label>{{ stats.views }}</ion-label>
+        <ion-label>{{ utils.formatNumber(stats.views) }}</ion-label>
       </ion-chip>
       <ion-chip color="secondary" @click="shareProject">
         <ion-icon :icon="shareSocial"></ion-icon>
@@ -166,6 +166,7 @@ export default defineComponent({
       color: "#1f1f1f",
     });
     return {
+      utils: utils,
       session: JSON.parse(window.localStorage.getItem("session"))
         ? JSON.parse(window.localStorage.getItem("session"))
         : null,
@@ -226,6 +227,12 @@ export default defineComponent({
     //document.querySelector("#content > div.box > div.box-head > h2")
     openRemixed() {
       window.open(`/?project=${this.remix.parent}`);
+    },
+    openRemixes() {
+      Browser.open({
+        url: `https://scratch.mit.edu/projects/${this.id}/remixes`,
+        toolbarColor: "#4E97FF",
+      });
     },
     closeModal() {
       StatusBar.setBackgroundColor({

@@ -289,7 +289,7 @@ export default defineComponent({
         user = res.data;
         this.bio.about = user.profile.bio;
         this.bio.wiwo = user.profile.status;
-        this.projectCount = user.projectCount;
+        this.projectCount = utils.formatNumber(user.projectCount);
         let fake = document.createElement("img");
         fake.src = `https://cdn2.scratch.mit.edu/get_image/user/${user.id}_500x500.png`;
         Http.request({
@@ -327,7 +327,7 @@ export default defineComponent({
         };
         this.joinDate = utils.formatDate(user.history.joined);
         if (user.followers) {
-          this.followers = user.followers;
+          this.followers = utils.formatNumber(user.followers);
         } else {
           this.followers = "dontshow";
         }
