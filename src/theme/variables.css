@@ -2,6 +2,7 @@
 http://ionicframework.com/docs/theming/ */
 /** Ionic CSS Variables **/
 :root {
+  --ion-background-color: #ffffff;
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
@@ -66,11 +67,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
   /** Gradient background **/
-  --gradient-bg: linear-gradient(324deg, rgba(6, 40, 101, 1) 0%, rgba(66, 140, 255, 1) 100%);
+  --gradient-bg: linear-gradient(
+    324deg,
+    rgba(6, 40, 101, 1) 0%,
+    rgba(66, 140, 255, 1) 100%
+  );
 }
 
 @media (prefers-color-scheme: dark) {
-
   /*
    * Dark Colors
    * -------------------------------------------
@@ -130,7 +134,11 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-light-contrast-rgb: 255, 255, 255;
     --ion-color-light-shade: #1e2023;
     --ion-color-light-tint: #383a3e;
-    --gradient-bg: linear-gradient(324deg, rgba(5, 29, 65, 1) 0%, rgba(66, 140, 255, 1) 100%);
+    --gradient-bg: linear-gradient(
+      324deg,
+      rgba(5, 29, 65, 1) 0%,
+      rgba(66, 140, 255, 1) 100%
+    );
   }
 
   /*
@@ -257,7 +265,11 @@ body.dark {
   --ion-color-light-contrast-rgb: 255, 255, 255;
   --ion-color-light-shade: #1e2023;
   --ion-color-light-tint: #383a3e;
-  --gradient-bg: linear-gradient(324deg, rgba(5, 29, 65, 1) 0%, rgba(66, 140, 255, 1) 100%);
+  --gradient-bg: linear-gradient(
+    324deg,
+    rgba(5, 29, 65, 1) 0%,
+    rgba(66, 140, 255, 1) 100%
+  );
 }
 
 .md body.dark {
