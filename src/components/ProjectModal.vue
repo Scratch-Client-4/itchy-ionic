@@ -1,117 +1,115 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons>
-          <ion-back-button
-            default-href="explore"
-            @click="closeModal"
-          ></ion-back-button>
-          <ion-title>{{ title }}</ion-title>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="modaled ion-padding">
-      <div class="tw-wrapper">
-        <iframe
-          class="tw-player"
-          :src="embed"
-          allowtransparency="true"
-          frameborder="0"
-          scrolling="no"
-          allowfullscreen="true"
-        ></iframe>
-      </div>
-      <div class="chips">
-        <ion-chip @click="openAuthor">
-          <ion-avatar>
-            <img :src="pfp" />
-          </ion-avatar>
-          <ion-label>by {{ author }}</ion-label>
-        </ion-chip>
-        <ion-chip color="danger" :outline="loveText == 'Love'" @click="love">
-          <ion-icon :icon="loveIcon"></ion-icon>
-          <ion-label>{{ stats.loves }}</ion-label>
-        </ion-chip>
-        <ion-chip
-          color="warning"
-          :outline="favText == 'Favorite'"
-          @click="favorite"
-        >
-          <ion-icon :icon="favIcon"></ion-icon>
-          <ion-label>{{ stats.favorites }}</ion-label>
-        </ion-chip>
-        <ion-chip color="success">
-          <ion-icon :icon="sync"></ion-icon>
-          <ion-label>{{ stats.remixes }}</ion-label>
-        </ion-chip>
-        <ion-chip color="primary">
-          <ion-icon :icon="eye"></ion-icon>
-          <ion-label>{{ stats.views }}</ion-label>
-        </ion-chip>
-        <ion-chip color="secondary" @click="shareProject">
-          <ion-icon :icon="shareSocial"></ion-icon>
-          <ion-label>Share</ion-label>
-        </ion-chip>
-      </div>
-      <ion-card
-        class="text-box ion-padding ion-activatable"
-        v-if="remix.parent != null"
-        @click="openRemixed()"
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons>
+        <ion-back-button
+          default-href="explore"
+          @click="closeModal"
+        ></ion-back-button>
+        <ion-title>{{ title }}</ion-title>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="modaled ion-padding">
+    <div class="tw-wrapper">
+      <iframe
+        class="tw-player"
+        :src="embed"
+        allowtransparency="true"
+        frameborder="0"
+        scrolling="no"
+        allowfullscreen="true"
+      ></iframe>
+    </div>
+    <div class="chips">
+      <ion-chip @click="openAuthor">
+        <ion-avatar>
+          <img :src="pfp" />
+        </ion-avatar>
+        <ion-label>by {{ author }}</ion-label>
+      </ion-chip>
+      <ion-chip color="danger" :outline="loveText == 'Love'" @click="love">
+        <ion-icon :icon="loveIcon"></ion-icon>
+        <ion-label>{{ stats.loves }}</ion-label>
+      </ion-chip>
+      <ion-chip
+        color="warning"
+        :outline="favText == 'Favorite'"
+        @click="favorite"
       >
-        <ion-card-content>
-          <ion-card-title>
-            <ion-icon class="fix-icon" :icon="sync" /> Remixed
-          </ion-card-title>
-          <div>
-            This project is a remix of a previous project! Some elements of this
-            project may or may not be property of the author. Click here to
-            visit the original project.
-          </div>
-        </ion-card-content>
-        <ion-ripple-effect />
-      </ion-card>
-      <ion-card
-        :class="[
-          'text-box',
-          'ion-padding',
-          'instructions',
-          { selected: selected == 'instructions' },
-        ]"
-        v-if="instructions.length > 1"
-        @click="select('instructions')"
-      >
-        <ion-card-content>
-          <ion-card-title>Instructions</ion-card-title>
-          <div v-html="instructions"></div>
-        </ion-card-content>
-        <div class="shadow" v-if="selected != 'instructions'"></div>
-      </ion-card>
-      <ion-card
-        :class="[
-          'text-box',
-          'ion-padding',
-          'credits',
-          { selected: selected == 'credits' },
-        ]"
-        v-if="credits.length > 1"
-        @click="select('credits')"
-      >
-        <ion-card-content>
-          <ion-card-title>Credits</ion-card-title>
-          <div v-html="credits"></div>
-        </ion-card-content>
-        <div class="shadow" v-if="selected != 'credits'"></div>
-      </ion-card>
-      <br />
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button>
-          <ion-spinner v-if="opening" />
-          <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
-        </ion-fab-button>
-      </ion-fab>
-    </ion-content>
-  </ion-page>
+        <ion-icon :icon="favIcon"></ion-icon>
+        <ion-label>{{ stats.favorites }}</ion-label>
+      </ion-chip>
+      <ion-chip color="success">
+        <ion-icon :icon="sync"></ion-icon>
+        <ion-label>{{ stats.remixes }}</ion-label>
+      </ion-chip>
+      <ion-chip color="primary">
+        <ion-icon :icon="eye"></ion-icon>
+        <ion-label>{{ stats.views }}</ion-label>
+      </ion-chip>
+      <ion-chip color="secondary" @click="shareProject">
+        <ion-icon :icon="shareSocial"></ion-icon>
+        <ion-label>Share</ion-label>
+      </ion-chip>
+    </div>
+    <ion-card
+      class="text-box ion-padding ion-activatable"
+      v-if="remix.parent != null"
+      @click="openRemixed()"
+    >
+      <ion-card-content>
+        <ion-card-title>
+          <ion-icon class="fix-icon" :icon="sync" /> Remixed
+        </ion-card-title>
+        <div>
+          This project is a remix of a previous project! Some elements of this
+          project may or may not be property of the author. Click here to visit
+          the original project.
+        </div>
+      </ion-card-content>
+      <ion-ripple-effect />
+    </ion-card>
+    <ion-card
+      :class="[
+        'text-box',
+        'ion-padding',
+        'instructions',
+        { selected: selected == 'instructions' },
+      ]"
+      v-if="instructions.length > 1"
+      @click="select('instructions')"
+    >
+      <ion-card-content>
+        <ion-card-title>Instructions</ion-card-title>
+        <div v-html="instructions"></div>
+      </ion-card-content>
+      <div class="shadow" v-if="selected != 'instructions'"></div>
+    </ion-card>
+    <ion-card
+      :class="[
+        'text-box',
+        'ion-padding',
+        'credits',
+        { selected: selected == 'credits' },
+      ]"
+      v-if="credits.length > 1"
+      @click="select('credits')"
+    >
+      <ion-card-content>
+        <ion-card-title>Credits</ion-card-title>
+        <div v-html="credits"></div>
+      </ion-card-content>
+      <div class="shadow" v-if="selected != 'credits'"></div>
+    </ion-card>
+    <br />
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button>
+        <ion-spinner v-if="opening" />
+        <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
+      </ion-fab-button>
+    </ion-fab>
+  </ion-content>
 </template>
 
 <script>

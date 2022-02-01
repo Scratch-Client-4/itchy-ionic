@@ -118,17 +118,12 @@ ion-title {
 }
 
 ion-content.modaled {
-  min-height: 100vh;
   height: max-content;
   margin-bottom: 5vw !important;
 }
 
 .text-box {
   width: 95%;
-}
-
-.text-box:last-of-type {
-  margin-bottom: 16.5%;
 }
 
 .author-pfp {

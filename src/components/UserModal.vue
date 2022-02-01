@@ -1,49 +1,45 @@
 <template>
-  <ion-page>
-    <ion-content
-      class="modaled ion-padding"
-      :scroll-events="true"
-      @ionScroll="scroll($event)"
-    >
-      <transition name="opacity">
-        <ion-progress-bar
-          v-if="loading"
-          type="determinate"
-          :value="loadingStatus / 6"
-        />
-      </transition>
-      <div class="backbutton" :style="{ background: headerColor }">
-        <ion-back-button
-          default-href="explore"
-          @click="closeModal"
-        ></ion-back-button>
-        <ion-text>
-          <transition name="fade">
-            <h2 v-if="showHeader">{{ username }}</h2>
-          </transition>
-        </ion-text>
-      </div>
-      <div class="user-header" :style="{ background: backgroundColor }">
-        <ion-avatar class="pfp" :style="`border: 3px solid ${textColor};`">
-          <img :src="pfp" />
-          <ion-spinner v-if="loading" />
-        </ion-avatar>
-        <br />
-        <ion-text color="white" class="username">
-          <h1>{{ username }}</h1>
-        </ion-text>
-        <ion-text
-          class="under-pfp"
-          v-if="!loading"
-          :style="{ color: textColor }"
-          ><ion-icon :icon="calendar" /> {{ joinDate
-          }}<span class="followers-space" v-if="followers != 'dontshow'"
-            ><ion-icon :icon="personAdd" /> {{ followers }}</span
-          >
-        </ion-text>
-        <p><br /></p>
-      </div>
-      <!--
+  <ion-content
+    class="modaled ion-padding"
+    :scroll-events="true"
+    @ionScroll="scroll($event)"
+  >
+    <transition name="opacity">
+      <ion-progress-bar
+        v-if="loading"
+        type="determinate"
+        :value="loadingStatus / 6"
+      />
+    </transition>
+    <div class="backbutton" :style="{ background: headerColor }">
+      <ion-back-button
+        default-href="explore"
+        @click="closeModal"
+      ></ion-back-button>
+      <ion-text>
+        <transition name="fade">
+          <h2 v-if="showHeader">{{ username }}</h2>
+        </transition>
+      </ion-text>
+    </div>
+    <div class="user-header" :style="{ background: backgroundColor }">
+      <ion-avatar class="pfp" :style="`border: 3px solid ${textColor};`">
+        <img :src="pfp" />
+        <ion-spinner v-if="loading" />
+      </ion-avatar>
+      <br />
+      <ion-text color="white" class="username">
+        <h1>{{ username }}</h1>
+      </ion-text>
+      <ion-text class="under-pfp" v-if="!loading" :style="{ color: textColor }"
+        ><ion-icon :icon="calendar" /> {{ joinDate
+        }}<span class="followers-space" v-if="followers != 'dontshow'"
+          ><ion-icon :icon="personAdd" /> {{ followers }}</span
+        >
+      </ion-text>
+      <p><br /></p>
+    </div>
+    <!--
       <ion-card class="top-shift text-box ion-padding">
         <ion-card-content>
           <ion-card-title>Activity</ion-card-title>
@@ -53,75 +49,74 @@
         </ion-card-content>
       </ion-card>
       !-->
-      <ProjectCard
-        class="featured-project"
-        :title="featuredProject.title"
-        :author="featuredProject.author"
-        :thumb="featuredProject.thumbnail"
-        :id="featuredProject.id"
-      />
-      <ion-card
-        :class="['text-box', 'ion-padding', { selected: selected == 'about' }]"
-        v-if="bio.about.length > 0"
-      >
-        <ion-card-content @click="select('about')">
-          <ion-card-title>About Me</ion-card-title>
-          <div v-safe-html="bio.about"></div>
-        </ion-card-content>
-        <div class="shadow" v-if="selected != 'about'"></div>
-      </ion-card>
-      <ion-card
-        :class="['text-box', 'ion-padding', { selected: selected == 'wiwo' }]"
-        v-if="bio.wiwo.length > 0"
-      >
-        <ion-card-content @click="select('wiwo')">
-          <ion-card-title>What I'm Working On</ion-card-title>
-          <div v-safe-html="bio.wiwo"></div>
-        </ion-card-content>
-        <div class="shadow" v-if="selected != 'wiwo'"></div>
-      </ion-card>
-      <div v-if="!loading">
-        <ion-text>
-          <h3>Projects ({{ projectCount }})</h3>
-        </ion-text>
-        <div class="sidescroll">
-          <div v-for="project in userProjects" :key="project.id">
-            <ProjectCard
-              class="user-projects"
-              :title="project.title"
-              :author="username"
-              :thumb="project.image"
-              :id="project.id"
-              :instructions="project.instructions"
-              :credits="project.description"
-            ></ProjectCard>
-          </div>
-        </div>
-        <ion-text>
-          <h3>Favorites</h3>
-        </ion-text>
-        <div class="sidescroll">
-          <div v-for="project in favoriteProjects" :key="project.id">
-            <ProjectCard
-              class="user-projects"
-              :title="project.title"
-              :author="project.author.username"
-              :thumb="project.image"
-              :id="project.id"
-              :instructions="project.instructions"
-              :credits="project.description"
-            ></ProjectCard>
-          </div>
+    <ProjectCard
+      class="featured-project"
+      :title="featuredProject.title"
+      :author="featuredProject.author"
+      :thumb="featuredProject.thumbnail"
+      :id="featuredProject.id"
+    />
+    <ion-card
+      :class="['text-box', 'ion-padding', { selected: selected == 'about' }]"
+      v-if="bio.about.length > 0"
+    >
+      <ion-card-content @click="select('about')">
+        <ion-card-title>About Me</ion-card-title>
+        <div v-safe-html="bio.about"></div>
+      </ion-card-content>
+      <div class="shadow" v-if="selected != 'about'"></div>
+    </ion-card>
+    <ion-card
+      :class="['text-box', 'ion-padding', { selected: selected == 'wiwo' }]"
+      v-if="bio.wiwo.length > 0"
+    >
+      <ion-card-content @click="select('wiwo')">
+        <ion-card-title>What I'm Working On</ion-card-title>
+        <div v-safe-html="bio.wiwo"></div>
+      </ion-card-content>
+      <div class="shadow" v-if="selected != 'wiwo'"></div>
+    </ion-card>
+    <div v-if="!loading">
+      <ion-text>
+        <h3>Projects ({{ projectCount }})</h3>
+      </ion-text>
+      <div class="sidescroll">
+        <div v-for="project in userProjects" :key="project.id">
+          <ProjectCard
+            class="user-projects"
+            :title="project.title"
+            :author="username"
+            :thumb="project.image"
+            :id="project.id"
+            :instructions="project.instructions"
+            :credits="project.description"
+          ></ProjectCard>
         </div>
       </div>
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button>
-          <ion-spinner v-if="opening" />
-          <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
-        </ion-fab-button>
-      </ion-fab>
-    </ion-content>
-  </ion-page>
+      <ion-text>
+        <h3>Favorites</h3>
+      </ion-text>
+      <div class="sidescroll">
+        <div v-for="project in favoriteProjects" :key="project.id">
+          <ProjectCard
+            class="user-projects"
+            :title="project.title"
+            :author="project.author.username"
+            :thumb="project.image"
+            :id="project.id"
+            :instructions="project.instructions"
+            :credits="project.description"
+          ></ProjectCard>
+        </div>
+      </div>
+    </div>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button>
+        <ion-spinner v-if="opening" />
+        <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
+      </ion-fab-button>
+    </ion-fab>
+  </ion-content>
 </template>
 
 <script>
@@ -137,7 +132,6 @@ import { Browser } from "@capacitor/browser";
 import { useRouter } from "vue-router";
 const { Http } = Plugins;
 import {
-  IonPage,
   IonProgressBar,
   IonContent,
   IonBackButton,
@@ -191,7 +185,6 @@ export default defineComponent({
     };
   },
   components: {
-    IonPage,
     IonProgressBar,
     IonContent,
     IonBackButton,
