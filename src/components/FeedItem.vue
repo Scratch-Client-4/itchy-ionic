@@ -44,13 +44,14 @@
 </template>
 
 <script>
-import { IonItem, IonLabel, IonRippleEffect } from "@ionic/vue";
+import { IonItem, IonLabel, IonRippleEffect, IonAvatar } from "@ionic/vue";
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {
     IonItem,
     IonLabel,
     IonRippleEffect,
+    IonAvatar,
   },
   props: {
     i: Object,

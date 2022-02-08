@@ -3,6 +3,7 @@
   "version": "0.9.5",
   "private": true,
   "scripts": {
+    "dev": "ionic cap run android -l --external",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "ionic:build": "vue-cli-service build",

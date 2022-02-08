@@ -161,10 +161,6 @@ ion-avatar {
   background: white;
 }
 
-.sidescroll:last-child {
-  margin-bottom: 20px;
-}
-
 .no-ripple {
   --ripple-color: transparent;
 }
