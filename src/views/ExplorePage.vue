@@ -101,6 +101,18 @@
           ></ProjectCard>
         </div>
       </div>
+      <ion-text>
+        <h2><ion-icon :icon="personOutline"></ion-icon>Top Followed</h2>
+      </ion-text>
+      <div class="sidescroll">
+        <UserCard
+          v-for="user in topUsers"
+          :key="user.id"
+          :id="user.id"
+          :name="user.username"
+          :followers="user.count"
+        />
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -129,6 +141,7 @@ import {
 import Feed from "../components/Feed.vue";
 import ProjectCard from "../components/ProjectCard.vue";
 import ProjectModal from "../components/ProjectModal.vue";
+import UserCard from "../components/UserCard.vue";
 import UserModal from "../components/UserModal.vue";
 import {
   ribbonOutline,
@@ -136,6 +149,7 @@ import {
   diamondOutline,
   syncOutline,
   happyOutline,
+  personOutline,
 } from "ionicons/icons";
 export default {
   name: "ExplorePage",
@@ -150,6 +164,7 @@ export default {
     IonPage,
     IonText,
     IonIcon,
+    UserCard,
     ProjectCard,
     Feed,
   },
@@ -163,6 +178,7 @@ export default {
       diamondOutline,
       syncOutline,
       happyOutline,
+      personOutline,
     };
   },
   data() {
@@ -172,6 +188,7 @@ export default {
       curatedProjects: [],
       remixedProjects: [],
       followingLovedProjects: [],
+      topUsers: [],
       loaded: false,
       session: JSON.parse(window.localStorage.getItem("session"))
         ? JSON.parse(window.localStorage.getItem("session"))
@@ -287,6 +304,25 @@ export default {
           }
         });
       }
+      Http.request({
+        method: "GET",
+        url: "https://scratchstats.com/api2/scratchdb/topusers/followers?country=global&page=0",
+        headers: {
+          Referer: "https://scratchstats.com/",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36",
+        },
+      }).then((res) => {
+        if (res.status == 200) {
+          this.topUsers = res.data;
+        } else {
+          this.presentAlert(
+            res.status,
+            "",
+            "We encountered an error while fetching data."
+          );
+        }
+      });
       if (event) {
         event.target.complete();
       }

@@ -1,74 +1,72 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons>
-          <ion-back-button
-            default-href="tab4"
-            @click="closeModal"
-          ></ion-back-button>
-          <ion-title>{{ mode }}</ion-title>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="modaled ion-padding">
-      <ion-card class="text-box ion-padding">
-        <ion-card-content>
-          <ion-grid>
-            <ion-row>
-              <ion-col style="text-align: center">
-                <img
-                  src="../../resources/android/icon.png"
-                  alt="Itchy Login"
-                  class="center-image"
-                />
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-          <ion-item>
-            <ion-label position="floating">Scratch Username</ion-label>
-            <ion-input type="text" required v-model="username"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Password</ion-label>
-            <ion-input
-              type="password"
-              required
-              v-model="password"
-              @keyup.enter="logIn"
-            ></ion-input>
-          </ion-item>
-          <ion-grid>
-            <ion-row>
-              <ion-col style="text-align: center">
-                <ion-button
-                  size="medium"
-                  expand="block"
-                  :disabled="!username || !password"
-                  @click="logIn"
-                >
-                  <ion-icon
-                    v-if="!loading"
-                    :icon="lockClosed"
-                    style="font-size: 15px; padding-right: 10px"
-                  ></ion-icon>
-                  <ion-spinner
-                    v-if="loading"
-                    style="height: 1.2em; margin-right: 5px"
-                  ></ion-spinner>
-                  <ion-label>Sign In</ion-label>
-                </ion-button>
-                <div class="disclaimer">
-                  Your data will be redirected from our servers to Scratch. See
-                  our <a href="#">Privacy Policy</a> for more info.
-                </div>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card-content>
-      </ion-card>
-    </ion-content>
-  </ion-page>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons>
+        <ion-back-button
+          default-href="tab4"
+          @click="closeModal"
+        ></ion-back-button>
+        <ion-title>{{ mode }}</ion-title>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="modaled ion-padding">
+    <ion-card class="text-box ion-padding">
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col style="text-align: center">
+              <img
+                src="../../resources/android/icon.png"
+                alt="Itchy Login"
+                class="center-image"
+              />
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-item>
+          <ion-label position="floating">Scratch Username</ion-label>
+          <ion-input type="text" required v-model="username"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input
+            type="password"
+            required
+            v-model="password"
+            @keyup.enter="logIn"
+          ></ion-input>
+        </ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col style="text-align: center">
+              <ion-button
+                size="medium"
+                expand="block"
+                :disabled="!username || !password"
+                @click="logIn"
+              >
+                <ion-icon
+                  v-if="!loading"
+                  :icon="lockClosed"
+                  style="font-size: 15px; padding-right: 10px"
+                ></ion-icon>
+                <ion-spinner
+                  v-if="loading"
+                  style="height: 1.2em; margin-right: 5px"
+                ></ion-spinner>
+                <ion-label>Sign In</ion-label>
+              </ion-button>
+              <div class="disclaimer">
+                Your data will be redirected from our servers to Scratch. See
+                our <a href="#">Privacy Policy</a> for more info.
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
 </template>
 
 <script>
@@ -77,11 +75,13 @@ import {
   parse
 } from 'node-html-parser'; */
 import {
+  IonTitle,
   IonContent,
   IonHeader,
-  IonTitle,
   IonToolbar,
   IonButtons,
+  IonButton,
+  IonSpinner,
   IonBackButton,
   IonCard,
   IonCardContent,
@@ -116,8 +116,10 @@ export default defineComponent({
     IonContent,
     IonHeader,
     IonTitle,
+    IonSpinner,
     IonToolbar,
     IonButtons,
+    IonButton,
     IonBackButton,
     IonLabel,
     IonInput,

@@ -100,7 +100,7 @@ export default {
   },
   data() {
     return {
-      version: "0.9.3",
+      version: "0.9.5",
     };
   },
   setup() {

@@ -1,132 +1,176 @@
 <template>
-<ion-item button @click="expandMessage()" :class="{ 'message-wrapped': selectedMessage==m.id, 'no-ripple': false }">
-  <ion-avatar class="msg-avatar" @click="openAuthor(m)">
-    <img :src="getPfpFromObj(m)">
-    <ion-badge v-if="isUnread">
-      <ion-icon :icon="ellipse" class="blue"></ion-icon>
-    </ion-badge>
-  </ion-avatar>
-  <ion-label :class="{ 'ion-text-wrap': selectedMessage==m.id }">
-    <h2 v-if="m.type == 'studioactivity'">{{ m.title }}</h2>
-    <h2 v-else>{{ m.actor_username }}</h2>
-    <ion-note v-if="m.type == 'addcomment'">
-      <ion-icon :icon="chatbubbleEllipses" class="blue"></ion-icon> {{ m.comment_fragment }}
-    </ion-note>
-    <ion-note v-if="m.type == 'followuser'">
-      <ion-icon :icon="personAdd" class="blue"></ion-icon> followed you
-    </ion-note>
-    <ion-note v-if="m.type == 'loveproject'">
-      <ion-icon :icon="heart" class="red"></ion-icon> loved {{ m.title }}
-    </ion-note>
-    <ion-note v-if="m.type == 'favoriteproject'">
-      <ion-icon :icon="star" class="yellow"></ion-icon> favorited {{ m.project_title }}
-    </ion-note>
-    <ion-note v-if="m.type == 'studioactivity'">
-      <ion-icon :icon="images" class="blue"></ion-icon> new activity in studio
-    </ion-note>
-    <ion-note v-if="m.type == 'remixproject'">
-      <ion-icon :icon="colorPalette" class="blue"></ion-icon> remixed your project {{ m.parent_title }}
-    </ion-note>
-    <ion-note v-if="m.type == 'curatorinvite'">
-      <ion-icon :icon="images" class="blue"></ion-icon> invited you to curate {{ m.title }}
-    </ion-note>
-    <ion-note v-if="m.type == 'becomeownerstudio'">
-      <ion-icon :icon="images" class="blue"></ion-icon> promoted you to curator of {{ m.gallery_title }}
-    </ion-note>
-    <ion-note v-if="m.type == 'becomehoststudio'">
-      <ion-icon :icon="images" class="blue"></ion-icon> made you host of {{ m.gallery_title }}
-    </ion-note>
-    <ion-note class="time" v-if="selectedMessage==m.id"><br>
-      {{ friendlyTime(new Date(m.datetime_created)) }}
-    </ion-note>
-    <ion-grid v-if="selectedMessage==m.id">
-      <ion-row>
-        <ion-col v-if="m.type == 'studioactivity' || m.type == 'curatorinvite' || m.type == 'becomeownerstudio'|| m.type == 'becomehoststudio'" @click="openStudio(m)">
-          <div class="ion-activatable btn-div">
-            <ion-icon :icon="arrowRedoCircle" class="blue action"></ion-icon>
-            <div>Open on Scratch</div>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
-        </ion-col>
-        <ion-col v-if="m.type == 'remixproject'" @click="openFromObj(m)">
-          <div class="ion-activatable btn-div">
-            <ion-icon :icon="image" class="blue action"></ion-icon>
-            <div>Open original</div>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
-        </ion-col>
-        <ion-col v-if="m.type == 'remixproject'" @click="openFromObj(m)">
-          <div class="ion-activatable btn-div">
-            <ion-icon :icon="colorPalette" class="blue action"></ion-icon>
-            <div>Open remix</div>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
-        </ion-col>
-        <ion-col v-if="m.type == 'followuser'" @click="followUser(m)" style="transform: translate(0,0);">
-          <div class="ion-activatable btn-div">
-            <ion-badge color="primary">BETA</ion-badge>
-            <ion-icon :icon="personAdd" class="blue action"></ion-icon>
-            <div>Follow back</div>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
-        </ion-col>
-        <ion-col v-if="m.type == 'followuser' || m.type == 'loveproject' || m.type == 'favoriteproject'|| m.type == 'becomeownerstudio' || m.type == 'becomehoststudio'" @click="openUserInBrowser(m)">
-          <div class="ion-activatable btn-div">
-            <ion-icon :icon="chatbubbleEllipses" class="blue action"></ion-icon>
-            <div>Say thanks</div>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
-        </ion-col>
-        <ion-col v-if="m.type == 'addcomment'" @click="openFromObj(m)">
-          <div class="ion-activatable btn-div">
-            <ion-icon :icon="chatbubbleEllipses" class="blue action"></ion-icon>
-            <div>Reply</div>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
-        </ion-col>
-        <ion-col v-if="m.type == 'addcomment'" @click="openFromObj(m)">
-          <div class="ion-activatable btn-div">
-            <ion-icon :icon="arrowRedoCircle" class="blue action"></ion-icon>
-            <div>View comment</div>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
-        </ion-col>
-        <ion-col v-if="m.type == 'loveproject' || m.type == 'favoriteproject'" @click="openFromObj(m)">
-          <div class="ion-activatable btn-div">
-            <ion-icon :icon="image" class="blue action"></ion-icon>
-            <div>Open project</div>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
-        </ion-col>
-        <ion-col v-if="m.type == 'curatorinvite'" @click="joinStudio(m)">
-          <div class="ion-activatable btn-div">
-            <ion-badge color="primary">BETA</ion-badge>
-            <ion-icon :icon="checkmarkCircle" class="blue action"></ion-icon>
-            <div>Accept invite</div>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-label>
-</ion-item>
+  <ion-item-divider v-if="firstUnread">
+    <ion-label>Unread</ion-label>
+  </ion-item-divider>
+  <ion-item-divider v-if="lastRead">
+    <ion-label>Last Read</ion-label>
+  </ion-item-divider>
+  <ion-item
+    button
+    @click="expandMessage()"
+    :class="{
+      'message-wrapped': selectedMessage == m.id,
+      'no-ripple': false,
+      'message-unread': isUnread,
+    }"
+  >
+    <ion-avatar class="msg-avatar" @click="openAuthor(m)">
+      <img :src="getPfpFromObj(m)" />
+    </ion-avatar>
+    <ion-label :class="{ 'ion-text-wrap': selectedMessage == m.id }">
+      <h2 v-if="m.type == 'studioactivity'">{{ m.title }}</h2>
+      <h2 v-else-if="m.type == 'admin'">Notification</h2>
+      <h2 v-else>{{ m.actor_username }}</h2>
+      <ion-note v-if="m.type == 'addcomment'">
+        <ion-icon :icon="chatbubbleEllipses" class="blue"></ion-icon>
+        {{ m.comment_fragment }}
+      </ion-note>
+      <ion-note v-if="m.type == 'followuser'">
+        <ion-icon :icon="personAdd" class="blue"></ion-icon> followed you
+      </ion-note>
+      <ion-note v-if="m.type == 'loveproject'">
+        <ion-icon :icon="heart" class="red"></ion-icon> loved {{ m.title }}
+      </ion-note>
+      <ion-note v-if="m.type == 'favoriteproject'">
+        <ion-icon :icon="star" class="yellow"></ion-icon> favorited
+        {{ m.project_title }}
+      </ion-note>
+      <ion-note v-if="m.type == 'studioactivity'">
+        <ion-icon :icon="images" class="blue"></ion-icon> new activity in studio
+      </ion-note>
+      <ion-note v-if="m.type == 'remixproject'">
+        <ion-icon :icon="colorPalette" class="blue"></ion-icon> remixed your
+        project {{ m.parent_title }}
+      </ion-note>
+      <ion-note v-if="m.type == 'curatorinvite'">
+        <ion-icon :icon="images" class="blue"></ion-icon> invited you to curate
+        {{ m.title }}
+      </ion-note>
+      <ion-note v-if="m.type == 'becomeownerstudio'">
+        <ion-icon :icon="images" class="blue"></ion-icon> promoted you to
+        curator of {{ m.gallery_title }}
+      </ion-note>
+      <ion-note v-if="m.type == 'becomehoststudio'">
+        <ion-icon :icon="images" class="blue"></ion-icon> made you host of
+        {{ m.gallery_title }}
+      </ion-note>
+      <ion-note v-if="m.type == 'admin'">
+        <ion-icon :icon="images" class="blue"></ion-icon> {{ m.message }}
+      </ion-note>
+      <ion-note class="time" v-if="selectedMessage == m.id"
+        ><br />
+        {{ friendlyTime(new Date(m.datetime_created)) }}
+      </ion-note>
+      <ion-grid v-if="selectedMessage == m.id">
+        <ion-row>
+          <ion-col
+            v-if="
+              m.type == 'studioactivity' ||
+              m.type == 'curatorinvite' ||
+              m.type == 'becomeownerstudio' ||
+              m.type == 'becomehoststudio'
+            "
+            @click="openStudio(m)"
+          >
+            <div class="ion-activatable btn-div">
+              <ion-icon :icon="arrowRedoCircle" class="blue action"></ion-icon>
+              <div>Open on Scratch</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col v-if="m.type == 'remixproject'" @click="openFromObj(m)">
+            <div class="ion-activatable btn-div">
+              <ion-icon :icon="image" class="blue action"></ion-icon>
+              <div>Open original</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col v-if="m.type == 'remixproject'" @click="openFromObj(m)">
+            <div class="ion-activatable btn-div">
+              <ion-icon :icon="colorPalette" class="blue action"></ion-icon>
+              <div>Open remix</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col
+            v-if="m.type == 'followuser'"
+            @click="followUser(m)"
+            style="transform: translate(0, 0)"
+          >
+            <div class="ion-activatable btn-div">
+              <ion-badge color="primary">BETA</ion-badge>
+              <ion-icon :icon="personAdd" class="blue action"></ion-icon>
+              <div>Follow back</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col
+            v-if="
+              m.type == 'followuser' ||
+              m.type == 'loveproject' ||
+              m.type == 'favoriteproject' ||
+              m.type == 'becomeownerstudio' ||
+              m.type == 'becomehoststudio'
+            "
+            @click="openUserInBrowser(m)"
+          >
+            <div class="ion-activatable btn-div">
+              <ion-icon
+                :icon="chatbubbleEllipses"
+                class="blue action"
+              ></ion-icon>
+              <div>Say thanks</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col v-if="m.type == 'addcomment'" @click="openFromObj(m)">
+            <div class="ion-activatable btn-div">
+              <ion-icon
+                :icon="chatbubbleEllipses"
+                class="blue action"
+              ></ion-icon>
+              <div>Reply</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col v-if="m.type == 'addcomment'" @click="openFromObj(m)">
+            <div class="ion-activatable btn-div">
+              <ion-icon :icon="arrowRedoCircle" class="blue action"></ion-icon>
+              <div>View comment</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col
+            v-if="m.type == 'loveproject' || m.type == 'favoriteproject'"
+            @click="openFromObj(m)"
+          >
+            <div class="ion-activatable btn-div">
+              <ion-icon :icon="image" class="blue action"></ion-icon>
+              <div>Open project</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col v-if="m.type == 'curatorinvite'" @click="joinStudio(m)">
+            <div class="ion-activatable btn-div">
+              <ion-badge color="primary">BETA</ion-badge>
+              <ion-icon :icon="checkmarkCircle" class="blue action"></ion-icon>
+              <div>Accept invite</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-label>
+  </ion-item>
 </template>
 <script>
-import '@capacitor-community/http';
-import {
-  Browser
-} from '@capacitor/browser';
-import {
-  Plugins
-} from '@capacitor/core';
-const {
-  Http
-} = Plugins;
-const friendlyTime = require('friendly-time');
-import UserModal from './UserModal.vue';
-import {
-  defineComponent
-} from 'vue';
+import "@capacitor-community/http";
+import { Browser } from "@capacitor/browser";
+import { Plugins } from "@capacitor/core";
+const { Http } = Plugins;
+const friendlyTime = require("friendly-time");
+import UserModal from "./UserModal.vue";
+import { defineComponent } from "vue";
 import {
   IonItem,
   IonLabel,
@@ -134,9 +178,13 @@ import {
   IonAvatar,
   IonRippleEffect,
   IonBadge,
+  IonGrid,
+  IonCol,
+  IonRow,
+  IonItemDivider,
   toastController,
-  modalController
-} from '@ionic/vue';
+  modalController,
+} from "@ionic/vue";
 import {
   chatbubbleEllipses,
   personAdd,
@@ -147,22 +195,29 @@ import {
   colorPalette,
   arrowRedoCircle,
   ellipse,
-  checkmarkCircle
-} from 'ionicons/icons';
+  checkmarkCircle,
+} from "ionicons/icons";
 export default defineComponent({
-  name: 'Message',
+  name: "Message",
+  inheritAttrs: false,
   components: {
     IonItem,
     IonLabel,
     IonNote,
     IonAvatar,
     IonRippleEffect,
-    IonBadge
+    IonBadge,
+    IonGrid,
+    IonCol,
+    IonRow,
+    IonItemDivider,
   },
   props: {
     selectedMessage: String,
     m: Object,
-    isUnread: Boolean
+    isUnread: Boolean,
+    firstUnread: Boolean,
+    lastRead: Boolean,
   },
   emits: ["expand"],
   data() {
@@ -178,20 +233,21 @@ export default defineComponent({
       arrowRedoCircle,
       checkmarkCircle,
       friendlyTime,
-      session: JSON.parse(window.localStorage.getItem('session')) ? JSON.parse(window.localStorage.getItem('session')) : null,
-      followText: "Follow back"
-    }
+      session: JSON.parse(window.localStorage.getItem("session"))
+        ? JSON.parse(window.localStorage.getItem("session"))
+        : null,
+      followText: "Follow back",
+    };
   },
   methods: {
     async openAuthor(o) {
-      const modal = await modalController
-        .create({
-          component: UserModal,
-          cssClass: 'open-modal',
-          componentProps: {
-            username: o.actor_username
-          },
-        })
+      const modal = await modalController.create({
+        component: UserModal,
+        cssClass: "open-modal",
+        componentProps: {
+          username: o.type == "admin" ? "ScratchCat" : o.actor_username,
+        },
+      });
       return modal.present();
     },
     expandMessage() {
@@ -200,100 +256,104 @@ export default defineComponent({
     async openStudio(m) {
       await Browser.open({
         url: `https://scratch.mit.edu/studios/${m.gallery_id}`,
-        toolbarColor: "#4E97FF"
+        toolbarColor: "#4E97FF",
       });
     },
     async openFromObj(o) {
-      if (o.type == 'addcomment') {
+      if (o.type == "addcomment") {
         if (o.comment_type == 0) {
           await Browser.open({
             url: `https://scratch.mit.edu/projects/${o.comment_obj_id}/#comments-${o.comment_id}`,
-            toolbarColor: "#4E97FF"
+            toolbarColor: "#4E97FF",
           });
         } else if (o.comment_type == 1) {
           await Browser.open({
             url: `https://scratch.mit.edu/users/${o.comment_obj_title}/#comments-${o.comment_id}`,
-            toolbarColor: "#4E97FF"
+            toolbarColor: "#4E97FF",
           });
         } else if (o.comment_type == 2) {
           await Browser.open({
             url: `https://scratch.mit.edu/studios/${o.comment_obj_id}/comments/#comments-${o.comment_id}`,
-            toolbarColor: "#4E97FF"
+            toolbarColor: "#4E97FF",
           });
         }
-      } else if (o.type == 'followuser') {
+      } else if (o.type == "followuser") {
         await Browser.open({
           url: `https://scratch.mit.edu/users/${o.actor_username}`,
-          toolbarColor: "#4E97FF"
+          toolbarColor: "#4E97FF",
         });
-      } else if (o.type == 'favoriteproject' || o.type == 'loveproject') {
+      } else if (o.type == "favoriteproject" || o.type == "loveproject") {
         await Browser.open({
           url: `https://scratch.mit.edu/projects/${o.project_id}`,
-          toolbarColor: "#4E97FF"
+          toolbarColor: "#4E97FF",
         });
-      } else if (o.type == 'studioactivity') {
+      } else if (o.type == "studioactivity") {
         await Browser.open({
           url: `https://scratch.mit.edu/studios/${o.gallery_id}`,
-          toolbarColor: "#4E97FF"
+          toolbarColor: "#4E97FF",
         });
       }
     },
     async followUser(o, session) {
-      session = JSON.parse(window.localStorage.getItem('session'));
-      session.session = session.session.replace('\\', '');
-      session.session = session.session.replace('"', '');
+      session = JSON.parse(window.localStorage.getItem("session"));
+      session.session = session.session.replace("\\", "");
+      session.session = session.session.replace('"', "");
       console.log(session);
       await Http.setCookie({
-        url: 'https://scratch.mit.edu',
-        key: 'scratchsessionsid',
-        value: `"${session.session}"`
+        url: "https://scratch.mit.edu",
+        key: "scratchsessionsid",
+        value: `"${session.session}"`,
       });
       await Http.setCookie({
-        url: 'https://scratch.mit.edu',
-        key: 'scratchcsrftoken',
-        value: 'a'
+        url: "https://scratch.mit.edu",
+        key: "scratchcsrftoken",
+        value: "a",
       });
-      console.log(await Http.getCookies({
-        url: 'https://scratch.mit.edu',
-      }));
+      console.log(
+        await Http.getCookies({
+          url: "https://scratch.mit.edu",
+        })
+      );
       const reqOpts = {
-        method: 'PUT',
+        method: "PUT",
         url: `https://scratch.mit.edu/site-api/users/followers/${o.actor_username}/add/?usernames=${session.username}`,
         headers: {
           "X-Requested-With": "XMLHttpRequest",
-          "Origin": "https://scratch.mit.edu",
-          "Referer": `https://scratch.mit.edu/users/${o.actor_username}`,
+          Origin: "https://scratch.mit.edu",
+          Referer: `https://scratch.mit.edu/users/${o.actor_username}`,
           "x-csrftoken": "a",
-          "Cookie": `scratchcsrftoken=a;scratchsessionsid="${session.session}"`,
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+          Cookie: `scratchcsrftoken=a;scratchsessionsid="${session.session}"`,
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
         },
         data: {
           id: o.actor_username,
           userId: o.actor_id,
           username: o.actor_username,
           thumbnail_url: `//uploads.scratch.mit.edu/users/avatars/${o.actor_id}.png`,
-          comments_allowed: true
+          comments_allowed: true,
         },
         webFetchExtra: {
           credentials: "include",
         },
-      }
+      };
       const res = await Http.request(reqOpts);
       await Http.request({
-        method: 'GET',
+        method: "GET",
         url: `https://scratch.mit.edu/csrf_token`,
         headers: {
           "X-Requested-With": "XMLHttpRequest",
-          "Origin": "https://scratch.mit.edu",
-          "Referer": `https://scratch.mit.edu/`,
+          Origin: "https://scratch.mit.edu",
+          Referer: `https://scratch.mit.edu/`,
           "x-csrftoken": "a",
-          "Cookie": `scratchcsrftoken=a;scratchsessionsid="${session.session}"`,
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+          Cookie: `scratchcsrftoken=a;scratchsessionsid="${session.session}"`,
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
         },
         webFetchExtra: {
           credentials: "include",
         },
-      })
+      });
       if (res.status == 200) {
         this.toastNotif(`You are following ${o.actor_username}`);
       } else {
@@ -303,30 +363,30 @@ export default defineComponent({
     async openUserInBrowser(o) {
       await Browser.open({
         url: `https://scratch.mit.edu/users/${o.actor_username}`,
-        toolbarColor: "#4E97FF"
+        toolbarColor: "#4E97FF",
       });
     },
     async joinStudio(o, session) {
-      session = JSON.parse(window.localStorage.getItem('session'));
+      session = JSON.parse(window.localStorage.getItem("session"));
       console.log(session);
       const cookieOpts = {
-        url: 'https://scratch.mit.edu',
-        key: 'scratchcsrftoken',
-        value: 'a'
+        url: "https://scratch.mit.edu",
+        key: "scratchcsrftoken",
+        value: "a",
       };
       await Http.setCookie(cookieOpts);
       const reqOpts = {
-        method: 'PUT',
+        method: "PUT",
         url: `https://scratch.mit.edu/site-api/users/curators-in/${o.gallery_id}/add/?usernames=${session.username}`,
         headers: {
           "x-requested-with": "XMLHttpRequest",
-          "origin": "https://scratch.mit.edu/",
-          "referer": `https://scratch.mit.edu/studios/${o.gallery_id}/curators`,
+          origin: "https://scratch.mit.edu/",
+          referer: `https://scratch.mit.edu/studios/${o.gallery_id}/curators`,
           "x-token": session.token,
           "x-csrftoken": "a",
-          "cookie": "scratchcsrftoken=a;"
-        }
-      }
+          cookie: "scratchcsrftoken=a;",
+        },
+      };
       const res = await Http.request(reqOpts);
       if (res.status == 200) {
         this.toastNotif(`You are a curator of ${o.title}`);
@@ -335,27 +395,28 @@ export default defineComponent({
       }
     },
     async toastNotif(content) {
-      const toast = await toastController
-        .create({
-          message: content,
-          duration: 3500,
-          color: 'light'
-        })
+      const toast = await toastController.create({
+        message: content,
+        duration: 3500,
+        color: "light",
+      });
       return toast.present();
     },
     getPfpFromObj(o) {
       if (o.type == "studioactivity") {
-        return `https://uploads.scratch.mit.edu/galleries/thumbnails/${o.gallery_id}.png`
+        return `https://uploads.scratch.mit.edu/galleries/thumbnails/${o.gallery_id}.png`;
+      } else if (o.type == "admin") {
+        return `https://uploads.scratch.mit.edu/users/avatars/15883188.png`;
       } else {
         return `https://uploads.scratch.mit.edu/users/avatars/${o.actor_id}.png`;
       }
-    }
-  }
+    },
+  },
 });
 </script>
 <style scoped>
 ion-icon.blue {
-  color: #4D97FF;
+  color: #4d97ff;
 }
 
 ion-icon.gray {
@@ -363,15 +424,15 @@ ion-icon.gray {
 }
 
 ion-icon.red {
-  color: #FF6680;
+  color: #ff6680;
 }
 
 ion-icon.yellow {
-  color: #FFBF00;
+  color: #ffbf00;
 }
 
 ion-icon.green {
-  color: #76C893;
+  color: #76c893;
 }
 
 ion-item {
@@ -384,21 +445,22 @@ ion-item.message-wrapped {
   z-index: 2;
   --ion-item-background: var(--ion-color-step-100);
   box-shadow: rgba(0, 0, 0, 0.2) 0 4px 8px 0px;
+  transition: 0.4s !important;
+  transition-delay: 0.3s;
+  max-height: 70vh !important;
+}
+
+ion-item.message-unread {
+  --ion-item-background: rgb(var(--ion-color-primary-rgb), 0.1);
 }
 
 ion-note {
   line-height: 1.2em !important;
 }
 
-ion-item.message-wrapped {
-  transition: 0.4s !important;
-  transition-delay: 0.3s;
-  max-height: 70vh !important;
-}
-
 ion-col div.btn-div {
   padding: 8px;
-  color: #4D97FF;
+  color: #4d97ff;
   text-align: center;
   font-size: 0.85em;
   border-radius: 4px;
