@@ -54,5 +54,5 @@ jobs:
       - name: Upload generated APK to Github
         uses: actions/upload-artifact@v1
         with:
-          name: app-dev-nightly
+          name: itchy-nightly-zipped
           path: android/app/build/outputs/apk/debug/app-debug.apk
