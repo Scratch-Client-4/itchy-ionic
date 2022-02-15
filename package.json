@@ -35,7 +35,7 @@
     "com-darryncampbell-cordova-plugin-intent": "^2.2.0",
     "cordova-plugin-advanced-http": "^3.2.2",
     "cordova-plugin-file": "^6.0.2",
-    "cordova-webintent": "github:cordova-misc/cordova-webintent",
+    "cordova-webintent": "https://github.com/cordova-misc/cordova-webintent",
     "core-js": "^3.20.2",
     "friendly-time": "^1.1.1",
     "install": "^0.13.0",
