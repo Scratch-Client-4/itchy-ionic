@@ -112,9 +112,16 @@
     </div>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button>
-        <ion-spinner v-if="opening" />
-        <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
+        <ion-icon :icon="caretUp" />
       </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button @click="openInBrowser">
+          <ion-icon :icon="exit" />
+        </ion-fab-button>
+        <ion-fab-button @click="openComments">
+          <ion-icon :icon="chatbubble" />
+        </ion-fab-button>
+      </ion-fab-list>
     </ion-fab>
   </ion-content>
 </template>
@@ -122,6 +129,7 @@
 <script>
 const utils = require("../utils.js");
 import ProjectCard from "@/components/ProjectCard.vue";
+import CommentModal from "@/components/CommentModal.vue";
 import { parse } from "node-html-parser";
 //import * as Vibrant from 'node-vibrant';
 import "@capacitor-community/http";
@@ -146,7 +154,7 @@ import {
   IonFabButton,
   IonIcon,
 } from "@ionic/vue";
-import { exitOutline, personAdd, calendar } from "ionicons/icons";
+import { exit, caretUp, personAdd, calendar, chatbubble } from "ionicons/icons";
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "UserModal",
@@ -179,9 +187,11 @@ export default defineComponent({
       projectCount: "loading",
       userProjects: [],
       favoriteProjects: [],
-      exitOutline,
+      exit,
       personAdd,
       calendar,
+      caretUp,
+      chatbubble,
     };
   },
   components: {
@@ -369,6 +379,17 @@ export default defineComponent({
       Browser.addListener("browserFinished", () => {
         this.opening = false;
       });
+    },
+    async openComments() {
+      const modal = await modalController.create({
+        component: CommentModal,
+        cssClass: "open-modal",
+        componentProps: {
+          type: "user",
+          title: this.username,
+        },
+      });
+      return modal.present();
     },
   },
 });
