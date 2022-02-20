@@ -5,7 +5,7 @@
     @click="visit(i)"
     lines="none"
   >
-    <ion-avatar slot="start">
+    <ion-avatar slot="start" @click.stop="openUser(i)">
       <img
         v-if="i.type != 'becomeownerstudio'"
         :src="`https://cdn2.scratch.mit.edu/get_image/user/${i.actor_id}_60x60.png`"
@@ -78,6 +78,13 @@ export default defineComponent({
         this.$emit("openProject", i.project_id);
       } else if (userLinks.includes(i.type)) {
         this.$emit("openUser", i.followed_username);
+      }
+    },
+    openUser(i) {
+      if (i.type != "becomeownerstudio") {
+        this.$emit("openUser", i.actor_username);
+      } else {
+        this.$emit("openUser", i.recipient_username);
       }
     },
   },
