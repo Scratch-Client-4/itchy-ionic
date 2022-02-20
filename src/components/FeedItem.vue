@@ -36,6 +36,9 @@
         <span v-if="i.type == 'becomeownerstudio'">
           was promoted to manager of {{ i.gallery_title }}</span
         >
+        <span v-if="i.type == 'followstudio'"
+          >followed the {{ i.title }} studio</span
+        >
       </h3>
       <p>{{ i.datetime_created }}</p>
     </ion-label>
