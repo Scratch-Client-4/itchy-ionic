@@ -37,7 +37,9 @@
               <p v-html="c.content"></p>
               <div class="info">
                 <ion-icon :icon="chatbubble" class="blue"></ion-icon>
-                {{ c.replies.length }}
+                <span class="reply-count">{{ c.replies.length }}</span>
+                <ion-icon :icon="time" class="blue"></ion-icon>
+                <span class="timestamp">{{ c.timestamp }}</span>
               </div>
             </div>
           </div>
@@ -45,17 +47,19 @@
         <transition name="list" class="replies">
           <div v-if="repliesSelected.includes(c.id)">
             <div v-for="r in c.replies" :key="r.id" class="comment reply">
-              <ion-avatar class="ion-activatable" @click="openUser(r.user)">
-                <img
-                  :src="`https://cdn2.scratch.mit.edu/get_image/user/22773795_60x60.png`"
-                  alt="pfp"
-                />
+              <ion-avatar
+                class="ion-activatable"
+                @click="openUser(r.author.username)"
+              >
+                <img :src="r.author.image" alt="pfp" />
                 <ion-ripple-effect />
               </ion-avatar>
               <div class="content">
                 <div class="username">
-                  <span class="name">{{ r.user }}</span>
-                  <span class="creator" v-if="r.user == title">CREATOR</span>
+                  <span class="name">{{ r.author.username }}</span>
+                  <span class="creator" v-if="r.author.username == title"
+                    >CREATOR</span
+                  >
                 </div>
                 <div class="message">
                   <p v-html="r.content"></p>
@@ -75,6 +79,7 @@ import "@capacitor-community/http";
 import { Plugins } from "@capacitor/core";
 import { App } from "@capacitor/app";
 const { Http } = Plugins;
+const friendlyTime = require("friendly-time");
 import UserModal from "@/components/UserModal.vue";
 import {
   IonProgressBar,
@@ -86,7 +91,7 @@ import {
   IonIcon,
   IonRippleEffect,
 } from "@ionic/vue";
-import { chatbubble } from "ionicons/icons";
+import { chatbubble, time } from "ionicons/icons";
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "CommentModal",
@@ -107,6 +112,8 @@ export default defineComponent({
       comments: [],
       repliesSelected: [],
       chatbubble,
+      time,
+      friendlyTime,
     };
   },
   components: {
@@ -142,7 +149,10 @@ export default defineComponent({
           method: "GET",
           url: `https://itchy-api.vercel.app/api/user?user=${this.title}&comments=true`,
         }).then((res) => {
-          this.comments = res.data;
+          res.data.forEach((comment) => {
+            comment.timestamp = friendlyTime(new Date(comment.timestamp));
+            this.comments.push(comment);
+          });
           console.log(res.data);
         });
       }
@@ -156,6 +166,9 @@ export default defineComponent({
         },
       });
       return modal.present();
+    },
+    timestamp(date) {
+      return this.friendlyTime(new Date(date));
     },
   },
 });
@@ -234,6 +247,10 @@ ion-progress-bar {
 .info ion-icon {
   transform: translateY(1.5px);
   margin-right: 3px;
+}
+
+.info span {
+  margin-right: 0.5em;
 }
 
 ion-avatar {
