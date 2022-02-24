@@ -1,9 +1,5 @@
 <template>
-  <ion-content
-    class="modaled ion-padding"
-    :scroll-events="true"
-    @ionScroll="scroll($event)"
-  >
+  <ion-content class="modaled ion-padding">
     <transition name="opacity">
       <ion-progress-bar
         v-if="loading"
@@ -11,23 +7,64 @@
         :value="loadingStatus / 1"
       />
     </transition>
-    <div class="backbutton" :style="{ background: headerColor }">
+    <div class="backbutton">
       <ion-back-button
         default-href="explore"
         @click="closeModal"
       ></ion-back-button>
       <ion-text>
-        <transition name="fade">
-          <h2 v-if="showHeader">Comments: {{ title }}</h2>
-        </transition>
+        <h2>Comments: {{ title }}</h2>
       </ion-text>
     </div>
     <main class="comments">
-      <div v-for="c in comments" :key="c.id" class="comment">
-        <ion-avatar>
-          <img :src="c.author.image" alt="pfp" />
-        </ion-avatar>
-        <div class="content" v-html="c.content"></div>
+      <div class="comment-parent" v-for="c in comments" :key="c.id">
+        <div class="comment" @click="select(c.id)">
+          <ion-avatar
+            class="ion-activatable"
+            @click="openUser(c.author.username)"
+          >
+            <img :src="c.author.image" alt="pfp" />
+            <ion-ripple-effect />
+          </ion-avatar>
+          <div class="content">
+            <div class="username">
+              <span class="name">{{ c.author.username }}</span>
+              <span class="creator" v-if="c.author.username == title"
+                >CREATOR</span
+              >
+            </div>
+            <div class="message">
+              <p v-html="c.content"></p>
+              <div class="info">
+                <ion-icon :icon="chatbubble" class="blue"></ion-icon>
+                {{ c.replies.length }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <transition name="list" class="replies">
+          <div v-if="repliesSelected.includes(c.id)">
+            <div v-for="r in c.replies" :key="r.id" class="comment reply">
+              <ion-avatar class="ion-activatable" @click="openUser(r.user)">
+                <img
+                  :src="`https://cdn2.scratch.mit.edu/get_image/user/22773795_60x60.png`"
+                  alt="pfp"
+                />
+                <ion-ripple-effect />
+              </ion-avatar>
+              <div class="content">
+                <div class="username">
+                  <span class="name">{{ r.user }}</span>
+                  <span class="creator" v-if="r.user == title">CREATOR</span>
+                </div>
+                <div class="message">
+                  <p v-html="r.content"></p>
+                  <div class="info"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
     </main>
   </ion-content>
@@ -38,6 +75,7 @@ import "@capacitor-community/http";
 import { Plugins } from "@capacitor/core";
 import { App } from "@capacitor/app";
 const { Http } = Plugins;
+import UserModal from "@/components/UserModal.vue";
 import {
   IonProgressBar,
   IonContent,
@@ -45,10 +83,14 @@ import {
   modalController,
   IonText,
   IonAvatar,
+  IonIcon,
+  IonRippleEffect,
 } from "@ionic/vue";
+import { chatbubble } from "ionicons/icons";
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "CommentModal",
+  emits: ["openUser"],
   props: {
     title: {
       type: String,
@@ -63,8 +105,8 @@ export default defineComponent({
       loading: true,
       loadingStatus: 0,
       comments: [],
-      showHeader: false,
-      headerColor: "transparent",
+      repliesSelected: [],
+      chatbubble,
     };
   },
   components: {
@@ -73,6 +115,8 @@ export default defineComponent({
     IonBackButton,
     IonText,
     IonAvatar,
+    IonIcon,
+    IonRippleEffect,
   },
   mounted() {
     App.addListener("backButton", () => {
@@ -82,20 +126,15 @@ export default defineComponent({
   },
   methods: {
     select(item) {
-      console.log("Selected", item);
-      this.selected = item;
+      if (this.repliesSelected.includes(item)) {
+        const index = this.repliesSelected.indexOf(item);
+        this.repliesSelected.splice(index, 1);
+      } else {
+        this.repliesSelected.push(item);
+      }
     },
     closeModal() {
       modalController.dismiss();
-    },
-    scroll(e) {
-      if (e.detail.scrollTop > 135) {
-        this.showHeader = true;
-        this.headerColor = this.backgroundColor;
-      } else {
-        this.showHeader = false;
-        this.headerColor = "transparent";
-      }
     },
     loadComments() {
       if (this.type == "user") {
@@ -104,8 +143,19 @@ export default defineComponent({
           url: `https://itchy-api.vercel.app/api/user?user=${this.title}&comments=true`,
         }).then((res) => {
           this.comments = res.data;
+          console.log(res.data);
         });
       }
+    },
+    async openUser(name) {
+      const modal = await modalController.create({
+        component: UserModal,
+        cssClass: "open-modal",
+        componentProps: {
+          username: name,
+        },
+      });
+      return modal.present();
     },
   },
 });
@@ -122,7 +172,7 @@ ion-progress-bar {
 }
 
 .backbutton {
-  background: transparent;
+  background: #303c54;
   position: fixed;
   top: 0;
   left: 0;
@@ -142,26 +192,84 @@ ion-progress-bar {
 }
 
 .comments {
-  margin: 0 2vw;
+  margin-top: 50px;
 }
 
 .comment {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto 1fr;
   font-size: 0.85rem;
   column-gap: 1rem;
-  margin-top: 0.75rem;
-  background: var(--ion-color-step-100);
-  padding: 0.75rem;
-  border-radius: 0.25rem;
+  margin-top: 0;
+  background: transparent;
+  padding: 0.5rem 0.25rem;
 }
 
 .comment ion-avatar {
-  height: 50px;
-  width: 50px;
+  height: 40px;
+  width: 40px;
 }
 
 .comment .content {
   text-align: left;
+}
+
+.content .username {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.username .name {
+  opacity: 0.5;
+}
+
+.message > p {
+  margin: 5px 0;
+}
+
+.info {
+  opacity: 0.25;
+}
+
+.info ion-icon {
+  transform: translateY(1.5px);
+  margin-right: 3px;
+}
+
+ion-avatar {
+  overflow: hidden;
+  position: relative;
+}
+
+.creator {
+  background: var(--ion-color-primary-shade);
+  font-size: 0.8em;
+  padding: 0.2em 0.5em;
+  margin-left: 0.6em;
+  border-radius: 1em;
+}
+
+.replies {
+  height: auto;
+  max-height: auto;
+}
+
+.reply {
+  margin-left: 1.25rem;
+}
+
+.list-move, /* apply transition to moving elements */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+  transform-origin: top center;
+  max-height: 100vh;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scaleY(0);
+  max-height: 0;
 }
 </style>
