@@ -57,13 +57,16 @@
               <div class="content">
                 <div class="username">
                   <span class="name">{{ r.author.username }}</span>
-                  <span class="creator" v-if="r.author.username == title"
-                    >CREATOR</span
+                  <span class="owner" v-if="r.author.username == title"
+                    >OWNER</span
                   >
                 </div>
                 <div class="message">
                   <p v-html="r.content"></p>
-                  <div class="info"></div>
+                  <div class="info">
+                    <ion-icon :icon="time" class="blue"></ion-icon>
+                    <span class="timestamp">{{ c.timestamp }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -149,8 +152,12 @@ export default defineComponent({
           method: "GET",
           url: `https://itchy-api.vercel.app/api/user?user=${this.title}&comments=true`,
         }).then((res) => {
+          // const mentionRegex = /@(-?_?[A-Z]?[a-z]?[0-9]?)+/g;
           res.data.forEach((comment) => {
             comment.timestamp = friendlyTime(new Date(comment.timestamp));
+            comment.replies.forEach((reply) => {
+              reply.timestamp = friendlyTime(new Date(reply.timestamp));
+            });
             this.comments.push(comment);
           });
           console.log(res.data);
@@ -258,7 +265,7 @@ ion-avatar {
   position: relative;
 }
 
-.creator {
+.owner {
   background: var(--ion-color-primary-shade);
   font-size: 0.8em;
   padding: 0.2em 0.5em;
