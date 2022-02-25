@@ -105,9 +105,16 @@
     <br />
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button>
-        <ion-spinner v-if="opening" />
-        <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
+        <ion-icon :icon="caretUp" />
       </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button @click="openInBrowser">
+          <ion-icon :icon="exit" />
+        </ion-fab-button>
+        <ion-fab-button @click="openComments">
+          <ion-icon :icon="chatbubble" />
+        </ion-fab-button>
+      </ion-fab-list>
     </ion-fab>
   </ion-content>
 </template>
@@ -131,16 +138,19 @@ import {
   IonChip,
   IonLabel,
   IonAvatar,
+  IonCardTitle,
   IonCardContent,
   IonIcon,
   IonRippleEffect,
-  IonSpinner,
   IonFab,
+  IonFabList,
   IonFabButton,
 } from "@ionic/vue";
 import {
   addOutline,
-  exitOutline,
+  exit,
+  chatbubble,
+  caretUp,
   heartOutline,
   starOutline,
   star,
@@ -152,6 +162,7 @@ import {
 import { defineComponent } from "vue";
 import UserModal from "./UserModal.vue";
 import { Browser } from "@capacitor/browser";
+import ProjectComments from "@/components/ProjectComments.vue";
 export default defineComponent({
   name: "ProjectModal",
   props: {
@@ -177,14 +188,18 @@ export default defineComponent({
       credits: "",
       pfp: "https://u.cubeupload.com/darkness3560/newscratchavataropti.png",
       addOutline,
-      exitOutline,
+      exit,
+      chatbubble,
+      caretUp,
       favIcon: starOutline,
       favText: "Favorite",
       loveIcon: heartOutline,
       loveText: "Love",
       shareSocial,
       stats: {},
-      remix: null,
+      remix: {
+        parent: null,
+      },
       selected: null,
       opening: false,
       heart,
@@ -204,11 +219,12 @@ export default defineComponent({
     IonChip,
     IonLabel,
     IonAvatar,
+    IonCardTitle,
     IonCardContent,
     IonIcon,
     IonRippleEffect,
-    IonSpinner,
     IonFab,
+    IonFabList,
     IonFabButton,
   },
   mounted() {
@@ -226,7 +242,9 @@ export default defineComponent({
     },
     //document.querySelector("#content > div.box > div.box-head > h2")
     openRemixed() {
-      window.open(`/?project=${this.remix.parent}`);
+      if (this.remix) {
+        window.open(`/?project=${this.remix.parent}`);
+      }
     },
     openRemixes() {
       Browser.open({
@@ -390,6 +408,18 @@ export default defineComponent({
           });
         }
       });
+    },
+    async openComments() {
+      const modal = await modalController.create({
+        component: ProjectComments,
+        cssClass: "open-modal",
+        componentProps: {
+          title: this.title,
+          author: this.author,
+          id: this.id,
+        },
+      });
+      return modal.present();
     },
   },
 });

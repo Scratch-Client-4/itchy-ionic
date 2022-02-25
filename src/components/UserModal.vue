@@ -129,7 +129,7 @@
 <script>
 const utils = require("../utils.js");
 import ProjectCard from "@/components/ProjectCard.vue";
-import CommentModal from "@/components/CommentModal.vue";
+import UserComments from "@/components/UserComments.vue";
 import { parse } from "node-html-parser";
 //import * as Vibrant from 'node-vibrant';
 import "@capacitor-community/http";
@@ -382,7 +382,7 @@ export default defineComponent({
     },
     async openComments() {
       const modal = await modalController.create({
-        component: CommentModal,
+        component: UserComments,
         cssClass: "open-modal",
         componentProps: {
           type: "user",

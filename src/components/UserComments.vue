@@ -65,7 +65,7 @@
                   <p v-html="r.content"></p>
                   <div class="info">
                     <ion-icon :icon="time" class="blue"></ion-icon>
-                    <span class="timestamp">{{ c.timestamp }}</span>
+                    <span class="timestamp">{{ r.timestamp }}</span>
                   </div>
                 </div>
               </div>
@@ -97,7 +97,7 @@ import {
 import { chatbubble, time } from "ionicons/icons";
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "CommentModal",
+  name: "UserComments",
   emits: ["openUser"],
   props: {
     title: {
@@ -165,6 +165,10 @@ export default defineComponent({
       }
     },
     async openUser(name) {
+      if (name == this.title) {
+        this.closeModal();
+        return;
+      }
       const modal = await modalController.create({
         component: UserModal,
         cssClass: "open-modal",
@@ -209,6 +213,10 @@ ion-progress-bar {
 .backbutton h2 {
   margin-top: 0.6em;
   font-size: 1.3em;
+  text-overflow: ellipsis;
+  width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .comments {
