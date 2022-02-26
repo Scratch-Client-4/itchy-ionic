@@ -54,12 +54,26 @@
         <ion-icon :icon="images" class="blue"></ion-icon> made you host of
         {{ m.gallery_title }}
       </ion-note>
+      <ion-note v-if="m.type == 'forumpost'">
+        <ion-icon :icon="images" class="blue"></ion-icon> made a post in
+        {{ m.topic_title }}
+      </ion-note>
       <ion-note v-if="m.type == 'admin'">
         <ion-icon :icon="images" class="blue"></ion-icon> {{ m.message }}
       </ion-note>
-      <ion-note class="time" v-if="selectedMessage == m.id"
+      <ion-note class="details" v-if="selectedMessage == m.id"
         ><br />
         {{ friendlyTime(new Date(m.datetime_created)) }}
+        <span v-if="m.type == 'addcomment' && m.comment_type == 0"
+          >on {{ m.comment_obj_title }}</span
+        >
+        <span v-if="m.type == 'addcomment' && m.comment_type == 1">
+          <span v-if="m.comment_obj_title == myUsername">on your profile</span>
+          <span v-else>on {{ m.comment_obj_title }}'s profile</span>
+        </span>
+        <span v-if="m.type == 'addcomment' && m.comment_type == 2"
+          >in {{ m.comment_obj_title }}</span
+        >
       </ion-note>
       <ion-grid v-if="selectedMessage == m.id">
         <ion-row>
@@ -82,6 +96,13 @@
             <div class="ion-activatable btn-div">
               <ion-icon :icon="image" class="blue action"></ion-icon>
               <div>Open original</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col v-if="m.type == 'remixproject'" @click="openFromObj(m)">
+            <div class="ion-activatable btn-div">
+              <ion-icon :icon="image" class="blue action"></ion-icon>
+              <div>Open thread</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
@@ -218,6 +239,7 @@ export default defineComponent({
     isUnread: Boolean,
     firstUnread: Boolean,
     lastRead: Boolean,
+    myUsername: String,
   },
   emits: ["expand"],
   data() {
@@ -251,6 +273,7 @@ export default defineComponent({
       return modal.present();
     },
     expandMessage() {
+      console.log(this.myUsername, this.m.comment_obj_title);
       this.$emit("expand");
     },
     async openStudio(m) {
@@ -506,8 +529,12 @@ ion-avatar ion-badge {
   width: 5px;
 }
 
-.time {
+.details {
   opacity: 0.7;
   font-size: 0.7em;
+}
+
+.details span {
+  color: rgb(var(--ion-color-primary-rgb));
 }
 </style>
