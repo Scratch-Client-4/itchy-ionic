@@ -1,12 +1,6 @@
 <template>
   <ion-content class="modaled ion-padding">
-    <transition name="opacity">
-      <ion-progress-bar
-        v-if="loading"
-        type="determinate"
-        :value="loadingStatus / 1"
-      />
-    </transition>
+    <ion-progress-bar v-if="loading" type="indeterminate" />
     <div class="backbutton">
       <ion-back-button
         default-href="explore"
@@ -118,7 +112,6 @@ export default defineComponent({
       backgroundColor: "#303c54",
       textColor: "white",
       loading: true,
-      loadingStatus: 0,
       comments: [],
       repliesSelected: [],
       chatbubble,
@@ -179,6 +172,7 @@ export default defineComponent({
           }
           this.comments.push(comment);
         });
+        this.loading = false;
       });
     },
     async openUser(name) {
@@ -317,5 +311,9 @@ ion-avatar {
   opacity: 0;
   transform: scaleY(0);
   max-height: 0;
+}
+
+ion-progress-bar {
+  z-index: 15;
 }
 </style>
