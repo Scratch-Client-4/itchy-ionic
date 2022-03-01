@@ -6,8 +6,8 @@ android {
         applicationId "org.scratchclient4.itchy"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 14
-        versionName "0.9.5"
+        versionCode 15
+        versionName "0.9.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

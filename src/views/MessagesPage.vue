@@ -36,6 +36,7 @@
             :isUnread="i < messageCount"
             :lastRead="i == messageCount"
             :firstUnread="i == 0 && messageCount > 0"
+            :myUsername="session.username"
           />
         </ion-item-group>
         <ion-infinite-scroll

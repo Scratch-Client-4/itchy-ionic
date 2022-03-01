@@ -58,8 +58,8 @@
                 <ion-label>Sign In</ion-label>
               </ion-button>
               <div class="disclaimer">
-                Your data will be redirected from our servers to Scratch. See
-                our <a href="#">Privacy Policy</a> for more info.
+                By logging in, you agree<br />
+                to our <a href="#" @click.prevent="openPrivacy">Privacy Policy</a>.
               </div>
             </ion-col>
           </ion-row>
@@ -70,10 +70,6 @@
 </template>
 
 <script>
-/*
-import {
-  parse
-} from 'node-html-parser'; */
 import {
   IonTitle,
   IonContent,
@@ -96,6 +92,7 @@ import {
   IonIcon,
 } from "@ionic/vue";
 import { lockClosed, personCircleOutline } from "ionicons/icons";
+import { Browser } from "@capacitor/browser";
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "AuthModal",
@@ -149,6 +146,12 @@ export default defineComponent({
         buttons: ["OK"],
       });
       return alert.present();
+    },
+    openPrivacy() {
+      Browser.open({
+        url: "https://itchy.micahlindley.com/privacy.html",
+        toolbarColor: "#000000",
+      });
     },
     async logIn() {
       this.loading = true;

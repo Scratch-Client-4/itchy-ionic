@@ -11,103 +11,112 @@
     </ion-toolbar>
   </ion-header>
   <ion-content class="modaled ion-padding">
-    <div class="tw-wrapper">
-      <iframe
-        class="tw-player"
-        :src="embed"
-        allowtransparency="true"
-        frameborder="0"
-        scrolling="no"
-        allowfullscreen="true"
-      ></iframe>
-    </div>
-    <div class="chips">
-      <ion-chip @click="openAuthor">
-        <ion-avatar>
-          <img :src="pfp" />
-        </ion-avatar>
-        <ion-label>by {{ author }}</ion-label>
-      </ion-chip>
-      <ion-chip color="danger" :outline="loveText == 'Love'" @click="love">
-        <ion-icon :icon="loveIcon"></ion-icon>
-        <ion-label>{{ utils.formatNumber(stats.loves) }}</ion-label>
-      </ion-chip>
-      <ion-chip
-        color="warning"
-        :outline="favText == 'Favorite'"
-        @click="favorite"
+    <Error :code="error.code" :message="error.message" v-if="error.show" />
+    <div v-if="!error.show">
+      <div class="tw-wrapper">
+        <iframe
+          class="tw-player"
+          :src="embed"
+          allowtransparency="true"
+          frameborder="0"
+          scrolling="no"
+          allowfullscreen="true"
+        ></iframe>
+      </div>
+      <div class="chips">
+        <ion-chip @click="openAuthor">
+          <ion-avatar>
+            <img :src="pfp" />
+          </ion-avatar>
+          <ion-label>by {{ author }}</ion-label>
+        </ion-chip>
+        <ion-chip color="danger" :outline="loveText == 'Love'" @click="love">
+          <ion-icon :icon="loveIcon"></ion-icon>
+          <ion-label>{{ utils.formatNumber(stats.loves) }}</ion-label>
+        </ion-chip>
+        <ion-chip
+          color="warning"
+          :outline="favText == 'Favorite'"
+          @click="favorite"
+        >
+          <ion-icon :icon="favIcon"></ion-icon>
+          <ion-label>{{ utils.formatNumber(stats.favorites) }}</ion-label>
+        </ion-chip>
+        <ion-chip color="success" @click="openRemixes">
+          <ion-icon :icon="sync"></ion-icon>
+          <ion-label>{{ utils.formatNumber(stats.remixes) }}</ion-label>
+        </ion-chip>
+        <ion-chip color="primary">
+          <ion-icon :icon="eye"></ion-icon>
+          <ion-label>{{ utils.formatNumber(stats.views) }}</ion-label>
+        </ion-chip>
+        <ion-chip color="secondary" @click="shareProject">
+          <ion-icon :icon="shareSocial"></ion-icon>
+          <ion-label>Share</ion-label>
+        </ion-chip>
+      </div>
+      <ion-card
+        class="text-box ion-padding ion-activatable"
+        v-if="remix.parent != null"
+        @click="openRemixed()"
       >
-        <ion-icon :icon="favIcon"></ion-icon>
-        <ion-label>{{ utils.formatNumber(stats.favorites) }}</ion-label>
-      </ion-chip>
-      <ion-chip color="success" @click="openRemixes">
-        <ion-icon :icon="sync"></ion-icon>
-        <ion-label>{{ utils.formatNumber(stats.remixes) }}</ion-label>
-      </ion-chip>
-      <ion-chip color="primary">
-        <ion-icon :icon="eye"></ion-icon>
-        <ion-label>{{ utils.formatNumber(stats.views) }}</ion-label>
-      </ion-chip>
-      <ion-chip color="secondary" @click="shareProject">
-        <ion-icon :icon="shareSocial"></ion-icon>
-        <ion-label>Share</ion-label>
-      </ion-chip>
+        <ion-card-content>
+          <ion-card-title>
+            <ion-icon class="fix-icon" :icon="sync" /> Remixed
+          </ion-card-title>
+          <div>
+            This project is a remix of a previous project! Some elements of this
+            project may or may not be property of the author. Click here to
+            visit the original project.
+          </div>
+        </ion-card-content>
+        <ion-ripple-effect />
+      </ion-card>
+      <ion-card
+        :class="[
+          'text-box',
+          'ion-padding',
+          'instructions',
+          { selected: selected == 'instructions' },
+        ]"
+        v-if="instructions.length > 1"
+        @click="select('instructions')"
+      >
+        <ion-card-content>
+          <ion-card-title>Instructions</ion-card-title>
+          <div v-html="instructions"></div>
+        </ion-card-content>
+        <div class="shadow" v-if="selected != 'instructions'"></div>
+      </ion-card>
+      <ion-card
+        :class="[
+          'text-box',
+          'ion-padding',
+          'credits',
+          { selected: selected == 'credits' },
+        ]"
+        v-if="credits.length > 1"
+      >
+        <ion-card-content @click="select('credits')">
+          <ion-card-title>Credits</ion-card-title>
+          <div v-html="credits"></div>
+        </ion-card-content>
+        <div class="shadow" v-if="selected != 'credits'"></div>
+      </ion-card>
+      <br />
     </div>
-    <ion-card
-      class="text-box ion-padding ion-activatable"
-      v-if="remix.parent != null"
-      @click="openRemixed()"
-    >
-      <ion-card-content>
-        <ion-card-title>
-          <ion-icon class="fix-icon" :icon="sync" /> Remixed
-        </ion-card-title>
-        <div>
-          This project is a remix of a previous project! Some elements of this
-          project may or may not be property of the author. Click here to visit
-          the original project.
-        </div>
-      </ion-card-content>
-      <ion-ripple-effect />
-    </ion-card>
-    <ion-card
-      :class="[
-        'text-box',
-        'ion-padding',
-        'instructions',
-        { selected: selected == 'instructions' },
-      ]"
-      v-if="instructions.length > 1"
-      @click="select('instructions')"
-    >
-      <ion-card-content>
-        <ion-card-title>Instructions</ion-card-title>
-        <div v-html="instructions"></div>
-      </ion-card-content>
-      <div class="shadow" v-if="selected != 'instructions'"></div>
-    </ion-card>
-    <ion-card
-      :class="[
-        'text-box',
-        'ion-padding',
-        'credits',
-        { selected: selected == 'credits' },
-      ]"
-      v-if="credits.length > 1"
-      @click="select('credits')"
-    >
-      <ion-card-content>
-        <ion-card-title>Credits</ion-card-title>
-        <div v-html="credits"></div>
-      </ion-card-content>
-      <div class="shadow" v-if="selected != 'credits'"></div>
-    </ion-card>
-    <br />
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button>
-        <ion-spinner v-if="opening" />
-        <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
+        <ion-icon :icon="caretUp" />
       </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button @click="openInBrowser">
+          <ion-icon :icon="exit" />
+        </ion-fab-button>
+        <ion-fab-button @click="openComments">
+          <ion-icon :icon="chatbubble" />
+        </ion-fab-button>
+      </ion-fab-list>
     </ion-fab>
   </ion-content>
 </template>
@@ -131,16 +140,19 @@ import {
   IonChip,
   IonLabel,
   IonAvatar,
+  IonCardTitle,
   IonCardContent,
   IonIcon,
   IonRippleEffect,
-  IonSpinner,
   IonFab,
+  IonFabList,
   IonFabButton,
 } from "@ionic/vue";
 import {
   addOutline,
-  exitOutline,
+  exit,
+  chatbubble,
+  caretUp,
   heartOutline,
   starOutline,
   star,
@@ -150,8 +162,10 @@ import {
   shareSocial,
 } from "ionicons/icons";
 import { defineComponent } from "vue";
+import Error from "./Error.vue";
 import UserModal from "./UserModal.vue";
 import { Browser } from "@capacitor/browser";
+import ProjectComments from "@/components/ProjectComments.vue";
 export default defineComponent({
   name: "ProjectModal",
   props: {
@@ -177,23 +191,33 @@ export default defineComponent({
       credits: "",
       pfp: "https://u.cubeupload.com/darkness3560/newscratchavataropti.png",
       addOutline,
-      exitOutline,
+      exit,
+      chatbubble,
+      caretUp,
       favIcon: starOutline,
       favText: "Favorite",
       loveIcon: heartOutline,
       loveText: "Love",
       shareSocial,
       stats: {},
-      remix: null,
+      remix: {
+        parent: null,
+      },
       selected: null,
       opening: false,
       heart,
       star,
       sync,
       eye,
+      error: {
+        show: false,
+        code: 200,
+        message: "",
+      },
     };
   },
   components: {
+    Error,
     IonContent,
     IonHeader,
     IonTitle,
@@ -204,11 +228,12 @@ export default defineComponent({
     IonChip,
     IonLabel,
     IonAvatar,
+    IonCardTitle,
     IonCardContent,
     IonIcon,
     IonRippleEffect,
-    IonSpinner,
     IonFab,
+    IonFabList,
     IonFabButton,
   },
   mounted() {
@@ -226,7 +251,9 @@ export default defineComponent({
     },
     //document.querySelector("#content > div.box > div.box-head > h2")
     openRemixed() {
-      window.open(`/?project=${this.remix.parent}`);
+      if (this.remix) {
+        window.open(`/?project=${this.remix.parent}`);
+      }
     },
     openRemixes() {
       Browser.open({
@@ -248,6 +275,17 @@ export default defineComponent({
         method: "GET",
         url: `https://api.scratch.mit.edu/projects/${this.id}`,
       }).then((response) => {
+        this.error.code = response.status;
+        if (response.status == 404) {
+          this.error.message =
+            "We couldn't find this project.\nMaybe it's not shared?";
+          this.error.show = true;
+          this.title = "Error";
+        } else if (response.status == 500) {
+          this.error.message = "Scratch's servers are having trouble.";
+          this.error.show = true;
+          this.title = "Error";
+        }
         this.instructions = utils.prepareText(response.data.instructions);
         this.credits = utils.prepareText(response.data.description);
         this.pfp = response.data.author.profile.images["90x90"];
@@ -390,6 +428,18 @@ export default defineComponent({
           });
         }
       });
+    },
+    async openComments() {
+      const modal = await modalController.create({
+        component: ProjectComments,
+        cssClass: "open-modal",
+        componentProps: {
+          title: this.title,
+          author: this.author,
+          id: this.id,
+        },
+      });
+      return modal.present();
     },
   },
 });

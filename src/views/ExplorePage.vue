@@ -241,10 +241,8 @@ export default {
         component: ProjectModal,
         cssClass: "open-modal",
         componentProps: {
-          title: "loading...",
           embed: `https://turbowarp.org/${id}/embed`,
           id: id,
-          author: "loading...",
         },
       });
       return modal.present();

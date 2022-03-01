@@ -22,24 +22,29 @@
         </transition>
       </ion-text>
     </div>
-    <div class="user-header" :style="{ background: backgroundColor }">
-      <ion-avatar class="pfp" :style="`border: 3px solid ${textColor};`">
-        <img :src="pfp" />
-        <ion-spinner v-if="loading" />
-      </ion-avatar>
-      <br />
-      <ion-text color="white" class="username">
-        <h1>{{ username }}</h1>
-      </ion-text>
-      <ion-text class="under-pfp" v-if="!loading" :style="{ color: textColor }"
-        ><ion-icon :icon="calendar" /> {{ joinDate
-        }}<span class="followers-space" v-if="followers != 'dontshow'"
-          ><ion-icon :icon="personAdd" /> {{ followers }}</span
-        >
-      </ion-text>
-      <p><br /></p>
-    </div>
-    <!--
+    <Error :code="error.code" :message="error.message" v-if="error.show" />
+    <div v-if="!error.show">
+      <div class="user-header" :style="{ background: backgroundColor }">
+        <ion-avatar class="pfp" :style="`border: 3px solid ${textColor};`">
+          <img :src="pfp" />
+          <ion-spinner v-if="loading" />
+        </ion-avatar>
+        <br />
+        <ion-text color="white" class="username">
+          <h1>{{ username }}</h1>
+        </ion-text>
+        <ion-text
+          class="under-pfp"
+          v-if="!loading"
+          :style="{ color: textColor }"
+          ><ion-icon :icon="calendar" /> {{ joinDate
+          }}<span class="followers-space" v-if="followers != 'dontshow'"
+            ><ion-icon :icon="personAdd" /> {{ followers }}</span
+          >
+        </ion-text>
+        <p><br /></p>
+      </div>
+      <!--
       <ion-card class="top-shift text-box ion-padding">
         <ion-card-content>
           <ion-card-title>Activity</ion-card-title>
@@ -49,72 +54,82 @@
         </ion-card-content>
       </ion-card>
       !-->
-    <ProjectCard
-      class="featured-project"
-      :title="featuredProject.title"
-      :author="featuredProject.author"
-      :thumb="featuredProject.thumbnail"
-      :id="featuredProject.id"
-    />
-    <ion-card
-      :class="['text-box', 'ion-padding', { selected: selected == 'about' }]"
-      v-if="bio.about.length > 0"
-    >
-      <ion-card-content @click="select('about')">
-        <ion-card-title>About Me</ion-card-title>
-        <div v-safe-html="bio.about"></div>
-      </ion-card-content>
-      <div class="shadow" v-if="selected != 'about'"></div>
-    </ion-card>
-    <ion-card
-      :class="['text-box', 'ion-padding', { selected: selected == 'wiwo' }]"
-      v-if="bio.wiwo.length > 0"
-    >
-      <ion-card-content @click="select('wiwo')">
-        <ion-card-title>What I'm Working On</ion-card-title>
-        <div v-safe-html="bio.wiwo"></div>
-      </ion-card-content>
-      <div class="shadow" v-if="selected != 'wiwo'"></div>
-    </ion-card>
-    <div v-if="!loading">
-      <ion-text>
-        <h3>Projects ({{ projectCount }})</h3>
-      </ion-text>
-      <div class="sidescroll">
-        <div v-for="project in userProjects" :key="project.id">
-          <ProjectCard
-            class="user-projects"
-            :title="project.title"
-            :author="username"
-            :thumb="project.image"
-            :id="project.id"
-            :instructions="project.instructions"
-            :credits="project.description"
-          ></ProjectCard>
+      <ProjectCard
+        class="featured-project"
+        :title="featuredProject.title"
+        :author="featuredProject.author"
+        :thumb="featuredProject.thumbnail"
+        :id="featuredProject.id"
+      />
+      <ion-card
+        :class="['text-box', 'ion-padding', { selected: selected == 'about' }]"
+        v-if="bio.about.length > 0"
+        @click="select('about')"
+      >
+        <ion-card-content>
+          <ion-card-title>About Me</ion-card-title>
+          <div v-safe-html="bio.about"></div>
+        </ion-card-content>
+        <div class="shadow" v-if="selected != 'about'"></div>
+      </ion-card>
+      <ion-card
+        :class="['text-box', 'ion-padding', { selected: selected == 'wiwo' }]"
+        v-if="bio.wiwo.length > 0"
+        @click="select('wiwo')"
+      >
+        <ion-card-content>
+          <ion-card-title>What I'm Working On</ion-card-title>
+          <div v-safe-html="bio.wiwo"></div>
+        </ion-card-content>
+        <div class="shadow" v-if="selected != 'wiwo'"></div>
+      </ion-card>
+      <div v-if="!loading">
+        <ion-text>
+          <h3>Projects ({{ projectCount }})</h3>
+        </ion-text>
+        <div class="sidescroll">
+          <div v-for="project in userProjects" :key="project.id">
+            <ProjectCard
+              class="user-projects"
+              :title="project.title"
+              :author="username"
+              :thumb="project.image"
+              :id="project.id"
+              :instructions="project.instructions"
+              :credits="project.description"
+            ></ProjectCard>
+          </div>
         </div>
-      </div>
-      <ion-text>
-        <h3>Favorites</h3>
-      </ion-text>
-      <div class="sidescroll">
-        <div v-for="project in favoriteProjects" :key="project.id">
-          <ProjectCard
-            class="user-projects"
-            :title="project.title"
-            :author="project.author.username"
-            :thumb="project.image"
-            :id="project.id"
-            :instructions="project.instructions"
-            :credits="project.description"
-          ></ProjectCard>
+        <ion-text>
+          <h3>Favorites</h3>
+        </ion-text>
+        <div class="sidescroll">
+          <div v-for="project in favoriteProjects" :key="project.id">
+            <ProjectCard
+              class="user-projects"
+              :title="project.title"
+              :author="project.author.username"
+              :thumb="project.image"
+              :id="project.id"
+              :instructions="project.instructions"
+              :credits="project.description"
+            ></ProjectCard>
+          </div>
         </div>
       </div>
     </div>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button>
-        <ion-spinner v-if="opening" />
-        <ion-icon :icon="exitOutline" @click="openInBrowser" v-else />
+        <ion-icon :icon="caretUp" />
       </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button @click="openInBrowser">
+          <ion-icon :icon="exit" />
+        </ion-fab-button>
+        <ion-fab-button @click="openComments">
+          <ion-icon :icon="chatbubble" />
+        </ion-fab-button>
+      </ion-fab-list>
     </ion-fab>
   </ion-content>
 </template>
@@ -122,6 +137,8 @@
 <script>
 const utils = require("../utils.js");
 import ProjectCard from "@/components/ProjectCard.vue";
+import UserComments from "@/components/UserComments.vue";
+import Error from "./Error.vue";
 import { parse } from "node-html-parser";
 //import * as Vibrant from 'node-vibrant';
 import "@capacitor-community/http";
@@ -146,7 +163,7 @@ import {
   IonFabButton,
   IonIcon,
 } from "@ionic/vue";
-import { exitOutline, personAdd, calendar } from "ionicons/icons";
+import { exit, caretUp, personAdd, calendar, chatbubble } from "ionicons/icons";
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "UserModal",
@@ -179,9 +196,16 @@ export default defineComponent({
       projectCount: "loading",
       userProjects: [],
       favoriteProjects: [],
-      exitOutline,
+      exit,
       personAdd,
       calendar,
+      caretUp,
+      chatbubble,
+      error: {
+        show: false,
+        code: 200,
+        message: "",
+      },
     };
   },
   components: {
@@ -198,6 +222,7 @@ export default defineComponent({
     IonFabButton,
     IonIcon,
     ProjectCard,
+    Error,
   },
   setup() {
     const router = useRouter();
@@ -236,8 +261,7 @@ export default defineComponent({
       }
     },
     async loadUser() {
-      let user,
-        userActivity = {};
+      let user;
       this.loadingStatus = 0;
       const isLoading = () => {
         if (this.loadingStatus == 6) {
@@ -249,10 +273,27 @@ export default defineComponent({
           return true;
         }
       };
+      const handleError = (status) => {
+        this.error.code = status;
+        if (status == 404) {
+          this.error.message =
+            "We couldn't find this project.\nMaybe it's not shared?";
+          this.loadingStatus = 6;
+          this.title = "Error";
+          this.error.show = true;
+        } else if (status == 500) {
+          this.error.message = "Scratch's servers are having trouble.";
+          this.loadingStatus = 6;
+          this.title = "Error";
+          this.error.show = true;
+        }
+        isLoading();
+      };
       Http.request({
         method: "GET",
         url: `https://scratch.mit.edu/site-api/users/all/${this.username}`,
       }).then((res) => {
+        handleError(res.status);
         this.featuredProject = {
           label: res.data.featured_project_label_name,
           author: res.data.featured_project_data.creator,
@@ -265,6 +306,7 @@ export default defineComponent({
         method: "GET",
         url: `https://api.scratch.mit.edu/users/${this.username}/favorites?limit=12`,
       }).then((res) => {
+        handleError(res.status);
         this.loadingStatus++;
         res.data.forEach((project) => {
           Http.request({
@@ -284,6 +326,7 @@ export default defineComponent({
         method: "GET",
         url: `https://itchy-api.vercel.app/api/user?user=${this.username}`,
       }).then((res) => {
+        handleError(res.status);
         this.loadingStatus++;
         isLoading();
         user = res.data;
@@ -336,7 +379,7 @@ export default defineComponent({
         method: "GET",
         url: `https://scratch.mit.edu/messages/ajax/user-activity/?user=${this.username}&max=6`,
       }).then((res) => {
-        console.log(userActivity);
+        handleError(res.status);
         this.loadingStatus++;
         isLoading();
         let unparsed = res.data;
@@ -369,6 +412,17 @@ export default defineComponent({
       Browser.addListener("browserFinished", () => {
         this.opening = false;
       });
+    },
+    async openComments() {
+      const modal = await modalController.create({
+        component: UserComments,
+        cssClass: "open-modal",
+        componentProps: {
+          type: "user",
+          title: this.username,
+        },
+      });
+      return modal.present();
     },
   },
 });
@@ -457,7 +511,7 @@ p {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
   color: white;
 }
 
@@ -505,7 +559,7 @@ ion-progress-bar {
 }
 
 ion-card.text-box {
-  z-index: -1;
+  z-index: 1;
   max-height: 18vh;
   transition: max-height 0.3s ease-out;
   margin-bottom: 0.5em;
