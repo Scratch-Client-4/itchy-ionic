@@ -54,6 +54,11 @@
         </ion-item>
         <ion-item>
           <ion-label>
+            <a href="https://itchy.micahlindley.com/privacy.html">Privacy Policy</a>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>
             Made
             <a href="https://github.com/scratch-client-4/itchy-ionic"
               >open source</a
