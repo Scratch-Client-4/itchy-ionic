@@ -58,10 +58,8 @@
                 <ion-label>Sign In</ion-label>
               </ion-button>
               <div class="disclaimer">
-                Your data will be redirected from our servers to Scratch. See
-                our
-                <a href="#" @click.prevent="openPrivacy">Privacy Policy</a> for
-                more info.
+                By logging in, you agree<br />
+                to our <a href="#" @click.prevent="openPrivacy">Privacy Policy</a>.
               </div>
             </ion-col>
           </ion-row>
