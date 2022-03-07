@@ -28,7 +28,7 @@
               >
             </div>
             <div class="message">
-              <p v-html="c.content"></p>
+              <p v-html="utils.replaceEmoji(c.content)"></p>
               <div class="info">
                 <ion-icon :icon="chatbubble" class="blue"></ion-icon>
                 <span class="reply-count">{{ c.replies.length }}</span>
@@ -56,7 +56,7 @@
                   >
                 </div>
                 <div class="message">
-                  <p v-html="r.content"></p>
+                  <p v-html="utils.replaceEmoji(r.content)"></p>
                   <div class="info">
                     <ion-icon :icon="time" class="blue"></ion-icon>
                     <span class="timestamp">{{ r.timestamp }}</span>
@@ -76,6 +76,7 @@ import "@capacitor-community/http";
 import { Plugins } from "@capacitor/core";
 import { App } from "@capacitor/app";
 const { Http } = Plugins;
+const utils = require("../utils.js");
 const friendlyTime = require("friendly-time");
 import UserModal from "@/components/UserModal.vue";
 import {
@@ -110,6 +111,7 @@ export default defineComponent({
       chatbubble,
       time,
       friendlyTime,
+      utils,
     };
   },
   components: {
@@ -189,7 +191,7 @@ ion-progress-bar {
 }
 
 .backbutton {
-  background: #303c54;
+  background: var(--ion-toolbar-background);
   position: fixed;
   top: 0;
   left: 0;
