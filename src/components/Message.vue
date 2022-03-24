@@ -267,7 +267,10 @@ export default defineComponent({
         component: UserModal,
         cssClass: "open-modal",
         componentProps: {
-          username: o.type == "admin" ? "ScratchCat" : o.actor_username,
+          username:
+            o.type == "admin" || o.actor_username == "systemuser"
+              ? "ScratchCat"
+              : o.actor_username,
         },
       });
       return modal.present();
