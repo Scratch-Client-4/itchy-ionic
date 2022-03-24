@@ -54,7 +54,9 @@
         </ion-item>
         <ion-item>
           <ion-label>
-            <a href="https://itchy.micahlindley.com/privacy.html">Privacy Policy</a>
+            <a href="https://itchy.micahlindley.com/privacy.html"
+              >Privacy Policy</a
+            >
           </ion-label>
         </ion-item>
         <ion-item>
@@ -105,7 +107,7 @@ export default {
   },
   data() {
     return {
-      version: "0.9.7",
+      version: "0.9.8",
     };
   },
   setup() {
