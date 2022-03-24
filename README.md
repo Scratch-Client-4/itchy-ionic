@@ -1,6 +1,7 @@
 # itchy-ionic
-
 A hybrid-native approach to a Scratch mobile app built with the Ionic framework
+
+[![Generate Android Development APK](https://github.com/Scratch-Client-4/itchy-ionic/actions/workflows/android-debug.yml/badge.svg)](https://github.com/Scratch-Client-4/itchy-ionic/actions/workflows/android-debug.yml)
 
 <img src="docs/Screenshot_latest.png" alt="screenshot of Itchy" width="300px">
 
