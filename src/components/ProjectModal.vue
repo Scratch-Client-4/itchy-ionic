@@ -103,6 +103,11 @@
         </ion-card-content>
         <div class="shadow" v-if="selected != 'credits'"></div>
       </ion-card>
+      <div v-if="history" class="history">
+        Created {{ utils.formatDate(history.created) }}<br />
+        Shared {{ utils.formatDate(history.shared) }}<br />
+        Modified {{ utils.formatDate(history.modified) }}
+      </div>
       <br />
     </div>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
@@ -204,6 +209,7 @@ export default defineComponent({
         parent: null,
       },
       selected: null,
+      history: null,
       opening: false,
       heart,
       star,
@@ -293,6 +299,7 @@ export default defineComponent({
         this.author = response.data.author.username;
         this.stats = response.data.stats;
         this.remix = response.data.remix;
+        this.history = response.data.history;
         if (this.session) {
           Http.request({
             method: "POST",
@@ -513,5 +520,11 @@ ion-card-content {
 
 .fix-icon {
   transform: translateY(2px);
+}
+
+.history {
+  color: var(--ion-color-step-300);
+  font-size: 0.75em;
+  padding-left: 1rem;
 }
 </style>
