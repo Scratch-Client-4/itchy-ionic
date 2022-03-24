@@ -30,8 +30,10 @@
             <div class="message">
               <p v-html="utils.replaceEmoji(c.content)"></p>
               <div class="info">
-                <ion-icon :icon="chatbubble" class="blue"></ion-icon>
-                <span class="reply-count">{{ c.reply_count }}</span>
+                <span v-if="c.reply_count > 0">
+                  <ion-icon :icon="chatbubble" class="blue"></ion-icon>
+                  <span class="reply-count">{{ c.reply_count }}</span>
+                </span>
                 <ion-icon :icon="time" class="blue"></ion-icon>
                 <span class="timestamp">{{ c.datetime_created }}</span>
               </div>
@@ -68,6 +70,18 @@
         </transition>
       </div>
     </main>
+    <ion-infinite-scroll
+      @ionInfinite="loadComments($event)"
+      threshold="100px"
+      id="infinite-scroll"
+    >
+      <ion-infinite-scroll-content
+        class="ion-padding"
+        loading-spinner="circular"
+        loading-text="Loading more comments..."
+      >
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </ion-content>
 </template>
 
@@ -88,6 +102,8 @@ import {
   IonAvatar,
   IonIcon,
   IonRippleEffect,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
 } from "@ionic/vue";
 import { chatbubble, time } from "ionicons/icons";
 import { defineComponent } from "vue";
@@ -119,6 +135,7 @@ export default defineComponent({
       time,
       friendlyTime,
       utils,
+      offset: 0,
     };
   },
   components: {
@@ -129,6 +146,8 @@ export default defineComponent({
     IonAvatar,
     IonIcon,
     IonRippleEffect,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
   },
   mounted() {
     App.addListener("backButton", () => {
@@ -148,10 +167,10 @@ export default defineComponent({
     closeModal() {
       modalController.dismiss();
     },
-    loadComments() {
+    loadComments(event) {
       Http.request({
         method: "GET",
-        url: `https://api.scratch.mit.edu/users/${this.author}/projects/${this.id}/comments`,
+        url: `https://api.scratch.mit.edu/users/${this.author}/projects/${this.id}/comments?offset=${this.offset}`,
       }).then((res) => {
         // const mentionRegex = /@(-?_?[A-Z]?[a-z]?[0-9]?)+/g;
         res.data.forEach((comment) => {
@@ -176,6 +195,10 @@ export default defineComponent({
         });
         console.log(this.comments);
         this.loading = false;
+        this.offset += res.data.length;
+        if (event) {
+          event.target.complete();
+        }
       });
     },
     async openUser(name) {

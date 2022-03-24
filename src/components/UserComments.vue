@@ -28,8 +28,10 @@
             <div class="message">
               <p v-html="utils.replaceEmoji(c.content)"></p>
               <div class="info">
-                <ion-icon :icon="chatbubble" class="blue"></ion-icon>
-                <span class="reply-count">{{ c.replies.length }}</span>
+                <span v-if="c.replies.length > 0">
+                  <ion-icon :icon="chatbubble" class="blue"></ion-icon>
+                  <span class="reply-count">{{ c.replies.length }}</span>
+                </span>
                 <ion-icon :icon="time" class="blue"></ion-icon>
                 <span class="timestamp">{{ c.timestamp }}</span>
               </div>
@@ -66,6 +68,18 @@
         </transition>
       </div>
     </main>
+    <ion-infinite-scroll
+      @ionInfinite="loadComments($event)"
+      threshold="100px"
+      id="infinite-scroll"
+    >
+      <ion-infinite-scroll-content
+        class="ion-padding"
+        loading-spinner="circular"
+        loading-text="Loading more comments..."
+      >
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </ion-content>
 </template>
 
@@ -86,6 +100,8 @@ import {
   IonAvatar,
   IonIcon,
   IonRippleEffect,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
 } from "@ionic/vue";
 import { chatbubble, time } from "ionicons/icons";
 import { defineComponent } from "vue";
@@ -110,6 +126,7 @@ export default defineComponent({
       time,
       friendlyTime,
       utils,
+      offset: 1,
     };
   },
   components: {
@@ -120,6 +137,8 @@ export default defineComponent({
     IonAvatar,
     IonIcon,
     IonRippleEffect,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
   },
   mounted() {
     App.addListener("backButton", () => {
@@ -139,11 +158,11 @@ export default defineComponent({
     closeModal() {
       modalController.dismiss();
     },
-    loadComments() {
+    loadComments(event) {
       if (this.type == "user") {
         Http.request({
           method: "GET",
-          url: `https://itchy-api.vercel.app/api/user?user=${this.title}&comments=true`,
+          url: `https://itchy-api.vercel.app/api/user?user=${this.title}&comments=true&commentoffset=${this.offset}`,
         }).then((res) => {
           // const mentionRegex = /@(-?_?[A-Z]?[a-z]?[0-9]?)+/g;
           res.data.forEach((comment) => {
@@ -154,6 +173,10 @@ export default defineComponent({
             this.comments.push(comment);
           });
           this.loading = false;
+          this.offset++;
+          if (event) {
+            event.target.complete();
+          }
         });
       }
     },
