@@ -23,9 +23,7 @@
           <div class="content">
             <div class="username">
               <span class="name">{{ c.author.username }}</span>
-              <span class="creator" v-if="c.author.username == title"
-                >CREATOR</span
-              >
+              <span class="owner" v-if="c.author.username == title">OWNER</span>
             </div>
             <div class="message">
               <p v-html="utils.replaceEmoji(c.content)"></p>
