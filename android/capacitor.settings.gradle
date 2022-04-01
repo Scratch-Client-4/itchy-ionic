@@ -29,5 +29,8 @@ project(':capacitor-splash-screen').projectDir = new File('../node_modules/@capa
 include ':capacitor-status-bar'
 project(':capacitor-status-bar').projectDir = new File('../node_modules/@capacitor/status-bar/android')
 
+include ':capacitor-storage'
+project(':capacitor-storage').projectDir = new File('../node_modules/@capacitor/storage/android')
+
 include ':capacitor-dark-mode'
 project(':capacitor-dark-mode').projectDir = new File('../node_modules/capacitor-dark-mode/android')

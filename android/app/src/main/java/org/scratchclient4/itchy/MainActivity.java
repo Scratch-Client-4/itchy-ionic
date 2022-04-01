@@ -1,23 +1,19 @@
 package org.scratchclient4.itchy;
 
-import android.os.Bundle;
-
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.webkit.WebSettings;
-import android.os.Bundle;
 import android.content.res.Configuration;
+import android.os.Bundle;
+import android.webkit.WebSettings;
 
 import com.capacitorjs.plugins.app.AppPlugin;
 import com.capacitorjs.plugins.browser.BrowserPlugin;
 import com.capacitorjs.plugins.haptics.HapticsPlugin;
+import com.capacitorjs.plugins.localnotifications.LocalNotificationsPlugin;
+import com.capacitorjs.plugins.share.SharePlugin;
 import com.capacitorjs.plugins.splashscreen.SplashScreenPlugin;
 import com.capacitorjs.plugins.statusbar.StatusBarPlugin;
-import com.capacitorjs.plugins.share.SharePlugin;
-import com.capacitorjs.plugins.localnotifications.LocalNotificationsPlugin;
+import com.capacitorjs.plugins.storage.StoragePlugin;
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
-import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.plugin.http.Http;
 
 import java.util.ArrayList;
@@ -37,6 +33,7 @@ public class MainActivity extends BridgeActivity {
       registerPlugin(AppPlugin.class);
       registerPlugin(SharePlugin.class);
       registerPlugin(LocalNotificationsPlugin.class);
+      registerPlugin(StoragePlugin.class);
     }});
     int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
     WebSettings webSettings = this.bridge.getWebView().getSettings();

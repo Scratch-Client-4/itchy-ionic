@@ -88,6 +88,7 @@ import {
   IonToggle,
   modalController,
 } from "@ionic/vue";
+import { Storage } from "@capacitor/storage";
 import AuthModal from "../components/AuthModal.vue";
 import UserModal from "../components/UserModal.vue";
 export default {
@@ -155,8 +156,9 @@ export default {
       });
       return modal.present();
     },
-    signOut() {
+    async signOut() {
       window.localStorage.removeItem("session");
+      await Storage.clear();
       window.location.reload();
     },
     toggle(setting) {

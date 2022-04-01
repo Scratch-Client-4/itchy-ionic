@@ -27,6 +27,7 @@
     "@capacitor/share": "^1.1.2",
     "@capacitor/splash-screen": "^1.2.2",
     "@capacitor/status-bar": "^1.0.8",
+    "@capacitor/storage": "^1.2.5",
     "@ionic-native/http": "^5.36.0",
     "@ionic-native/web-intent": "^5.36.0",
     "@ionic/vue": "^5.9.3",
