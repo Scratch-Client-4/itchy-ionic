@@ -1,11 +1,16 @@
 <template>
   <ion-item
     button
-    class="transparent-item ripple-parent ion-activatable"
+    :class="[
+      'transparent-item',
+      'ripple-parent',
+      'ion-activatable',
+      { padded: showAvatar },
+    ]"
     @click="visit(i)"
     lines="none"
   >
-    <ion-avatar slot="start" @click.stop="openUser(i)">
+    <ion-avatar slot="start" @click.stop="openUser(i)" v-if="showAvatar">
       <img
         v-if="i.type != 'becomeownerstudio'"
         :src="`https://cdn2.scratch.mit.edu/get_image/user/${i.actor_id}_60x60.png`"
@@ -23,6 +28,9 @@
         <span v-if="i.type == 'loveproject'">loved {{ i.title }}</span>
         <span v-if="i.type == 'favoriteproject'"
           >favorited {{ i.project_title }}</span
+        >
+        <span v-if="i.type == 'addproject'"
+          >added {{ i.title }} to {{ i.gallery_title }}</span
         >
         <span v-if="i.type == 'remixproject'"
           >remixed {{ i.parent_title }} as {{ i.title }}</span
@@ -58,6 +66,7 @@ export default defineComponent({
   },
   props: {
     i: Object,
+    showAvatar: Boolean,
   },
   emits: ["openProject", "openUser"],
   data() {
@@ -75,6 +84,7 @@ export default defineComponent({
         "shareproject",
         "loveproject",
         "favoriteproject",
+        "addproject",
       ];
       const userLinks = ["followuser"];
       if (projectLinks.includes(i.type)) {
@@ -146,5 +156,9 @@ ion-item {
 ion-avatar {
   margin-bottom: 4px;
   margin-top: 4px;
+}
+
+.padded {
+  padding: 0.1em 0;
 }
 </style>

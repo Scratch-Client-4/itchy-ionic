@@ -54,35 +54,39 @@
         </ion-card-content>
       </ion-card>
       !-->
-      <ProjectCard
-        class="featured-project"
-        :title="featuredProject.title"
-        :author="featuredProject.author"
-        :thumb="featuredProject.thumbnail"
-        :id="featuredProject.id"
-      />
-      <ion-card
-        :class="['text-box', 'ion-padding', { selected: selected == 'about' }]"
-        v-if="bio.about.length > 0"
-        @click="select('about')"
-      >
-        <ion-card-content>
-          <ion-card-title>About Me</ion-card-title>
-          <div v-safe-html="bio.about"></div>
-        </ion-card-content>
-        <div class="shadow" v-if="selected != 'about'"></div>
-      </ion-card>
-      <ion-card
-        :class="['text-box', 'ion-padding', { selected: selected == 'wiwo' }]"
-        v-if="bio.wiwo.length > 0"
-        @click="select('wiwo')"
-      >
-        <ion-card-content>
-          <ion-card-title>What I'm Working On</ion-card-title>
-          <div v-safe-html="bio.wiwo"></div>
-        </ion-card-content>
-        <div class="shadow" v-if="selected != 'wiwo'"></div>
-      </ion-card>
+      <div class="scroller" @scroll="paginate($event)">
+        <ProjectCard
+          class="featured-project"
+          :title="featuredProject.title"
+          :author="featuredProject.author"
+          :thumb="featuredProject.thumbnail"
+          :id="featuredProject.id"
+        />
+        <UserFeed
+          :username="username"
+          @openProject="openProject"
+          @openUser="openUser"
+        />
+        <div class="about">
+          <ion-card class="text-box ion-padding" v-if="bio.about.length > 0">
+            <ion-card-content>
+              <ion-card-title>About Me</ion-card-title>
+              <div v-safe-html="bio.about"></div>
+            </ion-card-content>
+          </ion-card>
+          <ion-card class="text-box ion-padding" v-if="bio.wiwo.length > 0">
+            <ion-card-content>
+              <ion-card-title>What I'm Working On</ion-card-title>
+              <div v-safe-html="bio.wiwo"></div>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+      <div class="paginator">
+        <span :class="['page', { active: page == 0 }]"></span>
+        <span :class="['page', { active: page == 1 }]"></span>
+        <span :class="['page', { active: page == 2 }]"></span>
+      </div>
       <div v-if="!loading">
         <ion-text>
           <h3>Projects ({{ projectCount }})</h3>
@@ -138,8 +142,8 @@
 const utils = require("../utils.js");
 import ProjectCard from "@/components/ProjectCard.vue";
 import UserComments from "@/components/UserComments.vue";
+import UserFeed from "@/components/UserFeed.vue";
 import Error from "./Error.vue";
-import { parse } from "node-html-parser";
 //import * as Vibrant from 'node-vibrant';
 import "@capacitor-community/http";
 import { Plugins } from "@capacitor/core";
@@ -165,6 +169,8 @@ import {
 } from "@ionic/vue";
 import { exit, caretUp, personAdd, calendar, chatbubble } from "ionicons/icons";
 import { defineComponent } from "vue";
+import ProjectModal from "../components/ProjectModal.vue";
+import UserModal from "../components/UserModal.vue";
 export default defineComponent({
   name: "UserModal",
   props: {
@@ -188,7 +194,6 @@ export default defineComponent({
         about: "",
       },
       pfp: "./assets/avatar.png",
-      selected: null,
       featuredProject: {},
       showHeader: false,
       headerColor: "transparent",
@@ -201,6 +206,7 @@ export default defineComponent({
       calendar,
       caretUp,
       chatbubble,
+      page: 0,
       error: {
         show: false,
         code: 200,
@@ -223,6 +229,7 @@ export default defineComponent({
     IonIcon,
     ProjectCard,
     Error,
+    UserFeed,
   },
   setup() {
     const router = useRouter();
@@ -241,10 +248,6 @@ export default defineComponent({
     this.loadUser();
   },
   methods: {
-    select(item) {
-      console.log("Selected", item);
-      this.selected = item;
-    },
     closeModal() {
       StatusBar.setBackgroundColor({
         color: "#121212",
@@ -260,11 +263,41 @@ export default defineComponent({
         this.headerColor = "transparent";
       }
     },
+    paginate(e) {
+      if (e.target.scrollLeft > e.target.offsetWidth * 2 - 100) {
+        this.page = 2;
+      } else if (e.target.scrollLeft > e.target.offsetWidth - 100) {
+        this.page = 1;
+      } else {
+        this.page = 0;
+      }
+    },
+    async openProject(id) {
+      const modal = await modalController.create({
+        component: ProjectModal,
+        cssClass: "open-modal",
+        componentProps: {
+          embed: `https://turbowarp.org/${id}/embed`,
+          id: id,
+        },
+      });
+      return modal.present();
+    },
+    async openUser(name) {
+      const modal = await modalController.create({
+        component: UserModal,
+        cssClass: "open-modal",
+        componentProps: {
+          username: name,
+        },
+      });
+      return modal.present();
+    },
     async loadUser() {
       let user;
       this.loadingStatus = 0;
       const isLoading = () => {
-        if (this.loadingStatus == 6) {
+        if (this.loadingStatus == 5) {
           setTimeout(() => {
             this.loading = false;
           }, 300);
@@ -375,33 +408,6 @@ export default defineComponent({
           this.followers = "dontshow";
         }
       });
-      Http.request({
-        method: "GET",
-        url: `https://scratch.mit.edu/messages/ajax/user-activity/?user=${this.username}&max=6`,
-      }).then((res) => {
-        handleError(res.status);
-        this.loadingStatus++;
-        isLoading();
-        let unparsed = res.data;
-        unparsed = parse(unparsed);
-        unparsed = unparsed.querySelectorAll("li");
-        for (let i = 1; i <= unparsed.length; i += 2) {
-          let obj = {};
-          const selected = unparsed[i].querySelector("div");
-          obj.user = selected.childNodes[1].innerText;
-          obj.action = selected.childNodes[2].innerText
-            .replace(/\s+/g, " ")
-            .trim();
-          obj.target = {
-            title: selected.childNodes[3].innerText,
-            link: `https://scratch.mit.edu${selected.childNodes[3].getAttribute(
-              "href"
-            )}`,
-          };
-          this.activity.push(obj);
-        }
-        console.log(this.activity);
-      });
     },
     async openInBrowser() {
       this.opening = true;
@@ -444,12 +450,6 @@ ion-progress-bar {
 
 ion-card-title {
   font-size: 2.5em;
-}
-
-::v-deep(ion-card.featured-project) {
-  width: 98%;
-  margin: auto;
-  max-height: 100% !important;
 }
 
 .user-header {
@@ -560,8 +560,6 @@ ion-progress-bar {
 
 ion-card.text-box {
   z-index: 1;
-  max-height: 18vh;
-  transition: max-height 0.3s ease-out;
   margin-bottom: 0.5em;
   width: 98%;
   margin-left: 4px;
@@ -605,5 +603,65 @@ h3 {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto;
   margin: 10px;
+}
+
+::v-deep(ion-card.featured-project) {
+  width: 93.5%;
+  margin: auto;
+  max-height: 100% !important;
+  display: inline-block;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+}
+
+.scroller {
+  display: flex;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  width: 105%;
+  margin-left: 1%;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.paginator {
+  margin: auto;
+  margin-top: 0.5em;
+  width: max-content;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.3em 0.4em;
+  user-select: none;
+  height: 1em;
+  line-height: 0.4rem;
+  border-radius: 0.6em;
+}
+
+.page:nth-of-type(1):after,
+.page:nth-of-type(2):after {
+  margin-right: 0.1em;
+}
+.page:after {
+  content: "•";
+  color: white;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.page.active:after {
+  opacity: 1;
+}
+
+.about {
+  scroll-snap-align: start;
+  width: 93.5%;
+  flex: 0 0 auto;
+  margin: auto;
+  margin-right: 10vw;
+  margin-top: 0;
+}
+
+.about ion-card {
+  margin: auto;
+  margin-bottom: 0.5em;
 }
 </style>

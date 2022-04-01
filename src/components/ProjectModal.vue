@@ -509,13 +509,13 @@ ion-card-content {
 }
 
 .instructions.selected {
-  max-height: max-content !important;
-  transition: max-height 0.3s ease-out;
+  max-height: 1000vh !important;
+  transition: max-height 5s ease-out;
 }
 
 .credits.selected {
-  max-height: max-content !important;
-  transition: max-height 0.3s ease-out;
+  max-height: 1000vh !important;
+  transition: max-height 5s ease-out;
 }
 
 .fix-icon {
