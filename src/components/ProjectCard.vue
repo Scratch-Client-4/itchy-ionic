@@ -75,3 +75,8 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped>
+img {
+  aspect-ratio: 4 / 3;
+}
+</style>

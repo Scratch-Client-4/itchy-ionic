@@ -37,6 +37,7 @@ ion-searchbar input {
   overflow-x: scroll;
   display: flex;
   padding-left: 10px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sidescroll::-webkit-scrollbar {

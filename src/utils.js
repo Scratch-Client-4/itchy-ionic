@@ -3,6 +3,51 @@ import { Plugins } from "@capacitor/core";
 const { Http } = Plugins;
 const approx = require("./approximate-number.js");
 
+function replaceEmoji(string) {
+  const namesToReplace = {
+    "meow.png": "😺",
+    "gobo.png": "[gobo emoji]",
+    "waffle.png": "🧇",
+    "taco.png": "🌮",
+    "sushi.png": "🍣",
+    "apple.png": "🍎",
+    "broccoli.png": "🥦",
+    "pizza.png": "🍕",
+    "candycorn.png": "[candycorn emoji]",
+    "10mil.png": "🎉",
+    "map.png": "🗺️",
+    "camera.png": "📷",
+    "suitcase.png": "💼",
+    "compass.png": "🧭",
+    "binoculars.png": "🔭",
+    "cupcake.png": "🧁",
+    "cat.png": "🐱",
+    "aww-cat.png": "😀",
+    "cool-cat.png": "😎",
+    "tongue-out-cat.png": "😛",
+    "wink-cat.png": "😜",
+    "lol-cat.png": "😹",
+    "upside-down-cat.png": "🙃",
+    "huh-cat.png": "🤨",
+    "love-it-cat.png": "😻",
+    "fav-it-cat.png": "🤩",
+    "rainbow-cat.png": "😸🌈",
+    "pizza-cat.png": "😸🍕",
+    "blm.png": "✊🏿",
+    "pride.png": "🏳️‍🌈",
+  };
+  Object.keys(namesToReplace).forEach((emoji) => {
+    string = string.replaceAll(
+      `<img src="/images/emoji/${emoji}" class="emoji" alt="${emoji.substring(
+        0,
+        emoji.length - 4
+      )} emoji">`,
+      namesToReplace[emoji]
+    );
+  });
+  return string;
+}
+
 function matchRegexes(string) {
   let numberPattern = new RegExp(`\\d+`, `g`);
   let projectRegex = new RegExp(
@@ -177,6 +222,7 @@ async function unifiedSearch(query, offset) {
 }
 
 export {
+  replaceEmoji,
   matchRegexes,
   prepareText,
   getParams,

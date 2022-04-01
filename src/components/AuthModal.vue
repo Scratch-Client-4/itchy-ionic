@@ -59,7 +59,8 @@
               </ion-button>
               <div class="disclaimer">
                 By logging in, you agree<br />
-                to our <a href="#" @click.prevent="openPrivacy">Privacy Policy</a>.
+                to our
+                <a href="#" @click.prevent="openPrivacy">Privacy Policy</a>.
               </div>
             </ion-col>
           </ion-row>
@@ -93,6 +94,7 @@ import {
 } from "@ionic/vue";
 import { lockClosed, personCircleOutline } from "ionicons/icons";
 import { Browser } from "@capacitor/browser";
+import { Storage } from "@capacitor/storage";
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "AuthModal",
@@ -168,6 +170,10 @@ export default defineComponent({
         if (response.status == 200) {
           let json = await response.json();
           window.localStorage.setItem("session", JSON.stringify(json));
+          await Storage.set({
+            key: "username",
+            value: username,
+          });
           window.location.reload();
         } else {
           this.presentAlert(

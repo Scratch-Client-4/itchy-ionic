@@ -54,7 +54,9 @@
         </ion-item>
         <ion-item>
           <ion-label>
-            <a href="https://itchy.micahlindley.com/privacy.html">Privacy Policy</a>
+            <a href="https://itchy.micahlindley.com/privacy.html"
+              >Privacy Policy</a
+            >
           </ion-label>
         </ion-item>
         <ion-item>
@@ -86,6 +88,7 @@ import {
   IonToggle,
   modalController,
 } from "@ionic/vue";
+import { Storage } from "@capacitor/storage";
 import AuthModal from "../components/AuthModal.vue";
 import UserModal from "../components/UserModal.vue";
 export default {
@@ -105,7 +108,7 @@ export default {
   },
   data() {
     return {
-      version: "0.9.7",
+      version: "0.9.8",
     };
   },
   setup() {
@@ -153,8 +156,9 @@ export default {
       });
       return modal.present();
     },
-    signOut() {
+    async signOut() {
       window.localStorage.removeItem("session");
+      await Storage.clear();
       window.location.reload();
     },
     toggle(setting) {

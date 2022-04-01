@@ -36,6 +36,10 @@
 		"classpath": "com.capacitorjs.plugins.statusbar.StatusBarPlugin"
 	},
 	{
+		"pkg": "@capacitor/storage",
+		"classpath": "com.capacitorjs.plugins.storage.StoragePlugin"
+	},
+	{
 		"pkg": "capacitor-dark-mode",
 		"classpath": "com.bkon.capacitor.DarkMode.DarkMode"
 	}
