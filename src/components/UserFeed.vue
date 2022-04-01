@@ -62,6 +62,7 @@ export default defineComponent({
             const selected = unparsed[i].querySelector("div");
             obj.actor_username = this.username;
             obj.actor_id = user.data.id;
+            obj.datetime_created = unparsed[i].querySelector(".time").innerText;
             switch (
               selected.childNodes[2].innerText.replace(/\s+/g, " ").trim()
             ) {

@@ -66,7 +66,10 @@ export default defineComponent({
   },
   props: {
     i: Object,
-    showAvatar: Boolean,
+    showAvatar: {
+      type: Boolean,
+      default: true,
+    },
   },
   emits: ["openProject", "openUser"],
   data() {
