@@ -66,6 +66,8 @@
           :username="username"
           @openProject="openProject"
           @openUser="openUser"
+          :open="userFeedOpen"
+          @expand="handleExpandFeed($event)"
         />
         <div class="about">
           <ion-card class="text-box ion-padding" v-if="bio.about.length > 0">
@@ -147,7 +149,7 @@ import Error from "./Error.vue";
 //import * as Vibrant from 'node-vibrant';
 import "@capacitor-community/http";
 import { Plugins } from "@capacitor/core";
-import { App } from "@capacitor/app";
+// import { App } from "@capacitor/app";
 import { StatusBar } from "@capacitor/status-bar";
 import { Browser } from "@capacitor/browser";
 import { useRouter } from "vue-router";
@@ -212,6 +214,7 @@ export default defineComponent({
         code: 200,
         message: "",
       },
+      userFeedOpen: false,
     };
   },
   components: {
@@ -242,12 +245,24 @@ export default defineComponent({
       color: this.backgroundColor,
     });
     this.router.push("/user/" + this.username);
+    /*
     App.addListener("backButton", () => {
-      this.closeModal();
-    });
+      setTimeout(() => {
+        if (!this.userFeedOpen) {
+          alert("CLOSING MODAL!");
+          this.closeModal();
+        } else {
+          alert("MODAL IS NOT NEEDED TO CLOSE");
+          this.userFeedOpen = false;
+        }
+      }, 2000);
+    }); */
     this.loadUser();
   },
   methods: {
+    handleExpandFeed() {
+      this.userFeedOpen = !this.userFeedOpen;
+    },
     closeModal() {
       StatusBar.setBackgroundColor({
         color: "#121212",
