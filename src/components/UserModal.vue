@@ -623,6 +623,8 @@ h3 {
 ::v-deep(ion-card.featured-project) {
   width: 93.5%;
   margin: auto;
+  margin-left: 10vw;
+  margin-right: 16px;
   max-height: 100% !important;
   display: inline-block;
   flex: 0 0 auto;
@@ -633,8 +635,8 @@ h3 {
   display: flex;
   overflow-x: auto;
   flex-wrap: nowrap;
-  width: 105%;
-  margin-left: 1%;
+  width: 100vw;
+  margin-left: -16px;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
 }
@@ -647,7 +649,7 @@ h3 {
   padding: 0.3em 0.4em;
   user-select: none;
   height: 1em;
-  line-height: 0.4rem;
+  line-height: 0.5rem;
   border-radius: 0.6em;
 }
 
@@ -667,7 +669,7 @@ h3 {
 }
 
 .about {
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   width: 93.5%;
   flex: 0 0 auto;
   margin: auto;

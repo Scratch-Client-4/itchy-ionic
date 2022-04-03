@@ -171,12 +171,12 @@ export default defineComponent({
 ion-card {
   margin: auto;
   flex: 0 0 auto;
-  margin-left: 6%;
-  margin-right: 6%;
+  margin-left: 16px;
+  margin-right: 16px;
   margin-top: 0;
   width: 93.5%;
   display: inline-block;
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   align-self: stretch;
   background: var(--gradient-bg);
 }
