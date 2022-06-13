@@ -108,7 +108,7 @@ export default {
   },
   data() {
     return {
-      version: "0.9.9",
+      version: "0.9.9 ",
     };
   },
   setup() {
