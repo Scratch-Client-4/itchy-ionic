@@ -623,7 +623,7 @@ h3 {
 ::v-deep(ion-card.featured-project) {
   width: 93.5%;
   margin: auto;
-  margin-left: 10vw;
+  margin-left: 10%;
   margin-right: 16px;
   max-height: 100% !important;
   display: inline-block;
@@ -635,7 +635,7 @@ h3 {
   display: flex;
   overflow-x: auto;
   flex-wrap: nowrap;
-  width: 100vw;
+  width: 100%;
   margin-left: -16px;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
@@ -673,12 +673,18 @@ h3 {
   width: 93.5%;
   flex: 0 0 auto;
   margin: auto;
-  margin-right: 10vw;
+  margin-right: 10%;
   margin-top: 0;
 }
 
 .about ion-card {
   margin: auto;
   margin-bottom: 0.5em;
+}
+
+@media only screen and (max-width: 768px) {
+  .scroller {
+    width: calc(100% + 32px);
+  }
 }
 </style>

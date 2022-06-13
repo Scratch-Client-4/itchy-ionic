@@ -242,13 +242,14 @@ ion-card-content {
 }
 
 ion-card.expanded {
-  left: -6%;
+  left: 0;
   position: fixed;
   top: 0;
   height: 100vh;
   width: 100vw;
   z-index: 3;
   border-radius: 0;
+  margin: 0;
 }
 
 .expanded .expand-icon {
