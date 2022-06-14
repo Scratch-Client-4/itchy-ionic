@@ -32,7 +32,6 @@
     "@ionic-native/web-intent": "^5.36.0",
     "@ionic/vue": "^5.9.4",
     "@ionic/vue-router": "^5.9.4",
-    "capacitor-dark-mode": "https://github.com/micahlt/ionicCapacitorDarkMode",
     "com-darryncampbell-cordova-plugin-intent": "^2.2.0",
     "cordova-plugin-advanced-http": "^3.2.2",
     "cordova-plugin-file": "^6.0.2",
