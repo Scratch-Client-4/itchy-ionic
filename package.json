@@ -45,7 +45,6 @@
     "npm": "^8.12.1",
     "vague-time": "^2.4.2",
     "vue": "^3.2.37",
-    "vue-async-computed": "^3.9.0",
     "vue-directive-long-press": "^1.1.0",
     "vue-router": "^4.0.16",
     "vue-safe-html": "^1.2.0"
