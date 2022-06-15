@@ -14,12 +14,10 @@ import {
   modalController,
 } from "@ionic/vue";
 import { StatusBar } from "@capacitor/status-bar";
-import "@capacitor-community/http";
+import { Http } from "@capacitor-community/http";
 import { LocalNotifications } from "@capacitor/local-notifications";
-import { Plugins } from "@capacitor/core";
 import UserModal from "@/components/UserModal.vue";
 import ProjectModal from "@/components/ProjectModal.vue";
-const { Http } = Plugins;
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "App",

@@ -62,9 +62,7 @@
 </template>
 
 <script>
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
-const { Http } = Plugins;
+import { Http } from "@capacitor-community/http";
 const utils = require("../utils.js");
 import Message from "@/components/Message.vue";
 import {

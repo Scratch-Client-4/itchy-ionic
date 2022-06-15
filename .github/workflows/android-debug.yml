@@ -3,8 +3,8 @@ name: Generate Android Development APK
 on: [push, pull_request]
 
 jobs:
-  prepare_tools:
-    name: Prepare tools to generate the APK
+  apk_gen:
+    name: Generate debug app
     runs-on: ubuntu-latest
     steps:
       - name: Get code from the current repository

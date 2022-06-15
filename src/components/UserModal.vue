@@ -147,13 +147,11 @@ import UserComments from "@/components/UserComments.vue";
 import UserFeed from "@/components/UserFeed.vue";
 import Error from "./Error.vue";
 //import * as Vibrant from 'node-vibrant';
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
+import { Http } from "@capacitor-community/http";
 // import { App } from "@capacitor/app";
 import { StatusBar } from "@capacitor/status-bar";
 import { Browser } from "@capacitor/browser";
 import { useRouter } from "vue-router";
-const { Http } = Plugins;
 import {
   IonProgressBar,
   IonContent,

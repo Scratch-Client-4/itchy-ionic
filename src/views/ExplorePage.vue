@@ -124,9 +124,7 @@
 
 <script>
 import LongPress from "vue-directive-long-press";
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
-const { Http } = Plugins;
+import { Http } from "@capacitor-community/http";
 const utils = require("../utils.js");
 import {
   IonProgressBar,

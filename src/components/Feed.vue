@@ -22,10 +22,8 @@
 </template>
 
 <script>
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
+import { Http } from "@capacitor-community/http";
 import { App } from "@capacitor/app";
-const { Http } = Plugins;
 import {
   IonCard,
   IonCardContent,

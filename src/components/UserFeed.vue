@@ -18,9 +18,7 @@
 </template>
 
 <script>
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
-const { Http } = Plugins;
+import { Http } from "@capacitor-community/http";
 import { chevronDown } from "ionicons/icons";
 import { IonCard, IonCardContent, IonList, IonIcon } from "@ionic/vue";
 import { defineComponent } from "vue";

@@ -185,10 +185,8 @@
   </ion-item>
 </template>
 <script>
-import "@capacitor-community/http";
+import { Http } from "@capacitor-community/http";
 import { Browser } from "@capacitor/browser";
-import { Plugins } from "@capacitor/core";
-const { Http } = Plugins;
 const friendlyTime = require("friendly-time");
 import UserModal from "./UserModal.vue";
 import { defineComponent } from "vue";
@@ -218,7 +216,7 @@ import {
   arrowRedoCircle,
   ellipse,
   checkmarkCircle,
-  chatbubbles
+  chatbubbles,
 } from "ionicons/icons";
 export default defineComponent({
   name: "Message",
@@ -324,8 +322,8 @@ export default defineComponent({
         });
       } else if (o.type == "forumpost") {
         await Browser.open({
-          url: `https://scratch.mit.edu/discuss/topic/${o.topic_id}/unread`
-        })
+          url: `https://scratch.mit.edu/discuss/topic/${o.topic_id}/unread`,
+        });
       }
     },
     async followUser(o, session) {
