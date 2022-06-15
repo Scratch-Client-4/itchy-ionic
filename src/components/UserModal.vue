@@ -623,6 +623,7 @@ h3 {
   margin: auto;
   margin-left: 10%;
   margin-right: 16px;
+  margin-bottom: 0.5em;
   max-height: 100% !important;
   display: inline-block;
   flex: 0 0 auto;
@@ -641,7 +642,6 @@ h3 {
 
 .paginator {
   margin: auto;
-  margin-top: 0.5em;
   width: max-content;
   background: rgba(255, 255, 255, 0.1);
   padding: 0.3em 0.4em;
