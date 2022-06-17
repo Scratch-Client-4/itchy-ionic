@@ -31,6 +31,7 @@ npm run dev
 - [Git](https://git-scm.com/)
 - [NPM](https://www.npmjs.com/)
 - [Node.js](https://nodejs.org/)
+- The Ionic CLI: install with `npm install -g @ionic/cli`
 
 ### Building for android
 
