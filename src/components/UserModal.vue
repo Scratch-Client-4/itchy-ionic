@@ -66,6 +66,8 @@
           :username="username"
           @openProject="openProject"
           @openUser="openUser"
+          :open="userFeedOpen"
+          @expand="handleExpandFeed($event)"
         />
         <div class="about">
           <ion-card class="text-box ion-padding" v-if="bio.about.length > 0">
@@ -145,13 +147,11 @@ import UserComments from "@/components/UserComments.vue";
 import UserFeed from "@/components/UserFeed.vue";
 import Error from "./Error.vue";
 //import * as Vibrant from 'node-vibrant';
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
-import { App } from "@capacitor/app";
+import { Http } from "@capacitor-community/http";
+// import { App } from "@capacitor/app";
 import { StatusBar } from "@capacitor/status-bar";
 import { Browser } from "@capacitor/browser";
 import { useRouter } from "vue-router";
-const { Http } = Plugins;
 import {
   IonProgressBar,
   IonContent,
@@ -212,6 +212,7 @@ export default defineComponent({
         code: 200,
         message: "",
       },
+      userFeedOpen: false,
     };
   },
   components: {
@@ -242,12 +243,24 @@ export default defineComponent({
       color: this.backgroundColor,
     });
     this.router.push("/user/" + this.username);
+    /*
     App.addListener("backButton", () => {
-      this.closeModal();
-    });
+      setTimeout(() => {
+        if (!this.userFeedOpen) {
+          alert("CLOSING MODAL!");
+          this.closeModal();
+        } else {
+          alert("MODAL IS NOT NEEDED TO CLOSE");
+          this.userFeedOpen = false;
+        }
+      }, 2000);
+    }); */
     this.loadUser();
   },
   methods: {
+    handleExpandFeed() {
+      this.userFeedOpen = !this.userFeedOpen;
+    },
     closeModal() {
       StatusBar.setBackgroundColor({
         color: "#121212",
@@ -608,6 +621,9 @@ h3 {
 ::v-deep(ion-card.featured-project) {
   width: 93.5%;
   margin: auto;
+  margin-left: 10%;
+  margin-right: 16px;
+  margin-bottom: 0.5em;
   max-height: 100% !important;
   display: inline-block;
   flex: 0 0 auto;
@@ -618,21 +634,20 @@ h3 {
   display: flex;
   overflow-x: auto;
   flex-wrap: nowrap;
-  width: 105%;
-  margin-left: 1%;
+  width: 100%;
+  margin-left: -16px;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
 }
 
 .paginator {
   margin: auto;
-  margin-top: 0.5em;
   width: max-content;
   background: rgba(255, 255, 255, 0.1);
   padding: 0.3em 0.4em;
   user-select: none;
   height: 1em;
-  line-height: 0.4rem;
+  line-height: 0.5rem;
   border-radius: 0.6em;
 }
 
@@ -652,16 +667,22 @@ h3 {
 }
 
 .about {
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   width: 93.5%;
   flex: 0 0 auto;
   margin: auto;
-  margin-right: 10vw;
+  margin-right: 10%;
   margin-top: 0;
 }
 
 .about ion-card {
   margin: auto;
   margin-bottom: 0.5em;
+}
+
+@media only screen and (max-width: 768px) {
+  .scroller {
+    width: calc(100% + 32px);
+  }
 }
 </style>

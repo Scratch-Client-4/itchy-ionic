@@ -1,6 +1,4 @@
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
-const { Http } = Plugins;
+import { Http } from "@capacitor-community/http";
 const approx = require("./approximate-number.js");
 
 function replaceEmoji(string) {

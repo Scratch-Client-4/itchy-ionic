@@ -1,6 +1,7 @@
 <template>
-  <ion-card>
+  <ion-card :class="{ expanded: open }">
     <ion-card-content>
+      <ion-icon :icon="chevronDown" class="expand-icon" @click="expand" />
       <ion-list>
         <FeedItem
           v-for="i in events"
@@ -11,15 +12,15 @@
           :showAvatar="false"
         />
       </ion-list>
+      <ion-spinner v-if="loading" />
     </ion-card-content>
   </ion-card>
 </template>
 
 <script>
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
-const { Http } = Plugins;
-import { IonCard, IonCardContent, IonList } from "@ionic/vue";
+import { Http } from "@capacitor-community/http";
+import { chevronDown } from "ionicons/icons";
+import { IonCard, IonCardContent, IonList, IonIcon } from "@ionic/vue";
 import { defineComponent } from "vue";
 import FeedItem from "@/components/FeedItem.vue";
 // const friendlyTime = require("friendly-time");
@@ -29,26 +30,46 @@ export default defineComponent({
     IonCard,
     IonCardContent,
     IonList,
+    IonIcon,
     FeedItem,
   },
   props: {
     username: String,
+    open,
   },
-  emits: ["openProject", "openUser"],
+  emits: ["openProject", "openUser", "fullscreen"],
   data() {
     return {
       imageLoading: true,
+      loading: false,
       events: [],
+      chevronDown,
     };
   },
   mounted() {
-    this.loadFeed();
+    this.loadFeed(4);
   },
   methods: {
-    loadFeed() {
+    expand() {
+      if (this.open) {
+        this.$emit("expand", false);
+        let newEvents = [];
+        this.events.forEach((e, i) => {
+          if (i < 4) {
+            newEvents.push(e);
+          }
+        });
+        this.events = newEvents;
+      } else {
+        this.$emit("expand", true);
+        this.loadFeed(30);
+      }
+    },
+    loadFeed(count) {
+      this.loading = true;
       Http.request({
         method: "GET",
-        url: `https://scratch.mit.edu/messages/ajax/user-activity/?user=${this.username}&max=5`,
+        url: `https://scratch.mit.edu/messages/ajax/user-activity/?user=${this.username}&max=${count}`,
       }).then((res) => {
         Http.request({
           method: "GET",
@@ -57,6 +78,7 @@ export default defineComponent({
           let unparsed = res.data;
           unparsed = parse(unparsed);
           unparsed = unparsed.querySelectorAll("li");
+          this.loading = false;
           for (let i = 0; i <= unparsed.length; i++) {
             let obj = {};
             const selected = unparsed[i].querySelector("div");
@@ -123,7 +145,6 @@ export default defineComponent({
             }
             this.events.push(obj);
           }
-          console.log(this.events);
         });
       });
     },
@@ -148,12 +169,12 @@ export default defineComponent({
 ion-card {
   margin: auto;
   flex: 0 0 auto;
-  margin-left: 6%;
-  margin-right: 6%;
+  margin-left: 16px;
+  margin-right: 16px;
   margin-top: 0;
   width: 93.5%;
   display: inline-block;
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   align-self: stretch;
   background: var(--gradient-bg);
 }
@@ -192,6 +213,8 @@ ion-label p {
 
 ion-list {
   background: transparent !important;
+  max-height: calc(100vh - 1em);
+  overflow-y: auto;
 }
 
 ion-item {
@@ -201,5 +224,39 @@ ion-item {
 ion-avatar {
   margin-bottom: 4px;
   margin-top: 4px;
+}
+
+ion-card-content {
+  position: relative;
+}
+
+.expand-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2em;
+  z-index: 1;
+  transition: transform 0.2s;
+}
+
+ion-card.expanded {
+  left: 0;
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 3;
+  border-radius: 0;
+  margin: 0;
+}
+
+.expanded .expand-icon {
+  transform: rotate(-180deg);
+}
+
+ion-spinner {
+  margin: auto;
+  width: 100%;
+  --color: white;
 }
 </style>

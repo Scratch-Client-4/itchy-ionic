@@ -127,10 +127,8 @@
 </template>
 
 <script>
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
+import { Http } from "@capacitor-community/http";
 import { Share } from "@capacitor/share";
-const { Http } = Plugins;
 import { StatusBar } from "@capacitor/status-bar";
 const utils = require("../utils.js");
 import {

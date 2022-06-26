@@ -8,7 +8,11 @@
         </ion-toolbar>
       </ion-header>
       <div class="fade-off"></div>
-      <ion-refresher slot="fixed" @ionRefresh="refreshData($event)">
+      <ion-refresher
+        slot="fixed"
+        @ionRefresh="refreshData($event)"
+        v-if="refresher"
+      >
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
       <!-- WHAT'S HAPPENING FEED -->
@@ -17,6 +21,7 @@
         v-if="session && prefs.enableFeed"
         @openProject="openProject"
         @openUser="openUser"
+        @fullscreen="refresher ? (refresher = false) : (refresher = true)"
       ></Feed>
       <!-- FEATURED PROJECTS -->
       <ion-text>
@@ -119,9 +124,7 @@
 
 <script>
 import LongPress from "vue-directive-long-press";
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
-const { Http } = Plugins;
+import { Http } from "@capacitor-community/http";
 const utils = require("../utils.js");
 import {
   IonProgressBar,
@@ -183,6 +186,7 @@ export default {
   },
   data() {
     return {
+      refresher: true,
       featuredProjects: [],
       lovedProjects: [],
       curatedProjects: [],
@@ -260,7 +264,7 @@ export default {
     async refreshData(event) {
       this.loaded = false;
       if (window.localStorage.getItem("session")) {
-        this.$refs.feed.loadFeed();
+        this.$refs.feed.loadFeed(4);
       }
       Http.request({
         method: "GET",
@@ -317,7 +321,7 @@ export default {
           this.presentAlert(
             res.status,
             "",
-            "We encountered an error while fetching data."
+            "We encountered an error while fetching some data."
           );
         }
       });

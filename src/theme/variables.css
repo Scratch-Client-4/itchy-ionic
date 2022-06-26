@@ -72,6 +72,7 @@ http://ionicframework.com/docs/theming/ */
     rgba(6, 40, 101, 1) 0%,
     rgba(66, 140, 255, 1) 100%
   );
+  --ion-card-background: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -56,6 +56,7 @@
 
 <script>
 import { IonItem, IonLabel, IonRippleEffect, IonAvatar } from "@ionic/vue";
+import { Browser } from "@capacitor/browser";
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {
@@ -89,11 +90,21 @@ export default defineComponent({
         "favoriteproject",
         "addproject",
       ];
+      const studioLinks = [
+        "becomeownerstudio",
+        "becomecurator",
+        "followStudio"
+      ]
       const userLinks = ["followuser"];
       if (projectLinks.includes(i.type)) {
         this.$emit("openProject", i.project_id);
       } else if (userLinks.includes(i.type)) {
         this.$emit("openUser", i.followed_username);
+      } else if (studioLinks.includes(i.type)) {
+        Browser.open({
+        url: `https://scratch.mit.edu/studios/${i.gallery_id}`,
+        toolbarColor: "#4E97FF",
+      });
       }
     },
     openUser(i) {

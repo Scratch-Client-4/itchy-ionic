@@ -84,10 +84,8 @@
 </template>
 
 <script>
-import "@capacitor-community/http";
-import { Plugins } from "@capacitor/core";
+import { Http } from "@capacitor-community/http";
 import { App } from "@capacitor/app";
-const { Http } = Plugins;
 const utils = require("../utils.js");
 const friendlyTime = require("friendly-time");
 import UserModal from "@/components/UserModal.vue";
@@ -212,13 +210,14 @@ ion-progress-bar {
 }
 
 .backbutton {
-  background: var(--ion-toolbar-background);
+  background: var(--ion-toolbar-background, white);
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1;
-  color: white;
+  color: var(--ion-text-color);
+  box-shadow: 3px 10px rgba(0, 0, 0, 0.2);
 }
 
 .backbutton ion-back-button {

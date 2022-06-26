@@ -19,7 +19,7 @@ dependencies {
     implementation project(':capacitor-splash-screen')
     implementation project(':capacitor-status-bar')
     implementation project(':capacitor-storage')
-    implementation project(':capacitor-dark-mode')
+    implementation project(':robingenz-capacitor-android-dark-mode-support')
     implementation "androidx.core:core:1.1.0"
 }
 

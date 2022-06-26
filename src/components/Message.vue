@@ -99,9 +99,9 @@
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
-          <ion-col v-if="m.type == 'remixproject'" @click="openFromObj(m)">
+          <ion-col v-if="m.type == 'forumpost'" @click="openFromObj(m)">
             <div class="ion-activatable btn-div">
-              <ion-icon :icon="image" class="blue action"></ion-icon>
+              <ion-icon :icon="chatbubbles" class="blue action"></ion-icon>
               <div>Open thread</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
@@ -185,15 +185,14 @@
   </ion-item>
 </template>
 <script>
-import "@capacitor-community/http";
+import { Http } from "@capacitor-community/http";
 import { Browser } from "@capacitor/browser";
-import { Plugins } from "@capacitor/core";
-const { Http } = Plugins;
 const friendlyTime = require("friendly-time");
 import UserModal from "./UserModal.vue";
 import { defineComponent } from "vue";
 import {
   IonItem,
+  IonIcon,
   IonLabel,
   IonNote,
   IonAvatar,
@@ -217,12 +216,14 @@ import {
   arrowRedoCircle,
   ellipse,
   checkmarkCircle,
+  chatbubbles,
 } from "ionicons/icons";
 export default defineComponent({
   name: "Message",
   inheritAttrs: false,
   components: {
     IonItem,
+    IonIcon,
     IonLabel,
     IonNote,
     IonAvatar,
@@ -234,7 +235,7 @@ export default defineComponent({
     IonItemDivider,
   },
   props: {
-    selectedMessage: String,
+    selectedMessage: Number,
     m: Object,
     isUnread: Boolean,
     firstUnread: Boolean,
@@ -254,6 +255,7 @@ export default defineComponent({
       colorPalette,
       arrowRedoCircle,
       checkmarkCircle,
+      chatbubbles,
       friendlyTime,
       session: JSON.parse(window.localStorage.getItem("session"))
         ? JSON.parse(window.localStorage.getItem("session"))
@@ -317,6 +319,10 @@ export default defineComponent({
         await Browser.open({
           url: `https://scratch.mit.edu/studios/${o.gallery_id}`,
           toolbarColor: "#4E97FF",
+        });
+      } else if (o.type == "forumpost") {
+        await Browser.open({
+          url: `https://scratch.mit.edu/discuss/topic/${o.topic_id}/unread`,
         });
       }
     },
