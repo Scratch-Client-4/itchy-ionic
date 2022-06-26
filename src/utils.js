@@ -219,6 +219,33 @@ async function unifiedSearch(query, offset) {
   return results;
 }
 
+const initialPrefs = {
+  theme: "system",
+  enableFeed: true,
+  haptics: false,
+};
+
+function getPrefs() {
+  let prefs = window.localStorage.getItem("preferences");
+  prefs = JSON.parse(prefs);
+  function init() {
+    prefs = initialPrefs;
+    window.localStorage.setItem("preferences", JSON.stringify(prefs));
+    //window.location.reload();
+  }
+  if (prefs) {
+    Object.keys(initialPrefs).forEach((pref) => {
+      if (!prefs[pref]) {
+        init();
+        return;
+      }
+    });
+    return prefs;
+  } else {
+    init();
+  }
+}
+
 export {
   replaceEmoji,
   matchRegexes,
@@ -229,4 +256,6 @@ export {
   searchResultProto,
   formatDate,
   formatNumber,
+  initialPrefs,
+  getPrefs,
 };

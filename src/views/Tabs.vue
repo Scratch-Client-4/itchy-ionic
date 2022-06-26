@@ -1,44 +1,38 @@
 <template>
-<ion-page>
-  <ion-tabs>
-    <ion-tab-bar slot="bottom">
-      <ion-tab-button tab="tab1" href="/tabs/explore" @click="vibrate">
-        <ion-icon :icon="earthOutline" />
-        <ion-label>Explore</ion-label>
-      </ion-tab-button>
+  <ion-page>
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="tab1" href="/tabs/explore" @click="vibrate">
+          <ion-icon :icon="earthOutline" />
+          <ion-label>Explore</ion-label>
+        </ion-tab-button>
 
-      <ion-tab-button tab="tab2" href="/tabs/search" @click="vibrate">
-        <ion-icon :icon="search" />
-        <ion-label>Search</ion-label>
-      </ion-tab-button>
+        <ion-tab-button tab="tab2" href="/tabs/search" @click="vibrate">
+          <ion-icon :icon="search" />
+          <ion-label>Search</ion-label>
+        </ion-tab-button>
 
-      <ion-tab-button tab="tab3" href="/tabs/messages" @click="vibrate">
-        <ion-icon :icon="mailOutline" />
-        <ion-label>Messages</ion-label>
-        <ion-badge v-if="userSignedIn" color="primary">{{ messageCount }}</ion-badge>
-      </ion-tab-button>
+        <ion-tab-button tab="tab3" href="/tabs/messages" @click="vibrate">
+          <ion-icon :icon="mailOutline" />
+          <ion-label>Messages</ion-label>
+          <ion-badge v-if="userSignedIn && messageCount != 0" color="primary">{{
+            messageCount
+          }}</ion-badge>
+        </ion-tab-button>
 
-      <ion-tab-button tab="tab4" href="/tabs/settings" @click="vibrate">
-        <ion-icon :icon="settingsOutline" />
-        <ion-label>Settings</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
-</ion-page>
+        <ion-tab-button tab="tab4" href="/tabs/settings" @click="vibrate">
+          <ion-icon :icon="settingsOutline" />
+          <ion-label>Settings</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-page>
 </template>
 
 <script>
-import '@capacitor-community/http';
-import {
-  Haptics,
-  ImpactStyle
-} from '@capacitor/haptics';
-import {
-  Plugins
-} from '@capacitor/core';
-const {
-  Http
-} = Plugins;
+import "@capacitor-community/http";
+import { Haptics, ImpactStyle } from "@capacitor/haptics";
+import { Http } from "@capacitor-community/http";
 import {
   IonTabBar,
   IonTabButton,
@@ -46,17 +40,17 @@ import {
   IonLabel,
   IonIcon,
   IonPage,
-  IonBadge
-} from '@ionic/vue';
+  IonBadge,
+} from "@ionic/vue";
 import {
   earthOutline,
   search,
   mailOutline,
-  settingsOutline
-} from 'ionicons/icons';
-
+  settingsOutline,
+} from "ionicons/icons";
+import { getPrefs } from "../utils";
 export default {
-  name: 'Tabs',
+  name: "Tabs",
   components: {
     IonLabel,
     IonTabs,
@@ -64,7 +58,7 @@ export default {
     IonTabButton,
     IonIcon,
     IonPage,
-    IonBadge
+    IonBadge,
   },
   setup() {
     let userSignedIn, username;
@@ -81,41 +75,43 @@ export default {
       mailOutline,
       settingsOutline,
       userSignedIn,
-      username
-    }
+      username,
+    };
   },
   data() {
     return {
-      messageCount: '-'
-    }
+      messageCount: 0,
+    };
   },
   created() {
     if (this.userSignedIn) {
       Http.request({
         method: "GET",
-        url: `https://api.scratch.mit.edu/users/${this.username}/messages/count`
+        url: `https://api.scratch.mit.edu/users/${this.username}/messages/count`,
       }).then((response) => {
         this.messageCount = response.data.count;
       });
       window.setInterval(() => {
-        this.refreshMessages()
-      }, 30000)
+        this.refreshMessages();
+      }, 15000);
     }
   },
   methods: {
     async vibrate() {
-      await Haptics.impact({
-        style: ImpactStyle.Light
-      });
+      if (getPrefs().haptics) {
+        await Haptics.impact({
+          style: ImpactStyle.Light,
+        });
+      }
     },
     refreshMessages() {
       Http.request({
         method: "GET",
-        url: `https://api.scratch.mit.edu/users/${this.username}/messages/count`
+        url: `https://api.scratch.mit.edu/users/${this.username}/messages/count`,
       }).then((response) => {
         this.messageCount = response.data.count;
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>

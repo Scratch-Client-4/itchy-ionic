@@ -3,6 +3,7 @@
     class="modaled ion-padding"
     :scroll-events="true"
     @ionScroll="scroll($event)"
+    overflow-scroll="true"
   >
     <transition name="opacity">
       <ion-progress-bar

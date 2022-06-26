@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" overflow-scroll="true">
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Messages</ion-title>

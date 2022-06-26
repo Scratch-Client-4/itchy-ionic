@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" overflow-scroll="true">
       <ion-progress-bar v-if="!loaded" type="indeterminate"></ion-progress-bar>
       <ion-header collapse="condense">
         <ion-toolbar>

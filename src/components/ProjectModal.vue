@@ -10,7 +10,7 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="modaled ion-padding">
+  <ion-content class="modaled ion-padding" overflow-scroll="true">
     <Error :code="error.code" :message="error.message" v-if="error.show" />
     <div v-if="!error.show">
       <div class="tw-wrapper">

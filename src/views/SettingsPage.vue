@@ -9,13 +9,13 @@
       <ion-title class="ion-padding">Settings</ion-title>
       <ion-item-group>
         <ion-item-divider>
-          <ion-label> Account </ion-label>
+          <ion-label>Account</ion-label>
         </ion-item-divider>
         <ion-item>
           <ion-label v-if="user.signedIn">
             Signed in as {{ user.username }}
           </ion-label>
-          <ion-label v-else> Signed out </ion-label>
+          <ion-label v-else>Signed out</ion-label>
           <ion-button v-if="user.signedIn" @click="signOut"
             >Sign Out</ion-button
           >
@@ -26,31 +26,37 @@
           v-if="user.signedIn"
           @click="openUserProfile"
         >
-          <ion-label> Open your profile </ion-label>
+          <ion-label>Open your profile</ion-label>
           <ion-ripple-effect></ion-ripple-effect>
         </ion-item>
         <ion-item-divider>
-          <ion-label> Display </ion-label>
+          <ion-label>Interface</ion-label>
         </ion-item-divider>
         <ion-item>
-          <ion-label> Force dark theme </ion-label>
+          <ion-label>Theme</ion-label>
+          <a class="dropdown" @click="openDarkModePicker"
+            >{{ prefs.theme }} <ion-icon :icon="caretDown"
+          /></a>
+        </ion-item>
+        <ion-item>
+          <ion-label>Tab vibration</ion-label>
           <ion-toggle
-            :checked="prefs.forceDark"
-            @ionChange="toggle('forceDark')"
+            :checked="prefs.haptics"
+            @ionChange="toggle('haptics')"
           ></ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-label> Enable personal data on Explore </ion-label>
+          <ion-label>Enable personal data on Explore</ion-label>
           <ion-toggle
             :checked="prefs.enableFeed"
             @ionChange="toggle('enableFeed')"
           ></ion-toggle>
         </ion-item>
         <ion-item-divider>
-          <ion-label> About </ion-label>
+          <ion-label>About</ion-label>
         </ion-item-divider>
         <ion-item>
-          <ion-label> Itchy v{{ version }} </ion-label>
+          <ion-label>Itchy v{{ version }}</ion-label>
         </ion-item>
         <ion-item>
           <ion-label>
@@ -86,11 +92,16 @@ import {
   IonItemDivider,
   IonButton,
   IonToggle,
+  IonRippleEffect,
+  IonIcon,
   modalController,
+  popoverController,
 } from "@ionic/vue";
+import { caretDown } from "ionicons/icons";
 import { Storage } from "@capacitor/storage";
 import AuthModal from "../components/AuthModal.vue";
 import UserModal from "../components/UserModal.vue";
+import DarkModeToggle from "../components/DarkModeToggle.vue";
 export default {
   name: "SettingsPage",
   components: {
@@ -105,10 +116,13 @@ export default {
     IonItemDivider,
     IonButton,
     IonToggle,
+    IonRippleEffect,
+    IonIcon,
   },
   data() {
     return {
-      version: "0.9.9 ",
+      version: "0.9.10",
+      caretDown,
     };
   },
   setup() {
@@ -123,8 +137,9 @@ export default {
     let prefs;
     if (!window.localStorage.getItem("preferences")) {
       prefs = {
-        forceDark: false,
+        theme: "system",
         enableFeed: true,
+        haptics: false,
       };
       window.localStorage.setItem("preferences", JSON.stringify(prefs));
     } else {
@@ -136,6 +151,19 @@ export default {
     };
   },
   methods: {
+    async openDarkModePicker(e) {
+      const popover = await popoverController.create({
+        component: DarkModeToggle,
+        cssClass: "dropdown-popover",
+        event: e,
+        translucent: false,
+      });
+      await popover.present();
+      const { data: theme } = await popover.onDidDismiss();
+      this.prefs.theme = theme || this.prefs.theme;
+      window.localStorage.setItem("preferences", JSON.stringify(this.prefs));
+      window.location.reload();
+    },
     async openUserProfile() {
       const modal = await modalController.create({
         component: UserModal,
@@ -164,10 +192,21 @@ export default {
     toggle(setting) {
       this.prefs[setting] = !this.prefs[setting];
       window.localStorage.setItem("preferences", JSON.stringify(this.prefs));
-      window.setTimeout(() => {
-        window.location.reload();
-      }, 150);
+      window.location.reload();
     },
   },
 };
 </script>
+
+<style scoped>
+.dropdown {
+  color: inherit;
+  opacity: 0.7;
+  text-transform: capitalize;
+}
+.dropdown ion-icon {
+  transform: translateY(2px);
+  margin-left: 0.25rem;
+  margin-right: 5px;
+}
+</style>

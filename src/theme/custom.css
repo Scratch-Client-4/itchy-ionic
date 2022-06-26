@@ -24,6 +24,22 @@
   }
 }
 
+.dark .fade-off {
+  display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: calc(100vh - 57px);
+  width: 25px;
+  background: transparent;
+  background: linear-gradient(
+    90deg,
+    rgba(18, 18, 18, 0) 0%,
+    rgba(18, 18, 18, 1) 100%
+  );
+  z-index: 100;
+}
+
 ion-searchbar {
   margin: 5vw;
   width: 90vw !important;
@@ -169,4 +185,9 @@ ion-avatar {
 .refresher-pulling-icon,
 .refresher-refreshing-icon {
   background: var(--ion-background-color) !important;
+}
+
+.dropdown-popover .popover-content {
+  margin-top: 0.5rem;
+  width: 8rem;
 }
