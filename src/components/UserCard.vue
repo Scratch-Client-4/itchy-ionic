@@ -69,6 +69,7 @@ ion-icon {
 import {
   IonAvatar,
   IonText,
+  IonIcon,
   IonRippleEffect,
   modalController,
 } from "@ionic/vue";
@@ -80,6 +81,7 @@ export default defineComponent({
   components: {
     IonAvatar,
     IonText,
+    IonIcon,
     IonRippleEffect,
   },
   data() {
