@@ -228,21 +228,22 @@ const initialPrefs = {
 function getPrefs() {
   let prefs = window.localStorage.getItem("preferences");
   prefs = JSON.parse(prefs);
-  function init() {
+  if (prefs) {
+    // iterate through default prefs to add those missing in the actual prefs
+    Object.keys(initialPrefs).forEach((pref) => {
+      // https://stackoverflow.com/a/455340
+      // - eslint did give an error when doing prefs.hasOwnProperty()
+      if (!(Object.prototype.hasOwnProperty.call(prefs, pref))) {
+        prefs[pref] = initialPrefs[pref];
+      }
+    });
+    window.localStorage.setItem("preferences", JSON.stringify(prefs));
+    return prefs;
+  } else {
     prefs = initialPrefs;
     window.localStorage.setItem("preferences", JSON.stringify(prefs));
     //window.location.reload();
-  }
-  if (prefs) {
-    Object.keys(initialPrefs).forEach((pref) => {
-      if (!prefs[pref]) {
-        init();
-        return;
-      }
-    });
     return prefs;
-  } else {
-    init();
   }
 }
 
