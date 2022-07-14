@@ -97,6 +97,7 @@ import {
   modalController,
   popoverController,
 } from "@ionic/vue";
+import { getPrefs } from "../utils.js";
 import { caretDown } from "ionicons/icons";
 import { Storage } from "@capacitor/storage";
 import AuthModal from "../components/AuthModal.vue";
@@ -134,17 +135,7 @@ export default {
         signedIn: false,
       };
     }
-    let prefs;
-    if (!window.localStorage.getItem("preferences")) {
-      prefs = {
-        theme: "system",
-        enableFeed: true,
-        haptics: false,
-      };
-      window.localStorage.setItem("preferences", JSON.stringify(prefs));
-    } else {
-      prefs = JSON.parse(window.localStorage.getItem("preferences"));
-    }
+    let prefs = getPrefs();
     return {
       prefs,
       user,

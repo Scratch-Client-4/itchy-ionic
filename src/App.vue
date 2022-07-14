@@ -1,12 +1,13 @@
 <template>
   <ion-app>
     <ion-router-outlet
-      :class="{ dark: darkModeEnabled, light: lightModeEnabled }"
+      :class="themeClass"
     />
   </ion-app>
 </template>
 
 <script>
+const themeClasses = {"light": "light", "dark": "dark"};
 const utils = require("./utils.js");
 import { isPlatform } from "@ionic/vue";
 import {
@@ -28,7 +29,7 @@ export default defineComponent({
     IonRouterOutlet,
   },
   data() {
-    let userSignedIn, username, darkForced, lightForced;
+    let themeClass, userSignedIn, username;
     if (window.localStorage.getItem("session")) {
       let session = JSON.parse(window.localStorage.getItem("session"));
       username = session.username;
@@ -36,27 +37,12 @@ export default defineComponent({
     } else {
       userSignedIn = false;
     }
-    if (window.localStorage.getItem("preferences")) {
-      let prefs = utils.getPrefs();
-      if (prefs?.theme == "dark") {
-        darkForced = true;
-        lightForced = false;
-        document.documentElement.classList.remove("light");
-        document.documentElement.classList.add("dark");
-        document.body.classList.remove("light");
-        document.body.classList.add("dark");
-      } else if (prefs?.theme == "light") {
-        darkForced = false;
-        lightForced = true;
-        document.documentElement.classList.remove("dark");
-        document.documentElement.classList.add("light");
-        document.body.classList.remove("dark");
-        document.body.classList.add("light");
-      }
-    }
+    
+    themeClass = this.getThemeClass();
+    this.updateTheme(themeClass);
+
     return {
-      darkModeEnabled: darkForced,
-      lightModeEnabled: lightForced,
+      themeClass,
       userSignedIn,
       username,
     };
@@ -125,6 +111,30 @@ export default defineComponent({
     }
   },
   methods: {
+    getThemeClass() {
+      let prefs = utils.getPrefs();
+
+      if (themeClasses[prefs?.theme]) {
+        return themeClasses[prefs?.theme];
+      }
+      else {
+        return "system";
+      }
+    },
+    updateTheme(themeClass) {
+      if (!themeClass) {
+        themeClass = this.getThemeClass();
+      }
+
+      Object.values(themeClasses).forEach((className) => {
+        document.documentElement.classList.remove(className);
+        document.body.classList.remove(className);
+      });
+
+      document.documentElement.classList.add(themeClass);
+      document.body.classList.add(themeClass);
+      this.themeClass = themeClass;
+    },
     async openUser(name) {
       const modal = await modalController.create({
         component: UserModal,
