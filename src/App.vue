@@ -117,11 +117,6 @@ export default defineComponent({
           this.scheduleNotifs();
         }
       });
-    } else if (isPlatform("desktop")) {
-      this.presentAlert(
-        "Unsupported Platform",
-        "You're running Itchy on desktop.  Please use Ctrl+Shift+I to open devtools and attempt to emulate a mobile device for the best experience."
-      );
     }
   },
   methods: {
