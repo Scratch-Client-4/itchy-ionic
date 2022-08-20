@@ -16,7 +16,7 @@ export default defineComponent({
     },
     message: {
       type: String,
-      default: "Whoops, something went wrong.",
+      default: {{$t("common:genericErrorMessage")}},
     },
   },
 });
