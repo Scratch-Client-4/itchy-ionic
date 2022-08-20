@@ -79,7 +79,6 @@ export default defineComponent({
     };
   },
   created() {
-    console.log(this.i);
   },
   methods: {
     visit(i) {

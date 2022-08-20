@@ -126,7 +126,6 @@ export default {
       return alert.present();
     },
     async search(event, query, offset, calledFrom) {
-      console.log("TRIGGERING A SEARCH");
       if (offset == 0) {
         this.currentOffset = 0;
         this.searchData = [];
@@ -138,7 +137,6 @@ export default {
       const toPush = await utils.unifiedSearch(query, offset);
       this.searchData = this.searchData.concat(toPush);
       this.currentOffset += 10;
-      console.log(this.currentOffset, "<-- current offset");
       if (calledFrom == "searchbar") {
         event.target.blur();
       } else if (calledFrom == "infinite") {

@@ -225,12 +225,6 @@ export default {
         this.openUser(params.user);
       }
     },
-    onLongPressStart() {
-      console.log("long-press");
-    },
-    onLongPressStop() {
-      console.log("long-press-stop");
-    },
     async presentAlert(title, code, message) {
       const alert = await alertController.create({
         header: title,

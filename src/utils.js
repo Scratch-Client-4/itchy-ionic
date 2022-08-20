@@ -55,7 +55,6 @@ function matchRegexes(string) {
   let studioRegex = new RegExp(`.(\\/scratch.mit.edu/studios/)[0-9]\\d*`, `g`);
   let userRegex = new RegExp(`.(\\/scratch.mit.edu/users/)\\w*`, `g`);
   if (string.match(projectRegex)) {
-    console.log(string.match(projectRegex)[0]);
     let id = string.match(projectRegex)[0];
     id = id.match(numberPattern)[0];
     return {
@@ -63,7 +62,6 @@ function matchRegexes(string) {
       id: id,
     };
   } else if (studioRegex.test(string)) {
-    console.log(`${string} is a link to a studio`);
     return {
       type: "studio",
       id: 123456,

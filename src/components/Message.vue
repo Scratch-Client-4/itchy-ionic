@@ -278,7 +278,6 @@ export default defineComponent({
       return modal.present();
     },
     expandMessage() {
-      console.log(this.myUsername, this.m.comment_obj_title);
       this.$emit("expand");
     },
     async openStudio(m) {
@@ -330,7 +329,6 @@ export default defineComponent({
       session = JSON.parse(window.localStorage.getItem("session"));
       session.session = session.session.replace("\\", "");
       session.session = session.session.replace('"', "");
-      console.log(session);
       await Http.setCookie({
         url: "https://scratch.mit.edu",
         key: "scratchsessionsid",
@@ -400,7 +398,6 @@ export default defineComponent({
     },
     async joinStudio(o, session) {
       session = JSON.parse(window.localStorage.getItem("session"));
-      console.log(session);
       const cookieOpts = {
         url: "https://scratch.mit.edu",
         key: "scratchcsrftoken",

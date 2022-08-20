@@ -241,8 +241,6 @@ export default defineComponent({
     IonFabButton,
   },
   mounted() {
-    console.log(`Session`);
-    console.log(this.session);
     this.loadProject();
   },
   methods: {

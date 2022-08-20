@@ -191,7 +191,6 @@ export default defineComponent({
           }
           this.comments.push(comment);
         });
-        console.log(this.comments);
         this.loading = false;
         this.offset += res.data.length;
         if (event) {

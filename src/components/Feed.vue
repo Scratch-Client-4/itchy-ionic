@@ -98,7 +98,6 @@ export default defineComponent({
       }).then((response) => {
         if (response.status == 200) {
           this.events = [];
-          console.log("Feed data: ", response.data);
           response.data.forEach((item) => {
             item.datetime_created = friendlyTime(
               new Date(item.datetime_created)

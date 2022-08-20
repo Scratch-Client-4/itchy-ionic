@@ -147,7 +147,6 @@ export default {
           },
         });
         let messages = await response.data;
-        console.log(messages);
         if (reset) {
           this.messages = [];
         }
@@ -192,7 +191,6 @@ export default {
         messages = this.htmlDecode(JSON.stringify(messages));
         messages = JSON.parse(messages);
         if (response.status == 200) {
-          console.log(messages);
           this.currentOffset += this.messages.length;
           if (messages.length < 20) {
             this.noMoreMessages = true;
