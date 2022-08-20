@@ -6,72 +6,66 @@
           <ion-title size="large">Settings</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-title class="ion-padding">Settings</ion-title>
+      <ion-title class="ion-padding">{{$t("navigation:settingsPage")}}</ion-title>
       <ion-item-group>
         <ion-item-divider>
-          <ion-label>Account</ion-label>
+          <ion-label>{{$t("settings:accountSection")}}</ion-label>
         </ion-item-divider>
         <ion-item>
           <ion-label v-if="user.signedIn">
-            Signed in as {{ user.username }}
+            {{$t("account:signedInAs", {username: user.username})}}
           </ion-label>
-          <ion-label v-else>Signed out</ion-label>
+          <ion-label v-else>{{$t("account:signedOut")}}</ion-label>
           <ion-button v-if="user.signedIn" @click="signOut"
-            >Sign Out</ion-button
-          >
-          <ion-button v-else @click="openAuthWindow">Sign In</ion-button>
+            >{{$t("account:signOut")}}</ion-button>
+          <ion-button v-else @click="openAuthWindow">{{$t("account:signIn")}}</ion-button>
         </ion-item>
         <ion-item
           class="ion-activatable"
           v-if="user.signedIn"
           @click="openUserProfile"
         >
-          <ion-label>Open your profile</ion-label>
+          <ion-label>{{$t("account:openYourProfile")}}</ion-label>
           <ion-ripple-effect></ion-ripple-effect>
         </ion-item>
         <ion-item-divider>
-          <ion-label>Interface</ion-label>
+          <ion-label>{{$t("settings:interfaceSection")}}</ion-label>
         </ion-item-divider>
         <ion-item>
-          <ion-label>Theme</ion-label>
+          <ion-label>{{$t("settings:themeSelect")}}</ion-label>
           <a class="dropdown" @click="openDarkModePicker"
             >{{ prefs.theme }} <ion-icon :icon="caretDown"
           /></a>
         </ion-item>
         <ion-item>
-          <ion-label>Tab vibration</ion-label>
+          <ion-label>{{$t("settings:hapticsToggle")}}</ion-label>
           <ion-toggle
             :checked="prefs.haptics"
             @ionChange="toggle('haptics')"
           ></ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-label>Enable personal data on Explore</ion-label>
+          <ion-label>{{$t("settings:feedToggle")}}</ion-label>
           <ion-toggle
             :checked="prefs.enableFeed"
             @ionChange="toggle('enableFeed')"
           ></ion-toggle>
         </ion-item>
         <ion-item-divider>
-          <ion-label>About</ion-label>
+          <ion-label>{{$t("settings:aboutSection")}}</ion-label>
         </ion-item-divider>
         <ion-item>
-          <ion-label>Itchy v{{ version }}</ion-label>
+          <ion-label>{{$t("common:appVersionString", {version: version})}}</ion-label>
         </ion-item>
         <ion-item>
           <ion-label>
             <a href="https://itchy.micahlindley.com/privacy.html"
-              >Privacy Policy</a
+              >{{$t("settings:privacyPolicyLink")}}</a
             >
           </ion-label>
         </ion-item>
         <ion-item>
-          <ion-label>
-            Made
-            <a href="https://github.com/scratch-client-4/itchy-ionic"
-              >open source</a
-            >
-            with 💖
+          <ion-label v-html="$t('settings:credits')">
           </ion-label>
         </ion-item>
       </ion-item-group>

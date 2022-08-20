@@ -1,0 +1,12 @@
+{
+	"appName": "Itchy",
+	"appVersionString": "Itchy v{{version}}",
+	"loading": "Loading...",
+
+	"betaBadge": "BETA",
+
+	"openOnScratch": "Open on Scratch",
+
+	"error": "Error",
+	"genericErrorMessage": "Whoops, something went wrong."
+}

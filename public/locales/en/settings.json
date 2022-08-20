@@ -1,0 +1,12 @@
+{
+	"accountSection": "Account",
+
+	"interfaceSection": "Interface",
+	"themeSelect": "Theme",
+	"hapticsToggle": "Tab vibration",
+	"feedToggle": "Enable personal data on Explore",
+
+	"aboutSection": "About",
+	"privacyPolicyLink": "Privacy Policy",
+	"credits": "Made <a href='https://github.com/scratch-client-4/itchy-ionic'>open source</a> with 💖"
+}

@@ -1,0 +1,15 @@
+{	
+	"signOut": "Sign Out",
+	"signedOut": "Signed out",
+
+	"signIn": "Sign In",
+	"signedIn": "Signed in",
+	"signedInAs": "Signed in as {{username}}",
+
+	"scratchUsername": "Scratch Username",
+	"password": "Password",
+
+	"openYourProfile": "Open your profile",
+	
+	"loginPrivacyPolicyDisclaimer": "By logging in, you agree<br />to our <a href='#' @click.prevent='openPrivacy'>Privacy Policy</a>.",
+}

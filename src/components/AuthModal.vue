@@ -25,11 +25,11 @@
           </ion-row>
         </ion-grid>
         <ion-item>
-          <ion-label position="floating">Scratch Username</ion-label>
+          <ion-label position="floating">{{$t("account:scratchUsername")}}</ion-label>
           <ion-input type="text" required v-model="username"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Password</ion-label>
+          <ion-label position="floating">{{$t("account:password")}}</ion-label>
           <ion-input
             type="password"
             required
@@ -55,12 +55,10 @@
                   v-if="loading"
                   style="height: 1.2em; margin-right: 5px"
                 ></ion-spinner>
-                <ion-label>Sign In</ion-label>
+                <ion-label>{{$t("account:signIn")}}</ion-label>
               </ion-button>
               <div class="disclaimer">
-                By logging in, you agree<br />
-                to our
-                <a href="#" @click.prevent="openPrivacy">Privacy Policy</a>.
+                {{$t("account:loginPrivacyPolicyDisclaimer")}}
               </div>
             </ion-col>
           </ion-row>
@@ -101,7 +99,7 @@ export default defineComponent({
   props: {
     mode: {
       type: String,
-      default: "Login",
+      default: $t("signIn"),
     },
   },
   data() {
