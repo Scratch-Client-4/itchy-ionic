@@ -157,6 +157,8 @@ let searchResultProto = {
 };
 
 async function unifiedSearch(query, offset) {
+  /* results.type is the part after `resultType` in translation
+  keys within `search.json` */
   var results = [];
   query = encodeURI(query);
   const doRequests = async () => {
@@ -172,7 +174,7 @@ async function unifiedSearch(query, offset) {
       if (user.status == 200) {
         results.push({
           title: user.data.username,
-          type: "User profile",
+          type: "Profile",
           id: user.data.id,
           image: user.data.profile.images["50x50"],
         });
@@ -180,7 +182,7 @@ async function unifiedSearch(query, offset) {
       if (secondUser.status == 200) {
         results.push({
           title: secondUser.data.username,
-          type: "User profile",
+          type: "Profile",
           id: secondUser.data.id,
           image: secondUser.data.profile.images["50x50"],
         });
@@ -194,7 +196,8 @@ async function unifiedSearch(query, offset) {
       projects.data.forEach((item) => {
         results.push({
           title: item.title,
-          type: `Project by ${item.author.username}`,
+          type: `Project`,
+          author: item.author.username,
           id: item.id,
           image: item.images["100x80"],
         });
