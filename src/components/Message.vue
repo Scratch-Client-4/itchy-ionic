@@ -1,9 +1,9 @@
 <template>
   <ion-item-divider v-if="firstUnread">
-    <ion-label>Unread</ion-label>
+    <ion-label>{{$t("messages:unreadSection")}}</ion-label>
   </ion-item-divider>
   <ion-item-divider v-if="lastRead">
-    <ion-label>Last Read</ion-label>
+    <ion-label>{{$t("messages:lastReadSection")}}</ion-label>
   </ion-item-divider>
   <ion-item
     button
@@ -19,61 +19,69 @@
     </ion-avatar>
     <ion-label :class="{ 'ion-text-wrap': selectedMessage == m.id }">
       <h2 v-if="m.type == 'studioactivity'">{{ m.title }}</h2>
-      <h2 v-else-if="m.type == 'admin'">Notification</h2>
+      <h2 v-else-if="m.type == 'admin'">{{$t("messages:adminMessageTitle")}}</h2>
       <h2 v-else>{{ m.actor_username }}</h2>
       <ion-note v-if="m.type == 'addcomment'">
         <ion-icon :icon="chatbubbleEllipses" class="blue"></ion-icon>
         {{ m.comment_fragment }}
       </ion-note>
       <ion-note v-if="m.type == 'followuser'">
-        <ion-icon :icon="personAdd" class="blue"></ion-icon> followed you
+        <ion-icon :icon="personAdd" class="blue"></ion-icon>
+        {{$t("messages:newFollowerMessageDescription")}}
       </ion-note>
       <ion-note v-if="m.type == 'loveproject'">
-        <ion-icon :icon="heart" class="red"></ion-icon> loved {{ m.title }}
+        <ion-icon :icon="heart" class="red"></ion-icon>
+        {{$t("messages:lovedProjectMessageDescription", {title: m.title})}}
       </ion-note>
       <ion-note v-if="m.type == 'favoriteproject'">
-        <ion-icon :icon="star" class="yellow"></ion-icon> favorited
-        {{ m.project_title }}
+        <ion-icon :icon="star" class="yellow"></ion-icon>
+        {{$t("messages:favoritedProjectMessageDescription", {title: m.project_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'studioactivity'">
-        <ion-icon :icon="images" class="blue"></ion-icon> new activity in studio
+        <ion-icon :icon="images" class="blue"></ion-icon>
+        {{$t("messages:studioActivityMessageDescription")}}
       </ion-note>
       <ion-note v-if="m.type == 'remixproject'">
-        <ion-icon :icon="colorPalette" class="blue"></ion-icon> remixed your
-        project {{ m.parent_title }}
+        <ion-icon :icon="colorPalette" class="blue"></ion-icon>
+        {{$t("messages:remixedProjectMessageDescription", {title: m.parent_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'curatorinvite'">
-        <ion-icon :icon="images" class="blue"></ion-icon> invited you to curate
-        {{ m.title }}
+        <ion-icon :icon="images" class="blue"></ion-icon>
+        {{$t("messages:curatorInviteMessageDescription", {title: m.title})}}
       </ion-note>
       <ion-note v-if="m.type == 'becomeownerstudio'">
-        <ion-icon :icon="images" class="blue"></ion-icon> promoted you to
-        curator of {{ m.gallery_title }}
+        <ion-icon :icon="images" class="blue"></ion-icon>
+        {{$t("messages:promotedToCuratorMessageDescription", {title: m.gallery_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'becomehoststudio'">
-        <ion-icon :icon="images" class="blue"></ion-icon> made you host of
-        {{ m.gallery_title }}
+        <ion-icon :icon="images" class="blue"></ion-icon>
+        {{$t("messages:promotedToHostMessageDescription", {title: m.gallery_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'forumpost'">
-        <ion-icon :icon="images" class="blue"></ion-icon> made a post in
-        {{ m.topic_title }}
+        <ion-icon :icon="images" class="blue"></ion-icon>
+        {{$t("messages:forumPostMessageDescription", {topic: m.topic_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'admin'">
-        <ion-icon :icon="images" class="blue"></ion-icon> {{ m.message }}
+        <ion-icon :icon="images" class="blue"></ion-icon>
+        {{ m.message }}
       </ion-note>
-      <ion-note class="details" v-if="selectedMessage == m.id"
-        ><br />
+      <ion-note class="details" v-if="selectedMessage == m.id">
+        <br />
         {{ friendlyTime(new Date(m.datetime_created)) }}
-        <span v-if="m.type == 'addcomment' && m.comment_type == 0"
-          >on {{ m.comment_obj_title }}</span
-        >
-        <span v-if="m.type == 'addcomment' && m.comment_type == 1">
-          <span v-if="m.comment_obj_title == myUsername">on your profile</span>
-          <span v-else>on {{ m.comment_obj_title }}'s profile</span>
+        <span v-if="m.type == 'addcomment' && m.comment_type == 0">
+          {{$t("messages:messageContextProject", {project: m.comment_obj_title})}}
         </span>
-        <span v-if="m.type == 'addcomment' && m.comment_type == 2"
-          >in {{ m.comment_obj_title }}</span
-        >
+        <span v-if="m.type == 'addcomment' && m.comment_type == 1">
+          <span v-if="m.comment_obj_title == myUsername">
+            {{$t("messages:messageContextOwnProfile")}}
+          </span>
+          <span v-else>
+            {{$t("messages:messageContextProfile", {user: m.comment_obj_title})}}
+          </span>
+        </span>
+        <span v-if="m.type == 'addcomment' && m.comment_type == 2">
+          {{$t("messages:messageContextStudio", {studio: m.comment_obj_title})}}
+        </span>
       </ion-note>
       <ion-grid v-if="selectedMessage == m.id">
         <ion-row>
@@ -88,28 +96,28 @@
           >
             <div class="ion-activatable btn-div">
               <ion-icon :icon="arrowRedoCircle" class="blue action"></ion-icon>
-              <div>Open on Scratch</div>
+              <div>{{$t("common:openOnScratch")}}</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
           <ion-col v-if="m.type == 'remixproject'" @click="openFromObj(m)">
             <div class="ion-activatable btn-div">
               <ion-icon :icon="image" class="blue action"></ion-icon>
-              <div>Open original</div>
-              <ion-ripple-effect></ion-ripple-effect>
-            </div>
-          </ion-col>
-          <ion-col v-if="m.type == 'forumpost'" @click="openFromObj(m)">
-            <div class="ion-activatable btn-div">
-              <ion-icon :icon="chatbubbles" class="blue action"></ion-icon>
-              <div>Open thread</div>
+              <div>{{$t("projects:openRemixedProject")}}</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
           <ion-col v-if="m.type == 'remixproject'" @click="openFromObj(m)">
             <div class="ion-activatable btn-div">
               <ion-icon :icon="colorPalette" class="blue action"></ion-icon>
-              <div>Open remix</div>
+              <div>{{$t("projects:openProjectRemix")}}</div>
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </ion-col>
+          <ion-col v-if="m.type == 'forumpost'" @click="openFromObj(m)">
+            <div class="ion-activatable btn-div">
+              <ion-icon :icon="chatbubbles" class="blue action"></ion-icon>
+              <div>{{$t("messages:openForumThreadButton")}}</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
@@ -119,9 +127,9 @@
             style="transform: translate(0, 0)"
           >
             <div class="ion-activatable btn-div">
-              <ion-badge color="primary">BETA</ion-badge>
+              <ion-badge color="primary">{{$t("common:betaBadge")}}</ion-badge>
               <ion-icon :icon="personAdd" class="blue action"></ion-icon>
-              <div>Follow back</div>
+              <div>{{$t("users:followBack")}}</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
@@ -140,7 +148,7 @@
                 :icon="chatbubbleEllipses"
                 class="blue action"
               ></ion-icon>
-              <div>Say thanks</div>
+              <div>{{$t("messages:openUserButton")}}</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
@@ -150,14 +158,14 @@
                 :icon="chatbubbleEllipses"
                 class="blue action"
               ></ion-icon>
-              <div>Reply</div>
+              <div>{{$t("comments:reply")}}</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
           <ion-col v-if="m.type == 'addcomment'" @click="openFromObj(m)">
             <div class="ion-activatable btn-div">
               <ion-icon :icon="arrowRedoCircle" class="blue action"></ion-icon>
-              <div>View comment</div>
+              <div>{{$t("comments:viewComment")}}</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
@@ -167,15 +175,15 @@
           >
             <div class="ion-activatable btn-div">
               <ion-icon :icon="image" class="blue action"></ion-icon>
-              <div>Open project</div>
+              <div>{{$t("projects:openProject")}}</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
           <ion-col v-if="m.type == 'curatorinvite'" @click="joinStudio(m)">
             <div class="ion-activatable btn-div">
-              <ion-badge color="primary">BETA</ion-badge>
+              <ion-badge color="primary">{{$t("common:betaBadge")}}</ion-badge>
               <ion-icon :icon="checkmarkCircle" class="blue action"></ion-icon>
-              <div>Accept invite</div>
+              <div>{{$t("studio:acceptCuratorInviteButton")}}</div>
               <ion-ripple-effect></ion-ripple-effect>
             </div>
           </ion-col>
@@ -188,6 +196,7 @@
 import { Http } from "@capacitor-community/http";
 import { Browser } from "@capacitor/browser";
 const friendlyTime = require("friendly-time");
+import { getMessageUrl } from "../utils"
 import UserModal from "./UserModal.vue";
 import { defineComponent } from "vue";
 import {
@@ -260,7 +269,6 @@ export default defineComponent({
       session: JSON.parse(window.localStorage.getItem("session"))
         ? JSON.parse(window.localStorage.getItem("session"))
         : null,
-      followText: "Follow back",
     };
   },
   methods: {
@@ -288,7 +296,16 @@ export default defineComponent({
       });
     },
     async openFromObj(o) {
-      if (o.type == "addcomment") {
+      const url = getMessageUrl(o);
+      if (url) {
+        await Browser.open({
+          url: url,
+          toolbarColor: "#4E97FF"
+        })
+      }
+
+      // Remove if above code does not introduce any regression
+      /*if (o.type == "addcomment") {
         if (o.comment_type == 0) {
           await Browser.open({
             url: `https://scratch.mit.edu/projects/${o.comment_obj_id}/#comments-${o.comment_id}`,
@@ -324,7 +341,7 @@ export default defineComponent({
         await Browser.open({
           url: `https://scratch.mit.edu/discuss/topic/${o.topic_id}/unread`,
         });
-      }
+      }*/
     },
     async followUser(o, session) {
       session = JSON.parse(window.localStorage.getItem("session"));

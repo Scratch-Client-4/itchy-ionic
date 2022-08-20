@@ -3,7 +3,7 @@
     <ion-content :fullscreen="true" overflow-scroll="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Messages</ion-title>
+          <ion-title size="large">{{$t("navigation:messagesPage")}}</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-refresher slot="fixed" @ionRefresh="getMessages(0, $event, true)">
@@ -16,7 +16,7 @@
       <div v-else>
         <ion-item-group>
           <ion-item-divider v-if="adminMessages.length > 0">
-            <ion-label>From the Scratch Team</ion-label>
+            <ion-label>{{$t("messages:adminSection")}}</ion-label>
           </ion-item-divider>
           <Message
             v-for="m in adminMessages"
@@ -47,7 +47,7 @@
           <ion-infinite-scroll-content
             class="ion-padding"
             loading-spinner="circular"
-            loading-text="Loading more messages..."
+            :loading-text="$t('messages:infiniteScrollLoading')"
           >
           </ion-infinite-scroll-content>
         </ion-infinite-scroll>

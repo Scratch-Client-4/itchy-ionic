@@ -1,0 +1,24 @@
+{
+	"adminSection": "From the Scratch Team",
+	"unreadSection": "Unread",
+	"lastReadSection": "Last Read",
+	"infiniteScrollLoading": "Loading more messages...",
+
+	"adminMessageTitle": "Notification",
+	"newFollowerMessageDescription": "followed you",
+	"lovedProjectMessageDescription": "loved {{title}}",
+	"favoritedProjectMessageDescription": "favorited {{title}}",
+	"studioActivityMessageDescription": "new activity in studio",
+	"remixedProjectMessageDescription": "remixed your project {{title}}",
+	"curatorInviteMessageDescription": "invited you to curate {{title}}",
+	"promotedToCuratorMessageDescription": "promoted you to curator of {{title}}",
+	"promotedToHostMessageDescription": "made you host of {{title}}",
+	"forumPostMessageDescription": "made a post in {{topic}}",
+	"messageContextProject": "on {{project}}",
+	"messageContextStudio": "in {{studio}}",
+	"messageContextOwnProfile": "on your profile",
+	"messageContextProfile": "on {{user}}'s profile",
+
+	"openForumThreadButton": "Open thread",
+	"openUserButton": "Say thanks"
+}
