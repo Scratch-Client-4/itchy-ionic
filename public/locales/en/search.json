@@ -1,0 +1,8 @@
+{
+	"hereBeDragons": "Itchy's built-in custom search is still in beta, so you may experience some issues!",
+	"infiniteScrollLoading": "Loading more results...",
+
+	"resultTypeProfile": "User profile",
+	"resultTypeProject": "Project by {{author}}",
+	"resultTypeStudio": "Studio"
+}

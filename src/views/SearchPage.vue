@@ -3,7 +3,7 @@
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Search</ion-title>
+          <ion-title size="large">{{$t("navigation:searchPage")}}</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-searchbar
@@ -20,8 +20,7 @@
           <ion-icon :icon="constructOutline"></ion-icon>
         </span>
         <p>
-          Itchy's built-in custom search is still in beta, so you may experience
-          some issues!
+          {{$t("search:hereBeDragons")}}
         </p>
       </div>
       <ion-item-group v-if="searchData.length > 0">
@@ -37,7 +36,7 @@
           <ion-label>
             <h2>{{ result.title }}</h2>
             <ion-note>
-              {{ result.type }}
+              {{ $t("search:resultType" + result.type, {author: result.author || undefined}) }}
             </ion-note>
           </ion-label>
           <ion-ripple-effect></ion-ripple-effect>
@@ -51,7 +50,7 @@
         <ion-infinite-scroll-content
           class="ion-padding"
           loading-spinner="circular"
-          loading-text="Loading more results..."
+          :loading-text="$t('search:infiniteScrollLoading')"
         >
         </ion-infinite-scroll-content>
       </ion-infinite-scroll>
