@@ -4,17 +4,17 @@
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="tab1" href="/tabs/explore" @click="vibrate">
           <ion-icon :icon="earthOutline" />
-          <ion-label>Explore</ion-label>
+          <ion-label>{{$t("navigation:explorePage")}}</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab2" href="/tabs/search" @click="vibrate">
           <ion-icon :icon="search" />
-          <ion-label>Search</ion-label>
+          <ion-label>{{$t("navigation:searchPage")}}</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab3" href="/tabs/messages" @click="vibrate">
           <ion-icon :icon="mailOutline" />
-          <ion-label>Messages</ion-label>
+          <ion-label>{{$t("navigation:messagesPage")}}</ion-label>
           <ion-badge v-if="userSignedIn && messageCount != 0" color="primary">{{
             messageCount
           }}</ion-badge>
@@ -22,7 +22,7 @@
 
         <ion-tab-button tab="tab4" href="/tabs/settings" @click="vibrate">
           <ion-icon :icon="settingsOutline" />
-          <ion-label>Settings</ion-label>
+          <ion-label>{{$t("navigation:settingsPage")}}</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
