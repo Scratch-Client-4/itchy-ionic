@@ -25,7 +25,7 @@
       ></Feed>
       <!-- FEATURED PROJECTS -->
       <ion-text>
-        <h2><ion-icon :icon="ribbonOutline"></ion-icon>Featured</h2>
+        <h2><ion-icon :icon="ribbonOutline"></ion-icon>{{$t("explore:featuredProjectsTitle")}}</h2>
       </ion-text>
       <div class="sidescroll">
         <div v-for="project in featuredProjects" :key="project.thumbnail_url">
@@ -41,7 +41,7 @@
       </div>
       <!-- PROJECTS FRIENDS LOVED -->
       <ion-text v-if="session && prefs.enableFeed">
-        <h2><ion-icon :icon="happyOutline"></ion-icon>Friends Loved</h2>
+        <h2><ion-icon :icon="happyOutline"></ion-icon>{{$t("followingLovedProjectsTitle")}}</h2>
       </ion-text>
       <div class="sidescroll" v-if="session && prefs.enableFeed">
         <div
@@ -60,7 +60,7 @@
       </div>
       <!-- TOP LOVED PROJECTS -->
       <ion-text>
-        <h2><ion-icon :icon="heartOutline"></ion-icon>Top Loved</h2>
+        <h2><ion-icon :icon="heartOutline"></ion-icon>{{$t("lovedProjectsTitle")}}</h2>
       </ion-text>
       <div class="sidescroll">
         <div v-for="project in lovedProjects" :key="project.thumbnail_url">
@@ -76,7 +76,7 @@
       </div>
       <!-- CURATED PROJECTS -->
       <ion-text>
-        <h2><ion-icon :icon="diamondOutline"></ion-icon>Curated</h2>
+        <h2><ion-icon :icon="diamondOutline"></ion-icon>{{$t("curatedProjectsTitle")}}</h2>
       </ion-text>
       <div class="sidescroll">
         <div v-for="project in curatedProjects" :key="project.thumbnail_url">
@@ -92,7 +92,7 @@
       </div>
       <!-- TOP REMIXED PROJECTS -->
       <ion-text>
-        <h2><ion-icon :icon="syncOutline"></ion-icon>Top Remixed</h2>
+        <h2><ion-icon :icon="syncOutline"></ion-icon>{{$t("remixedProjectsTitle")}}</h2>
       </ion-text>
       <div class="sidescroll">
         <div v-for="project in remixedProjects" :key="project.thumbnail_url">
@@ -107,7 +107,7 @@
         </div>
       </div>
       <ion-text>
-        <h2><ion-icon :icon="personOutline"></ion-icon>Top Followed</h2>
+        <h2><ion-icon :icon="personOutline"></ion-icon>{{$t("topUsersTitle")}}</h2>
       </ion-text>
       <div class="sidescroll">
         <UserCard
