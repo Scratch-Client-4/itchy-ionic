@@ -48,7 +48,7 @@ i18next
   },
   fallbackLng: "en",
   // keep these in alphebatical order
-  ns: ["account", "comments", "common", "explore", "messages", "navigation",
+  ns: ["account", "activity", "comments", "common", "explore", "messages", "navigation",
   "projects", "search", "settings", "studios", "users"],
   derfaultNS: "common"
 })

@@ -1,0 +1,21 @@
+{
+	"followedYou": "followed you",
+	"followedUser": "followed {{username}}",
+
+	"sharedProject": "shared {{title}}",
+	"lovedProject": "loved {{title}}",
+	"favoritedProject": "favorited {{title}}",
+	"remixedYourProject": "remixed your project {{title}}",
+	"remixedProjectAs": "remixed {{original}} as {{remix}}",
+
+	"studioActivity": "new activity in studio",
+	"addedProjectToStudio": "added {{project}} to {{studio}}",
+	"studioCuratorInviteYou": "invited you to curate {{studio}}",
+	"becameStudioCurator": "started curating {{studio}}",
+	"promotedToStudioManager": "was promoted to manager of {{studio}}",
+	"promotedToStudioCuratorYou": "promoted you to curator of {{studio}}",
+	"promotedToStudioHostYou": "made you host of {{studio}}",
+	"followedStudio": "followed the {{studio}} studio",
+
+	"forumPost": "made a post in {{topic}}",
+}

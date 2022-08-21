@@ -2,7 +2,8 @@
   <ion-card :class="{ expanded: expanded }">
     <ion-card-header>
       <ion-card-title>
-        <h2><ion-icon :icon="sparklesOutline"></ion-icon>Your Feed</h2>
+        <h2><ion-icon :icon="sparklesOutline"></ion-icon>
+        {{$t("navigation:personalFeedTitle")}}</h2>
         <ion-icon :icon="chevronDown" class="expand-icon" @click="expand" />
       </ion-card-title>
     </ion-card-header>

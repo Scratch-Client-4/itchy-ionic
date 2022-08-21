@@ -27,39 +27,39 @@
       </ion-note>
       <ion-note v-if="m.type == 'followuser'">
         <ion-icon :icon="personAdd" class="blue"></ion-icon>
-        {{$t("messages:newFollowerMessageDescription")}}
+        {{$t("activity:followedYou")}}
       </ion-note>
       <ion-note v-if="m.type == 'loveproject'">
         <ion-icon :icon="heart" class="red"></ion-icon>
-        {{$t("messages:lovedProjectMessageDescription", {title: m.title})}}
+        {{$t("activity:lovedProject", {title: m.title})}}
       </ion-note>
       <ion-note v-if="m.type == 'favoriteproject'">
         <ion-icon :icon="star" class="yellow"></ion-icon>
-        {{$t("messages:favoritedProjectMessageDescription", {title: m.project_title})}}
+        {{$t("activity:favoritedProject", {title: m.project_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'studioactivity'">
         <ion-icon :icon="images" class="blue"></ion-icon>
-        {{$t("messages:studioActivityMessageDescription")}}
+        {{$t("activity:studioActivity")}}
       </ion-note>
       <ion-note v-if="m.type == 'remixproject'">
         <ion-icon :icon="colorPalette" class="blue"></ion-icon>
-        {{$t("messages:remixedProjectMessageDescription", {title: m.parent_title})}}
+        {{$t("activity:remixedYourProject", {title: m.parent_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'curatorinvite'">
         <ion-icon :icon="images" class="blue"></ion-icon>
-        {{$t("messages:curatorInviteMessageDescription", {title: m.title})}}
+        {{$t("activity:studioCuratorInviteYou", {studio: m.title})}}
       </ion-note>
       <ion-note v-if="m.type == 'becomeownerstudio'">
         <ion-icon :icon="images" class="blue"></ion-icon>
-        {{$t("messages:promotedToCuratorMessageDescription", {title: m.gallery_title})}}
+        {{$t("activity:promotedToStudioCuratorYou", {studio: m.gallery_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'becomehoststudio'">
         <ion-icon :icon="images" class="blue"></ion-icon>
-        {{$t("messages:promotedToHostMessageDescription", {title: m.gallery_title})}}
+        {{$t("activity:promotedToStudioHostYou", {studio: m.gallery_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'forumpost'">
         <ion-icon :icon="images" class="blue"></ion-icon>
-        {{$t("messages:forumPostMessageDescription", {topic: m.topic_title})}}
+        {{$t("activity:forumPost", {topic: m.topic_title})}}
       </ion-note>
       <ion-note v-if="m.type == 'admin'">
         <ion-icon :icon="images" class="blue"></ion-icon>

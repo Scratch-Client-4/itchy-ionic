@@ -24,29 +24,42 @@
       <h2 v-if="i.type != 'becomeownerstudio'">{{ i.actor_username }}</h2>
       <h2 v-else>{{ i.recipient_username }}</h2>
       <h3>
-        <span v-if="i.type == 'shareproject'">shared {{ i.title }}</span>
-        <span v-if="i.type == 'loveproject'">loved {{ i.title }}</span>
-        <span v-if="i.type == 'favoriteproject'"
-          >favorited {{ i.project_title }}</span
-        >
-        <span v-if="i.type == 'addproject'"
-          >added {{ i.title }} to {{ i.gallery_title }}</span
-        >
-        <span v-if="i.type == 'remixproject'"
-          >remixed {{ i.parent_title }} as {{ i.title }}</span
-        >
-        <span v-if="i.type == 'followuser'"
-          >followed {{ i.followed_username }}</span
-        >
-        <span v-if="i.type == 'becomecurator'"
-          >started curating {{ i.title }}</span
-        >
+        <span v-if="i.type == 'shareproject'">
+          shared {{ i.title }}
+          {{$t("activity:sharedProject", {title: i.title})}}
+        </span>
+        <span v-if="i.type == 'loveproject'">
+          loved {{ i.title }}
+          {{$t("activity:lovedProject", {title: i.title})}}
+        </span>
+        <span v-if="i.type == 'favoriteproject'">
+          favorited {{ i.project_title }}
+          {{$t("activity:favoritedProject", {title: i.title})}}
+        </span>
+        <span v-if="i.type == 'addproject'">
+          added {{ i.title }} to {{ i.gallery_title }}
+          {{$t("activity:addedProjectToStudio", {project: i.title, studio: i.gallery_title})}}
+        </span>
+        <span v-if="i.type == 'remixproject'">
+          remixed {{ i.parent_title }} as {{ i.title }}
+          {{$t("activity:remixedProjectAs", {original: i.parent_title, remix: i.title})}}
+        </span>
+        <span v-if="i.type == 'followuser'">
+          followed {{ i.followed_username }}
+          {{$t("activity:followedUser", {username: i.followed_username})}}
+        </span>
+        <span v-if="i.type == 'becomecurator'">
+          started curating {{ i.title }}
+          {{$t("activity:becameStudioCurator", {studio: i.title})}}
+        </span>
         <span v-if="i.type == 'becomeownerstudio'">
-          was promoted to manager of {{ i.gallery_title }}</span
-        >
-        <span v-if="i.type == 'followstudio'"
-          >followed the {{ i.title }} studio</span
-        >
+          was promoted to manager of {{ i.gallery_title }}
+          {{$t("activity:promotedToStudioManager", {studio: i.gallery_title})}}
+        </span>
+        <span v-if="i.type == 'followstudio'">
+          followed the {{ i.title }} studio
+          {{$t("activity:followedStudio", {studio: i.title})}}
+        </span>
       </h3>
       <p>{{ i.datetime_created }}</p>
     </ion-label>
