@@ -1,5 +1,7 @@
 # itchy-ionic
-A hybrid-native approach to a Scratch mobile app built with the Ionic framework
+A hybrid-native approach to a Scratch mobile app built with the Ionic framework.
+
+> ⚠️ This project is no longer active.  Development on a Scratch mobile app has moved to [micahlt/itchy-native](https://github.com/micahlt/itchy-native).
 
 [![Generate Android Development APK](https://github.com/Scratch-Client-4/itchy-ionic/actions/workflows/android-debug.yml/badge.svg)](https://github.com/Scratch-Client-4/itchy-ionic/actions/workflows/android-debug.yml)
 
